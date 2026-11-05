@@ -7,6 +7,17 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+
+  /* Added this block to allow Unsplash images */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
+
   turbopack: {
     rules: {
       "*.css": {
