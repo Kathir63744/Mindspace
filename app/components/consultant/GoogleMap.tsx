@@ -1,158 +1,270 @@
+
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { SectionBadge } from "./Services";
-import Link from "next/link";
-import WorldMap, { DataItem } from "react-svg-worldmap";
+import type { DataItem } from "react-svg-worldmap";
 
-// ==========================================
-// FIX: Bypass SSR for the map to prevent hydration mismatch
-// ==========================================
-const MapComponent = dynamic(
-    () => Promise.resolve(({ mapData }: { mapData: DataItem<number>[] }) => (
-        <WorldMap
-            color="#2dd4bf"
-            valueSuffix=""
-            size="responsive"
-            data={mapData}
-            backgroundColor="#2c3a5aff"
-            borderColor="#042F2E"
-            strokeOpacity={1}
-            styleFunction={(context) => {
-                const baseActiveCountries = ["ca", "us", "mx", "br", "ar", "gb", "fr", "de", "es", "pl", "ua", "za", "in", "au", "nz"];
-                const isBaseActive = baseActiveCountries.includes(context.countryCode);
-                return {
-                    fill: isBaseActive ? "#2dd4bf" : "#acacb8ff",
-                    stroke: isBaseActive ? "#042F2E" : "#0F766E",
-                    strokeWidth: isBaseActive ? 1.5 : 0.5,
-                    strokeLinejoin: "round",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                };
-            }}
-        />
-    )),
+const WorldMap = dynamic(
+    () => import("react-svg-worldmap").then((mod) => mod.default),
     {
         ssr: false,
         loading: () => (
-            <div className="flex h-[400px] w-full items-center justify-center text-white/50">
-                Loading map...
+            <div className="flex aspect-[2/1] w-full items-center justify-center rounded-2xl bg-[#101A2B] text-sm text-[#A0A9BA]">
+                Loading world map...
             </div>
-        )
+        ),
     }
 );
 
-// Grouping countries by Continent for the Hover Effect
-const continentMap: Record<string, string[]> = {
-    "North America": ["ca", "us", "mx", "gl", "cu", "do", "ht", "jm", "pr", "tt", "bs", "bz", "cr", "sv", "gt", "hn", "ni", "pa"],
-    "South America": ["br", "ar", "cl", "co", "pe", "ve", "ec", "bo", "py", "uy", "gy", "sr", "gf"],
-    "Europe": ["gb", "fr", "de", "es", "it", "pl", "ua", "ro", "nl", "be", "cz", "gr", "pt", "se", "hu", "at", "ch", "bg", "rs", "dk", "fi", "sk", "no", "ie", "hr", "ba", "al", "lt", "si", "lv", "ee", "cy", "lu", "mt", "is"],
-    "Asia": ["cn", "in", "id", "pk", "bd", "jp", "ph", "vn", "tr", "ir", "th", "mm", "kr", "iq", "af", "my", "sa", "uz", "ye", "np", "kp", "tw", "lk", "kz", "sy", "kh", "jo", "az", "ae", "tj", "il", "la", "kg", "tm", "sg", "om", "ps", "lb", "qa", "kw", "ge", "mn", "am", "bh", "bt", "bn", "mv"],
-    "Africa": ["ng", "et", "eg", "cd", "za", "tz", "ke", "sd", "dz", "ug", "ma", "ao", "mz", "gh", "mg", "cm", "ci", "ne", "bf", "ml", "mw", "zm", "sn", "td", "so", "zw", "gn", "rw", "bj", "bi", "tn", "ss", "tg", "sl", "ly", "lr", "mr", "er", "gm", "bw", "ga", "ls", "gw", "gq", "mu", "sz", "dj", "re", "km", "cv", "st", "sc", "yt"],
-    "Oceania": ["au", "pg", "nz", "fj", "sb", "vu", "ws", "ki", "to", "fm", "mh", "pw", "nc", "pf"]
+type Destination = {
+    code: DataItem<number>["country"];
+    name: string;
+    region: string;
+    description: string;
+    image: string;
 };
 
-const baseActiveCountries = ["ca", "us", "mx", "br", "ar", "gb", "fr", "de", "es", "pl", "ua", "za", "in", "au", "nz"];
-const mapData: DataItem<number>[] = baseActiveCountries.map(c => ({ country: c as any, value: 1 }));
+const destinations: Destination[] = [
+    {
+        code: "ca",
+        name: "Canada",
+        region: "North America",
+        description:
+            "Explore internationally recognised universities, flexible study options and opportunities to build your future.",
+        image:
+            "https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+        code: "gb",
+        name: "United Kingdom",
+        region: "Europe",
+        description:
+            "Discover globally respected institutions, diverse courses and a rich academic environment.",
+        image:
+            "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+        code: "au",
+        name: "Australia",
+        region: "Oceania",
+        description:
+            "Find a balance of quality education, vibrant student cities and international experiences.",
+        image:
+            "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+        code: "us",
+        name: "United States",
+        region: "North America",
+        description:
+            "Explore a wide range of academic pathways, institutions and campus experiences.",
+        image:
+            "https://images.unsplash.com/photo-1496588152823-86ff7695e68f?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+        code: "nz",
+        name: "New Zealand",
+        region: "Oceania",
+        description:
+            "Discover welcoming study environments and opportunities across a range of disciplines.",
+        image:
+            "https://images.unsplash.com/photo-1469521669194-babb45599def?auto=format&fit=crop&w=1200&q=85",
+    },
+];
 
-export default function GlobalMap() {
-    const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-    const mapRef = useRef<HTMLDivElement>(null);
+export default function GoogleMap() {
+    const [activeDestination, setActiveDestination] = useState(
+        destinations[0]
+    );
 
-    useEffect(() => {
-        const container = mapRef.current;
-        if (!container) return;
-
-        const handleMouseOver = (e: MouseEvent) => {
-            const target = e.target as SVGPathElement;
-            if (target.tagName === "path") {
-                const name = target.getAttribute("data-country-name") || target.querySelector("title")?.textContent;
-                if (name) setHoveredCountry(name);
-            }
-        };
-
-        const handleMouseOut = () => setHoveredCountry(null);
-
-        container.addEventListener("mouseover", handleMouseOver);
-        container.addEventListener("mouseout", handleMouseOut);
-
-        return () => {
-            container.removeEventListener("mouseover", handleMouseOver);
-            container.removeEventListener("mouseout", handleMouseOut);
-        };
-    }, []);
+    const mapData = useMemo<DataItem<number>[]>(
+        () =>
+            destinations.map((destination) => ({
+                country: destination.code,
+                value: 1,
+            })),
+        []
+    );
 
     return (
-        <section className="relative overflow-hidden bg-[#0B0B0C] py-24 sm:py-32">
-            <div aria-hidden="true" className="absolute right-0 top-0 -z-10 h-[600px] w-[600px] translate-x-1/3 -translate-y-1/3 rounded-full bg-[#2dd4bf]/5 blur-[120px]" />
+        <section
 
-            <div className="mx-auto max-w-[90rem] px-8 lg:px-24">
-                <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
+            className="relative overflow-hidden bg-[#07090F] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"
+        >
+            <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
+                <span className="h-px w-9 bg-[#2F7BFF]" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                    Study destinations
+                </span>
+                <span className="h-px max-w-24 flex-1 bg-white/10" />
+            </div>
+            {/* Background accents */}
+            <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-[#2F7BFF]/10 blur-[120px]" />
+            <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-[#2F7BFF]/10 blur-[120px]" />
 
-                    {/* LEFT: Text Content */}
-                    <div className="lg:col-span-5">
-                        <SectionBadge text="Global Reach" />
-                        <h2 className="mt-6 font-display text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
-                            Global <span className="text-[#2dd4bf] italic">delivery.</span>
-                        </h2>
-                        <p className="mt-4 text-lg leading-relaxed text-white/50">
-                            We have extensive experience guiding students to top institutions across the globe. Hover over the map to explore our presence.
-                        </p>
+            <div className="relative mx-auto max-w-7xl">
+                {/* Section heading */}
+                <div className="mb-12 max-w-2xl">
 
-                        <div className="mt-10 rounded-2xl border border-white/5 bg-[#151517] p-6 shadow-xl">
-                            <h3 className="text-sm font-bold uppercase tracking-wider text-[#2dd4bf]">Our Clients Come From:</h3>
-                            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm text-white/70">
-                                {["North America", "South America", "Europe", "United Kingdom", "Asia", "India", "Australia", "Africa"].map(c => (
-                                    <li key={c} className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[#2dd4bf]" /> {c}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
 
-                        <div className="mt-10">
-                            <Link
-                                href="/contact"
-                                className="group inline-flex items-center gap-3 rounded-full bg-[#2dd4bf] px-8 py-4 font-bold text-[#0B0B0C] transition-all hover:scale-105 hover:bg-[#5eead4]"
-                            >
-                                Check your eligibility
-                                <svg viewBox="0 0 20 20" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M4 10h12M11 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </Link>
-                        </div>
-                    </div>
+                    <h2 className="text-3xl font-semibold leading-tight tracking-tight text-[#F3F5FA] sm:text-4xl lg:text-5xl">
+                        Your next chapter,
+                        <span className="block text-[#2F7BFF]">
+                            somewhere in the world.
+                        </span>
+                    </h2>
 
-                    {/* RIGHT: Interactive Map */}
-                    <div className="relative lg:col-span-7 flex justify-center items-center">
-                        <div className="relative w-full overflow-hidden rounded-3xl border border-white/5 bg-[#151517]/50 p-6 shadow-2xl backdrop-blur-sm">
+                    <p className="mt-5 max-w-xl text-sm leading-7 text-[#A0A9BA] sm:text-base">
+                        Explore international study destinations and find the place
+                        that feels right for your next academic journey.
+                    </p>
+                </div>
 
-                            {/* Custom Teal Pop-Up Tooltip */}
-                            <div className={`absolute top-6 right-6 z-50 rounded-xl border-2 border-[#0F766E] bg-[#0B0B0C]/95 px-5 py-3 shadow-[0_0_30px_rgba(15,118,110,0.4)] backdrop-blur-md transition-all duration-300 ${hoveredCountry ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95 pointer-events-none"
-                                }`}>
-                                <div className="flex items-center gap-3">
-                                    <span className="flex h-3 w-3 relative">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2dd4bf] opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[#2dd4bf]"></span>
+                {/* Main content */}
+                <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+                    {/* World map */}
+                    <div className="relative flex min-h-[350px] items-center overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0B1220] p-5 sm:p-8">
+                        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(47,123,255,0.12),transparent_65%)]" />
+
+                        <div className="relative w-full">
+                            <div className="mb-5 flex items-center justify-between gap-3">
+                                <div>
+                                    <p className="text-sm font-semibold text-white">
+                                        Explore the world
+                                    </p>
+                                    <p className="mt-1 text-xs text-[#7F8DA3]">
+                                        Highlighted countries are study destinations
+                                    </p>
+                                </div>
+
+                                <div className="flex shrink-0 items-center gap-2">
+                                    <span className="h-2 w-2 rounded-full bg-[#2F7BFF]" />
+                                    <span className="text-[11px] text-[#A0A9BA]">
+                                        Destinations
                                     </span>
-                                    <div>
-                                        <p className="text-[10px] text-white/50 uppercase tracking-widest font-semibold">Destination</p>
-                                        <p className="text-sm font-bold text-white whitespace-nowrap">
-                                            {hoveredCountry || "Hover over a country"}
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
 
-                            {/* The Map Wrapper with Ref */}
-                            <div ref={mapRef} className="flex w-full items-center justify-center">
-                                <MapComponent mapData={mapData} />
+                            <div className="w-full">
+                                <WorldMap
+                                    color="#2F7BFF"
+                                    backgroundColor="transparent"
+                                    borderColor="#26364F"
+                                    size="responsive"
+                                    data={mapData}
+                                    frame={false}
+                                    richInteraction={false}
+                                    styleFunction={(context) => ({
+                                        fill: context.countryValue
+                                            ? "#2F7BFF"
+                                            : "#1A2A40",
+                                        stroke: "#26364F",
+                                        strokeWidth: 0.7,
+                                    })}
+                                />
                             </div>
 
+                            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/[0.07] pt-5">
+                                <span className="text-xs text-[#A0A9BA]">
+                                    <span className="mr-2 inline-block h-2 w-2 rounded-sm bg-[#2F7BFF]" />
+                                    Study destinations
+                                </span>
+                                <span className="text-xs text-[#A0A9BA]">
+                                    <span className="mr-2 inline-block h-2 w-2 rounded-sm bg-[#1A2A40]" />
+                                    Other countries
+                                </span>
+                            </div>
                         </div>
                     </div>
 
+                    {/* Selected destination */}
+                    <div className="group relative min-h-[350px] overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0B1220]">
+                        <div className="absolute inset-0">
+                            <img
+                                key={activeDestination.name}
+                                src={activeDestination.image}
+                                alt={activeDestination.name}
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#07090F] via-[#07090F]/55 to-[#07090F]/10" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#07090F]/30 to-transparent" />
+                        </div>
+
+                        <div className="relative flex min-h-[350px] flex-col justify-end p-7 sm:p-9">
+                            <span className="mb-4 w-fit rounded-full border border-white/20 bg-black/25 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.15em] text-[#D8E5FF] backdrop-blur-md">
+                                {activeDestination.region}
+                            </span>
+
+                            <h3 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                                {activeDestination.name}
+                            </h3>
+
+                            <p className="mt-3 max-w-md text-sm leading-7 text-white/75">
+                                {activeDestination.description}
+                            </p>
+
+                            <div className="mt-7 flex items-center gap-2">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#2F7BFF]" />
+                                <span className="text-xs font-medium text-white/70">
+                                    Explore your possibilities
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Destination selector */}
+                <div className="mt-8">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-white">
+                            Choose your destination
+                        </h3>
+                        <span className="text-xs text-[#7F8DA3]">
+                            {destinations.length} destinations
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                        {destinations.map((destination) => {
+                            const isActive =
+                                activeDestination.code === destination.code;
+
+                            return (
+                                <button
+                                    key={destination.code}
+                                    type="button"
+                                    onClick={() => setActiveDestination(destination)}
+                                    aria-pressed={isActive}
+                                    className={`group flex items-center gap-3 rounded-2xl border p-3 text-left transition-all duration-300 sm:p-4 ${isActive
+                                        ? "border-[#2F7BFF]/60 bg-[#2F7BFF]/10"
+                                        : "border-white/[0.08] bg-[#0B1220] hover:border-[#2F7BFF]/40 hover:bg-[#101A2B]"
+                                        }`}
+                                >
+                                    <span
+                                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold transition-colors ${isActive
+                                            ? "bg-[#2F7BFF] text-white"
+                                            : "bg-white/[0.06] text-[#A0A9BA] group-hover:bg-[#2F7BFF]/15 group-hover:text-[#A9C7FF]"
+                                            }`}
+                                    >
+                                        {destination.code.toUpperCase()}
+                                    </span>
+
+                                    <span className="min-w-0">
+                                        <span
+                                            className={`block truncate text-xs font-semibold sm:text-sm ${isActive ? "text-white" : "text-[#A0A9BA]"
+                                                }`}
+                                        >
+                                            {destination.name}
+                                        </span>
+                                        <span className="mt-1 block text-[10px] text-[#718096]">
+                                            {destination.region}
+                                        </span>
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </section>

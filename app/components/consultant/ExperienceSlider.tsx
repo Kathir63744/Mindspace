@@ -1,183 +1,183 @@
-"use client";
 
-import Image from "next/image";
-import { SectionBadge } from "./Services";
-
-// 1. The Core Approach Data
-const approaches = [
+const principles = [
     {
-        title: "Expert Counsellors",
-        desc: "Our advisors are certified professionals who have studied or worked abroad, bringing firsthand experience to your application."
+        number: "01",
+        title: "Personal, not generic",
+        description:
+            "Your ambitions, interests and priorities deserve attention beyond a standard checklist.",
     },
     {
-        title: "Tailored Guidance",
-        desc: "We don't believe in one-size-fits-all. Your profile, budget, and goals shape the exact strategy we build for you."
-    },
-    {
-        title: "Visa Expertise",
-        desc: "With a 98% success rate, we meticulously prepare your financial documents and interview prep to secure your visa."
-    },
-    {
-        title: "Scholarship Assistance",
-        desc: "We help you identify and apply for merit-based and need-based scholarships to make your global education affordable."
+        number: "02",
+        title: "Informed, not rushed",
+        description:
+            "Good decisions start with understanding the possibilities, not simply choosing the quickest option.",
     },
 
-];
-
-// 2. The Success Stories Data
-const successStories = [
     {
-        id: 1,
-        name: "Meera Nair",
-        role: "MS in Artificial Intelligence",
-        dest: "University of Oxford",
-        img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop"
-    },
-    {
-        id: 2,
-        name: "Aditya Sharma",
-        role: "MBA in Finance",
-        dest: "University of Manchester",
-        img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop"
-    },
-    {
-        id: 3,
-        name: "Ishita Reddy",
-        role: "MS in Biotechnology",
-        dest: "University of Edinburgh",
-        img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop"
-    },
-    {
-        id: 4,
-        name: "Karan Malhotra",
-        role: "MS in Data Analytics",
-        dest: "University of California, Berkeley",
-        img: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&auto=format&fit=crop"
-    },
-    {
-        id: 5,
-        name: "Diya Kapoor",
-        role: "MSc in Cybersecurity",
-        dest: "University of British Columbia",
-        img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&auto=format&fit=crop"
-    },
-    {
-        id: 6,
-        name: "Rohan Mehta",
-        role: "BBA in International Business",
-        dest: "University of Sydney",
-        img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop"
+        number: "03",
+        title: "Support that continues",
+        description:
+            "A meaningful experience is built on consistent communication, not one-time conversations.",
     },
 ];
 
 export default function ExperienceSlider() {
     return (
-        <section className="relative overflow-hidden bg-[#0B0B0C] py-24 sm:py-32">
+        <section className="relative overflow-hidden bg-[#07090F] py-24 text-[#F3F5FA] sm:py-32">
 
-            {/* Ambient Background Glows (Teal-400) */}
-            <div aria-hidden="true" className="absolute left-0 top-0 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-[120px]" />
-            <div aria-hidden="true" className="absolute right-0 bottom-0 -z-10 h-[500px] w-[500px] translate-x-1/2 translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-[120px]" />
+            {/* Shared section label */}
+            <div className="mx-auto  flex max-w-7xl items-center gap-3 px-6">
+                <span className="h-px w-9 bg-[#2F7BFF]" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                    The MindSpace perspective
+                </span>
+                <span className="h-px max-w-24 flex-1 bg-white/10" />
+            </div>
 
-            <div className="mx-auto max-w-[90rem] px-8 lg:px-24">
+            <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-16">
 
-                {/* =========================================
-                    PART 1: The Core Approach Grid
-                ========================================= */}
-                <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+                {/* Visual composition */}
+                <div className="relative mx-auto flex min-h-[560px] w-full max-w-[600px] items-center justify-center">
 
-                    {/* Left Sticky Title */}
-                    <div className="lg:col-span-4 lg:sticky lg:top-32 self-start">
+                    {/* Full visual background */}
+                    <div
+                        className="absolute inset-0 opacity-[0.18]"
+                        style={{
+                            backgroundImage:
+                                "linear-gradient(rgba(169,199,255,0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(169,199,255,0.13) 1px, transparent 1px)",
+                            backgroundSize: "38px 38px",
+                            maskImage:
+                                "radial-gradient(ellipse at center, black 35%, transparent 82%)",
+                        }}
+                    />
 
-                        <h2 className="mt-6 font-display text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
-                            An experience that keeps students at the <span className="text-[#2dd4bf] italic">center.</span>
-                        </h2>
-                        <p className="mt-4 text-lg text-white/50">
-                            We combine global expertise with personalized care to ensure your journey is seamless.
+                    {/* Soft ambient glow */}
+                    <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2F7BFF]/[0.08] blur-[90px]" />
+
+                    {/* Orbital rings */}
+                    <div className="absolute left-1/2 top-1/2 h-[470px] w-[470px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2F7BFF]/20" />
+                    <div className="absolute left-1/2 top-1/2 h-[370px] w-[370px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[#A9C7FF]/20" />
+                    <div className="absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2F7BFF]/25" />
+
+                    {/* Decorative orbit points */}
+                    <span className="absolute left-[13%] top-[29%] h-2.5 w-2.5 rounded-full bg-[#2F7BFF] shadow-[0_0_20px_#2F7BFF]" />
+                    <span className="absolute right-[14%] top-[25%] h-2 w-2 rounded-full bg-[#A9C7FF] shadow-[0_0_18px_#A9C7FF]" />
+                    <span className="absolute bottom-[22%] left-[23%] h-2 w-2 rounded-full bg-[#2F7BFF] shadow-[0_0_18px_#2F7BFF]" />
+                    <span className="absolute bottom-[29%] right-[13%] h-2.5 w-2.5 rounded-full bg-[#A9C7FF] shadow-[0_0_18px_#A9C7FF]" />
+
+                    {/* Central identity */}
+                    <div className="relative z-10 flex h-[220px] w-[220px] items-center justify-center rounded-full border border-[#A9C7FF]/30 bg-gradient-to-br from-[#17294A] via-[#0D1527] to-[#080D18] shadow-[0_0_100px_rgba(47,123,255,0.22)]">
+                        <div className="absolute inset-3 rounded-full border border-[#2F7BFF]/25" />
+                        <div className="absolute inset-7 rounded-full border border-white/[0.06]" />
+                        <span className="bg-gradient-to-br from-white via-[#A9C7FF] to-[#2F7BFF] bg-clip-text text-[104px] font-semibold tracking-[-0.13em] text-transparent">
+                            M
+                        </span>
+                    </div>
+
+                    {/* Floating labels */}
+                    <div className="absolute left-0 top-[35%] z-20 rounded-xl border border-white/10 bg-[#101827]/95 px-5 py-4 shadow-2xl backdrop-blur-md">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#78869D]">
+                            Built around
+                        </p>
+                        <p className="mt-1.5 text-sm font-medium text-white">
+                            Individual goals
                         </p>
                     </div>
 
-                    {/* Right Grid */}
-                    <div className="lg:col-span-8">
-                        <div className="grid gap-6 sm:grid-cols-2">
-                            {approaches.map((item, i) => (
-                                <div
-                                    key={i}
-                                    className="group relative overflow-hidden rounded-2xl border border-white/5 bg-[#151517] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#2dd4bf]/30 hover:bg-[#1A1A1D] hover:shadow-[0_10px_30px_-10px_rgba(45,212,191,0.15)]"
-                                >
-                                    {/* Hover Highlight Gradient */}
-                                    <div className="absolute -inset-px -z-10 rounded-2xl bg-gradient-to-br from-[#2dd4bf]/0 via-[#2dd4bf]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute right-0 top-[30%] z-20 rounded-xl border border-white/10 bg-[#101827]/95 px-5 py-4 shadow-2xl backdrop-blur-md">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#78869D]">
+                            Looking ahead
+                        </p>
+                        <p className="mt-1.5 text-sm font-medium text-white">
+                            New horizons
+                        </p>
+                    </div>
 
-                                    {/* Left Accent Border (Teal-400) */}
-                                    <div className="absolute bottom-0 left-0 top-0 w-1 bg-gradient-to-b from-[#2dd4bf] to-transparent opacity-50 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute bottom-[15%] left-[8%] z-20 rounded-xl border border-white/10 bg-[#101827]/95 px-5 py-4 shadow-2xl backdrop-blur-md">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#78869D]">
+                            Your direction
+                        </p>
+                        <p className="mt-1.5 text-sm font-medium text-white">
+                            A personal vision
+                        </p>
+                    </div>
 
-                                    <h3 className="font-display text-xl font-bold text-white transition-colors group-hover:text-[#2dd4bf]">
+                    <div className="absolute bottom-[12%] right-[5%] z-20 rounded-xl border border-white/10 bg-[#101827]/95 px-5 py-4 shadow-2xl backdrop-blur-md">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#78869D]">
+                            The bigger picture
+                        </p>
+                        <p className="mt-1.5 text-sm font-medium text-white">
+                            A future with purpose
+                        </p>
+                    </div>
+
+                    {/* Small editorial details */}
+                    <span className="absolute left-2 top-2 text-[10px] tracking-[0.2em] text-white/30">
+                        MINDSPACE / 01
+                    </span>
+                    <span className="absolute bottom-2 right-2 text-[10px] tracking-[0.2em] text-white/30">
+                        BEYOND BOUNDARIES
+                    </span>
+                </div>
+
+                {/* Editorial content */}
+                <div className="relative flex h-full flex-col justify-center py-8 lg:py-12">
+
+                    {/* Subtle background accent */}
+                    <div className="pointer-events-none absolute -right-10 top-10 h-64 w-64 rounded-full bg-[#2F7BFF]/[0.06] blur-[90px]" />
+
+                    {/* Heading and introduction */}
+                    <div className="relative">
+                        <h2 className="max-w-xl text-4xl font-semibold leading-[1.08] tracking-[-0.055em] sm:text-5xl lg:text-[58px]">
+                            Beyond the destination,
+                            <span className="mt-3 block bg-gradient-to-r from-[#A9C7FF] to-[#2F7BFF] bg-clip-text text-transparent">
+                                it’s how you get there.
+                            </span>
+                        </h2>
+
+                        <p className="mt-7 max-w-lg text-[14px] leading-8 text-[#A0A9BA]">
+                            Every ambition has its own direction. We believe the experience
+                            should reflect the person behind it, with thoughtful guidance,
+                            honest conversations and a clearer perspective.
+                        </p>
+                    </div>
+
+                    {/* Principles */}
+                    <div className="relative mt-11 grid gap-3">
+                        {principles.map((item) => (
+                            <div
+                                key={item.number}
+                                className="group relative grid grid-cols-[48px_1fr] items-start gap-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0D121D]/75 p-5 transition-all duration-300 hover:border-[#2F7BFF]/35 hover:bg-[#101A2B]"
+                            >
+                                {/* Hover accent */}
+                                <div className="absolute inset-y-0 left-0 w-[2px] scale-y-0 bg-[#2F7BFF] transition-transform duration-300 group-hover:scale-y-100" />
+
+                                {/* Number */}
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#2F7BFF]/20 bg-[#2F7BFF]/[0.09] text-xs font-semibold tracking-wider text-[#A9C7FF] transition-colors group-hover:bg-[#2F7BFF]/20">
+                                    {item.number}
+                                </div>
+
+                                {/* Content */}
+                                <div className="pt-0.5">
+                                    <h3 className="text-[15px] font-semibold tracking-tight text-white transition-colors group-hover:text-[#A9C7FF]">
                                         {item.title}
                                     </h3>
-                                    <p className="mt-3 text-[15px] leading-relaxed text-white/60">
-                                        {item.desc}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Divider */}
-                <div className="my-20 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-                {/* =========================================
-                    PART 2: The Alumni Success Slider
-                ========================================= */}
-                <div className="text-center">
-                    <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                        Our students are studying at <span className="text-[#2dd4bf] italic">top global institutions</span>
-                    </h2>
-                    <p className="mt-4 text-lg text-white/50">
-                        Join hundreds of successful students who achieved their dream of studying abroad.
-                    </p>
-                </div>
-
-                {/* Infinite Scrolling Carousel */}
-                <div className="relative mt-16 w-full overflow-hidden">
-                    {/* Gradient Fades for left and right edges (Matches bg-[#0B0B0C]) */}
-                    <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-[#0B0B0C] to-transparent" />
-                    <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-[#0B0B0C] to-transparent" />
-
-                    {/* The scrolling track */}
-                    <div className="flex w-max animate-infinite-scroll gap-8 hover:[animation-play-state:paused]">
-                        {/* We map over the array twice to create a seamless infinite loop */}
-                        {[...successStories, ...successStories].map((student, i) => (
-                            <div key={i} className="group flex w-64 flex-col items-center">
-
-                                {/* Image Container */}
-                                <div className="relative h-64 w-64 overflow-hidden rounded-3xl border border-white/5 bg-[#151517] shadow-2xl">
-                                    <Image
-                                        src={student.img}
-                                        alt={student.name}
-                                        fill
-                                        className="object-cover opacity-80 transition-all duration-500 group-hover:scale-110 group-hover:opacity-100"
-                                    />
-                                    {/* Inner Gradient Overlay to blend into the ash card */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#151517] via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-40" />
-                                </div>
-
-                                {/* Ash-Shaded Floating Highlight Card */}
-                                <div className="relative z-10 -mt-10 w-[85%] rounded-xl border border-white/10 bg-teal-900 px-4 py-3 shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:-translate-y-1 group-hover:border-[#2dd4bf]/30">
-                                    <h4 className="font-display text-lg font-bold text-white">
-                                        {student.name}
-                                    </h4>
-                                    <p className="text-xs font-medium text-white/50">
-                                        {student.role}
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold text-[#2dd4bf]">
-                                        {student.dest}
+                                    <p className="mt-2 max-w-md text-[13px] leading-[1.8] text-[#929EB1]">
+                                        {item.description}
                                     </p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
 
+                    {/* Bottom signature */}
+                    <div className="relative mt-7 flex items-center justify-between border-t border-white/[0.08] pt-5">
+                        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/35">
+                            MindSpace · A different perspective
+                        </span>
+                        
+                    </div>
+                </div>
             </div>
         </section>
     );

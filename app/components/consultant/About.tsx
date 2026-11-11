@@ -1,137 +1,291 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { SectionBadge } from "./Services";
+import { useRef, type MouseEvent } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useInView } from "framer-motion";
 
-const focusRing =
-    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB547]";
+/* -------------------------------------------------------------------------- */
+/* Types and editable content                                                  */
+/* -------------------------------------------------------------------------- */
 
-const values = [
-    {
-        title: "University Admissions",
-        desc: "We help you shortlist the right universities, prepare your documents, and submit flawless applications to secure your dream offer.",
-    },
-    {
-        title: "Visa Guidance",
-        desc: "Our experts guide you through the entire visa process, from financial documentation to interview preparation, ensuring a smooth approval.",
-    },
-    {
-        title: "Test Preparation",
-        desc: "Get access to top-tier coaching for IELTS, TOEFL, GRE, and GMAT to meet the entry requirements of global institutions.",
-    }
-];
+type AboutThemeName = "midnight" | "peach" | "split";
 
-export default function About() {
-    const [activeIndex, setActiveIndex] = useState(0);
+interface AboutStat {
+    value: string;
+    label: string;
+}
 
-    // Auto-slide logic for the values
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % values.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, []);
+interface AboutContent {
+    eyebrow: string;
+    headlineLine1: string;
+    headlineLine2: string;
+    paragraph: string;
+    stats: AboutStat[];
+    ticker: string[];
+    cta: string;
+    badge: string;
+    image: string;
+    imageAlt: string;
+}
 
+const DEFAULT_CONTENT: AboutContent = {
+    eyebrow: "A LITTLE ABOUT US",
+    headlineLine1: "We turn bold",
+    headlineLine2: "ideas into impact.",
+    paragraph:
+        "MindSpace is a creative digital studio shaping thoughtful brands, meaningful experiences, and high-performing digital products. We bring strategy, design, and technology together to make every interaction count.",
+    stats: [
+        { value: "08+", label: "Years of making" },
+        { value: "120+", label: "Projects delivered" },
+        { value: "40+", label: "Partners in progress" },
+        { value: "12", label: "Industry recognitions" },
+    ],
+    ticker: ["Strategy", "Brand identity", "Digital experiences", "Development", "Motion"],
+    cta: "Get to know us",
+    badge: "Independent creative studio",
+    image:
+        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&q=85&auto=format&fit=crop",
+    imageAlt: "Creative team collaborating around a table",
+};
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const reveal = {
+    hidden: { opacity: 0, y: 34 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE } },
+};
+
+const stagger = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.11, delayChildren: 0.08 } },
+};
+
+/* -------------------------------------------------------------------------- */
+/* Small visual components                                                     */
+/* -------------------------------------------------------------------------- */
+
+function Eyebrow({ children }: { children: string }) {
     return (
-        <section id="about" className="relative overflow-hidden bg-[#0B0B0C] py-24 sm:py-32">
-            {/* Background Ambience */}
-            <div aria-hidden="true" className="absolute left-1/2 top-0 -z-10 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFB547]/5 blur-[120px]" />
+        <div className="inline-flex items-center gap-[11px] text-[#80ADFF] text-[11px] font-bold tracking-[0.22em] uppercase">
+            <span className="w-[7px] h-[7px] rounded-full bg-[#2F7BFF] shadow-[0_0_18px_#2F7BFF]" />
+            <span>{children}</span>
+        </div>
+    );
+}
 
-            <div className="mx-auto max-w-[90rem] px-8 lg:px-24">
-
-                {/* CENTERED HEADER */}
-                <div className="mx-auto mb-16 max-w-4xl text-center lg:mb-24">
-                    <SectionBadge text="About Our Consultancy" />
-                    <h2 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl uppercase">
-                        Guiding you to<br />
-                        <span className="text-teal-400  lowercase tracking-normal">global education.</span>
-                    </h2>
-                    <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
-                        Navigating international admissions can be overwhelming. We are here to simplify the process, providing end-to-end support from your first enquiry to your arrival on campus.
-                    </p>
+function StatItem({ stat, index }: { stat: AboutStat; index: number }) {
+    return (
+        <motion.div
+            className="relative flex gap-5 items-start pt-7 pb-[30px] pr-[clamp(12px,2.5vw,34px)] md:pl-[clamp(12px,2.5vw,34px)] md:border-l border-white/10 first:border-l-0 first:pl-0 max-md:border-t max-md:first:border-t-0"
+            variants={reveal}
+        >
+            <span className="pt-2 text-[#80ADFF] text-[10px] tracking-[0.1em]">0{index + 1}</span>
+            <div>
+                <div className="text-white text-[clamp(34px,4.5vw,58px)] font-semibold tracking-[-0.065em] leading-none tabular-nums">
+                    {stat.value}
                 </div>
-
-                {/* SPLIT CONTENT */}
-                <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 lg:items-center">
-
-                    {/* LEFT: Staggered Image Collage */}
-                    <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-                        {/* Image 1 (Top Left) */}
-                        <div className="relative aspect-[4/5] w-3/4 overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
-                            <Image
-                                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop" // Students on campus
-                                alt="Students on campus"
-                                fill
-                                className="object-cover transition-transform duration-700 hover:scale-105"
-                            />
-                        </div>
-
-                        {/* Image 2 (Bottom Right, Overlapping) */}
-                        <div className="absolute -bottom-16 right-0 aspect-square w-2/3 overflow-hidden rounded-3xl border-[6px] border-[#0B0B0C] shadow-2xl">
-                            <Image
-                                src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=800&auto=format&fit=crop" // Counselling session
-                                alt="Counselling session"
-                                fill
-                                className="object-cover transition-transform duration-700 hover:scale-105"
-                            />
-                        </div>
-                    </div>
-
-                    {/* RIGHT: Core Services List (Auto-sliding) */}
-                    <div className="flex flex-col gap-2 pt-16 lg:pt-0">
-                        <h3 className="mb-6 font-display text-2xl font-bold text-white">How we help you</h3>
-
-                        {values.map((v, i) => {
-                            const isActive = activeIndex === i;
-                            return (
-                                <div
-                                    key={i}
-                                    onMouseEnter={() => setActiveIndex(i)}
-                                    className={`group relative overflow-hidden rounded-2xl border p-6 transition-all duration-500 ${isActive
-                                            ? "border-[#FFB547]/40 bg-[#151517] shadow-[0_0_30px_-10px_rgba(255,181,71,0.15)] translate-x-2"
-                                            : "border-white/5 bg-[#151517]/30 hover:bg-[#151517]/60"
-                                        }`}
-                                >
-                                    <div className={`absolute -inset-px -z-10 rounded-2xl bg-gradient-to-r from-[#FFB547]/0 via-[#FFB547]/5 to-transparent transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-0"}`} />
-
-                                    <div className="flex items-start gap-5">
-                                        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-display text-lg font-bold transition-all duration-500 ${isActive
-                                                ? "bg-teal-400 text-[#0B0B0C] shadow-lg scale-110"
-                                                : "bg-white/5 text-white/40 border border-white/10"
-                                            }`}>
-                                            0{i + 1}
-                                        </div>
-
-                                        <div>
-                                            <h4 className={`font-display text-xl font-bold transition-colors duration-500 ${isActive ? "text-teal-400" : "text-white"}`}>
-                                                {v.title}
-                                            </h4>
-                                            <p className={`mt-2 text-[15px] leading-relaxed transition-colors duration-500 ${isActive ? "text-teal-400" : "text-white/50"}`}>
-                                                {v.desc}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-
-                        <div className="mt-8">
-                            <Link
-                                href="/contact"
-                                className={`inline-flex items-center gap-2 border-b-2 border-teal-400 pb-1 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:text-[#FFB547] ${focusRing}`}
-                            >
-                                Start your application
-                                <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M4 10h12M11 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </Link>
-                        </div>
-                    </div>
-
+                <div className="mt-2.5 text-[#9AA6BA] text-[11px] leading-relaxed tracking-[0.1em] uppercase">
+                    {stat.label}
                 </div>
             </div>
-        </section>
+        </motion.div>
+    );
+}
+
+function Marquee({ items }: { items: string[] }) {
+    if (!items.length) return null;
+    const loop = [...items, ...items];
+
+    return (
+        <div
+            className="mt-7 overflow-hidden border-b border-white/10 pb-[22px] [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]"
+            aria-label={`Our capabilities: ${items.join(", ")}`}
+        >
+            <div className="flex w-max animate-[scroll_34s_linear_infinite] hover:[animation-play-state:paused]">
+                {loop.map((item, index) => (
+                    <span
+                        className="inline-flex items-center gap-[34px] pr-[34px] text-[#9AA6BA] text-[11px] font-semibold tracking-[0.18em] uppercase whitespace-nowrap"
+                        key={`${item}-${index}`}
+                    >
+                        {item}
+                        <span aria-hidden="true" className="text-[#2F7BFF] text-base">✳</span>
+                    </span>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Main component                                                              */
+/* -------------------------------------------------------------------------- */
+
+interface AboutProps {
+    theme?: AboutThemeName;
+    content?: Partial<AboutContent>;
+    id?: string;
+}
+
+export default function About({
+    content,
+    id = "about",
+}: AboutProps) {
+    const c: AboutContent = { ...DEFAULT_CONTENT, ...content };
+    const visualRef = useRef<HTMLDivElement | null>(null);
+    const inView = useInView(visualRef, { once: true, amount: 0.2 });
+
+    const pointerX = useMotionValue(0);
+    const pointerY = useMotionValue(0);
+    const smoothX = useSpring(pointerX, { stiffness: 90, damping: 22 });
+    const smoothY = useSpring(pointerY, { stiffness: 90, damping: 22 });
+    const imageX = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
+    const imageY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
+
+    const handleMove = (event: MouseEvent<HTMLDivElement>) => {
+        const rect = visualRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        pointerX.set((event.clientX - rect.left) / rect.width - 0.5);
+        pointerY.set((event.clientY - rect.top) / rect.height - 0.5);
+    };
+
+    const resetPointer = () => {
+        pointerX.set(0);
+        pointerY.set(0);
+    };
+
+    return (
+        <>
+            <style>{`
+                @keyframes scroll {
+                    to { transform: translateX(-50%); }
+                }
+            `}</style>
+            <section
+                id={id}
+                className="relative isolate w-full overflow-hidden bg-[#080B13] text-[#F5F7FC] px-[clamp(22px,6vw,100px)] pt-[clamp(88px,10vw,148px)] pb-[42px]"
+                aria-labelledby={`${id}-heading`}
+            >
+                {/* Background Glow & Grid */}
+                <div className="absolute -z-10 w-[min(58vw,760px)] aspect-square -top-[30%] -right-[18%] rounded-full bg-[#2F7BFF] blur-[180px] opacity-[0.13] pointer-events-none" />
+                <div className="absolute -z-10 inset-0 opacity-[0.18] pointer-events-none bg-[linear-gradient(rgba(255,255,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+
+                <div className="relative z-10 max-w-[1440px] mx-auto">
+                    {/* Topline */}
+                    <motion.div
+                        className="flex justify-between items-center gap-6 mb-[clamp(46px,7vw,92px)] max-sm:items-start max-sm:mb-[42px]"
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true }}
+                    >
+                        <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
+                            <span className="h-px w-9 bg-[#2F7BFF]" />
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                                A Little About Us
+                            </span>
+                            <span className="h-px max-w-24 flex-1 bg-white/10" />
+                        </div>
+                        <motion.span
+                            className="text-[#9AA6BA] text-xs tracking-[0.08em] uppercase max-sm:max-w-[110px] max-sm:text-right max-sm:leading-relaxed"
+                            variants={reveal}
+                        >
+                            Independent minds. Shared ambition.
+                        </motion.span>
+                    </motion.div>
+
+                    {/* Hero Text */}
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-[minmax(0,1.25fr)_minmax(260px,.65fr)] items-end gap-[clamp(28px,6vw,100px)] mb-[clamp(42px,6vw,76px)]"
+                        variants={stagger}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, amount: 0.25 }}
+                    >
+                        <h2 id={`${id}-heading`} className="max-w-[980px] m-0 text-[clamp(54px,8.5vw,132px)] leading-[0.91] tracking-[-0.075em] font-[650] max-sm:text-[clamp(49px,15vw,76px)]">
+                            <span className="block overflow-hidden pb-[0.08em]">
+                                <motion.span variants={reveal}>{c.headlineLine1}</motion.span>
+                            </span>
+                            <span className="block overflow-hidden pb-[0.08em]">
+                                <motion.span className="text-[#80ADFF] italic font-medium" variants={reveal}>{c.headlineLine2}</motion.span>
+                            </span>
+                        </h2>
+                        <motion.div className="max-w-[390px] pb-2.5 max-md:max-w-[580px]" variants={reveal}>
+                            <p className="m-0 text-[#9AA6BA] text-[clamp(15px,1.25vw,18px)] leading-[1.85]">{c.paragraph}</p>
+                            <a className="group inline-flex items-center gap-[14px] mt-7 pb-2.5 text-[#F5F7FC] no-underline border-b border-[#2F7BFF] text-[13px] font-[650] tracking-[0.04em] transition-all duration-300 hover:gap-[22px] hover:text-[#80ADFF]" href="#contact">
+                                {c.cta}<span className="text-[#80ADFF] text-lg" aria-hidden="true">↗</span>
+                            </a>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Visual / Image Section */}
+                    <motion.div
+                        ref={visualRef}
+                        className="relative min-h-[360px] h-[clamp(360px,48vw,650px)] max-md:h-[clamp(360px,68vw,560px)] max-sm:min-h-[390px] max-sm:h-[112vw] max-sm:max-h-[520px]"
+                        onMouseMove={handleMove}
+                        onMouseLeave={resetPointer}
+                        initial={{ opacity: 0, y: 42 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 1, ease: EASE }}
+                    >
+                        <motion.div className="absolute inset-0 right-[5%] overflow-hidden rounded-[5px] bg-[#111827] max-sm:right-[12px]" style={{ x: imageX, y: imageY }}>
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#040810]/75 z-10 pointer-events-none" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <motion.img
+                                className="w-full h-full block object-cover saturate-[0.78]"
+                                src={c.image}
+                                alt={c.imageAlt}
+                                loading="lazy"
+                                initial={{ scale: 1.12 }}
+                                animate={inView ? { scale: 1.04 } : { scale: 1.12 }}
+                                transition={{ duration: 1.5, ease: EASE }}
+                            />
+                            <div className="absolute z-20 left-[clamp(20px,4vw,54px)] bottom-[clamp(22px,4vw,48px)] flex flex-col gap-2">
+                                <small className="text-white/68 text-[10px] tracking-[0.2em] uppercase">Curiosity, crafted into reality</small>
+                                <strong className="max-w-[340px] text-white text-[clamp(24px,3vw,42px)] leading-[1.05] tracking-[-0.045em] font-semibold">Good work starts with a different point of view.</strong>
+                            </div>
+                        </motion.div>
+
+                        {/* Floating Card */}
+                        <motion.div
+                            className="absolute z-30 right-0 top-[12%] w-[clamp(150px,19vw,238px)] p-[22px] text-[#F5F7FC] bg-[#111827] border border-white/10 backdrop-blur-xl shadow-[0_22px_70px_rgba(0,0,0,0.25)] max-sm:top-[8%] max-sm:p-[15px] max-sm:w-[145px]"
+                            initial={{ opacity: 0, x: 24 }}
+                            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 24 }}
+                            transition={{ delay: .35, duration: .8, ease: EASE }}
+                        >
+                            <span className="block text-[#80ADFF] text-[10px] tracking-[0.18em] uppercase">{c.badge}</span>
+                            <strong className="block mt-[18px] text-[clamp(34px,4vw,54px)] leading-none tracking-[-0.06em] max-sm:mt-3">∞</strong>
+                            <p className="mt-[9px] text-[#9AA6BA] text-xs leading-relaxed">Always exploring. Always making what’s next.</p>
+                        </motion.div>
+
+                        {/* Rotating Badge */}
+                        <motion.div
+                            className="absolute z-30 right-0 bottom-[10%] w-[76px] h-[76px] grid place-items-center rounded-full text-white bg-[#2F7BFF] shadow-[0_12px_40px_rgba(47,123,255,0.35)] text-[25px] max-sm:w-[58px] max-sm:h-[58px] max-sm:text-xl"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+                            aria-hidden="true"
+                        >
+                            ✳
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Stats */}
+                    {c.stats.length > 0 && (
+                        <motion.div
+                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-b border-white/10 mt-[clamp(58px,8vw,108px)] max-sm:mt-[58px]"
+                            variants={stagger}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, amount: 0.25 }}
+                        >
+                            {c.stats.map((stat, index) => (
+                                <StatItem key={`${stat.label}-${index}`} stat={stat} index={index} />
+                            ))}
+                        </motion.div>
+                    )}
+
+                    {/* Marquee */}
+                    <Marquee items={c.ticker} />
+                </div>
+            </section>
+        </>
     );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import { Bricolage_Grotesque, Figtree, Questrial } from "next/font/google";
 import "./globals.css";
+import OpeningAnimation from "./components/consultant/OpeningAnimation";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -12,6 +13,13 @@ const body = Figtree({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-body",
+});
+
+export const questrial = Questrial({
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400", // Questrial only comes in one weight
+  variable: "--font-questrial",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +45,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+
+        {children}</body>
     </html>
   );
 }
