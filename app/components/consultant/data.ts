@@ -124,19 +124,23 @@ export const heroContent = {
 
 /* ---------- Keep the rest of your existing data below (stories, faqs, etc) ---------- */
 export const stories = [
+
     {
         id: "a",
         name: "Joshua Lange",
         role: "Research Scientist",
         location: "Stockholm, Sweden",
         image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop",
-        quote: "I feel like I've gained a valuable skill set that looks great on my CV. You don't have to change careers; you can make your current job better, more efficient, and make your life easier."
+        quote: "I feel like I've gained a valuable skill set...",
+        focus: "center 30%", // ← optional
     },
+    // ...
     {
         id: "b",
         name: "Shabana Khatau",
         role: "Systems and Applications Advisor",
         location: "London, England",
+        focus: "center 30%",
         image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
         quote: "I wasted quite a bit of time before learning about Mind Space. Anyone who would come up to me, I would direct them straight to Mind Space. Don't waste any time on anyone else; just start there."
     },
@@ -144,6 +148,7 @@ export const stories = [
         id: "c",
         name: "Jimmy Soto",
         role: "SOC Security Specialist",
+        focus: "center 30%",
         location: "Washington, DC - Baltimore",
         image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
         quote: "Mind Space played into the whole gamification aspect because of how user-friendly it is. Completing a module felt like an achievement, and it helped me have a pathway to dive into cybersecurity, coming from a completely different world."

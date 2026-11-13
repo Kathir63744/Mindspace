@@ -2,29 +2,27 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { heroContent } from "./data";
 import LogoIntro from "./LogoIntro";
 
 /* ============================================================
    CONFIG
-   ============================================================ */
+============================================================ */
 
-const WORDS = ["Create", "Connect", "Educate", "Elevate"];
-
-type Clip = { src: string; poster: string };
+type Clip =
+    | { type: "video"; src: string; poster: string }
+    | { type: "photo"; src: string };
 
 const CLIPS: Clip[] = [
-    { src: "/website-development-video.mp4", poster: "/website-development-poster.jpg" },
-    { src: "/app-development-video.mp4", poster: "/app-development-poster.jpg" },
-    { src: "/software-development-video.mp4", poster: "/software-development-poster.jpg" },
-    { src: "/website-development-video.mp4", poster: "/website-development-poster.jpg" },
-    { src: "/app-development-video.mp4", poster: "/app-development-poster.jpg" },
-    { src: "/software-development-video.mp4", poster: "/software-development-poster.jpg" },
+    { type: "video", src: "/website-development-video.mp4", poster: "/website-development-poster.jpg" },
+    { type: "photo", src: "/website-development-poster.jpg" },
+    { type: "video", src: "/app-development-video.mp4", poster: "/app-development-poster.jpg" },
+    { type: "photo", src: "/app-development-poster.jpg" },
+    { type: "video", src: "/software-development-video.mp4", poster: "/software-development-poster.jpg" },
+    { type: "photo", src: "/software-development-poster.jpg" },
 ];
 
-const FALLBACK_MS = 5000;
+const CLIP_DURATION_MS = 5000;
 
-// The two dark tiles answer "who is this for?" at a glance, one audience per face.
 const AUDIENCES = [
     {
         pos: { left: 0, top: 0, width: 15, height: 47.6 },
@@ -44,82 +42,229 @@ const AUDIENCES = [
     },
 ];
 
-/* ============================================================
-   MOTION CONSTANTS
-   ============================================================ */
-
 const EASE = "cubic-bezier(0.76, 0, 0.24, 1)";
 const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 const MOVE_MS = 1100;
 
-const CSS = `
-@keyframes ms-in{from{opacity:0;transform:translateY(45%) rotateX(-90deg)}to{opacity:1;transform:none}}
-@keyframes ms-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-45%) rotateX(90deg)}}
-@media (prefers-reduced-motion: reduce){.ms-letter{animation:none!important}}
-`;
-
 /* ============================================================
-   ROTATING HEADLINE
+   TYPOGRAPHY — dot fade reveal + always-changing blue last word
 ============================================================ */
 
-function RotatingHeadline({ active, reduced }: { active: boolean; reduced: boolean }) {
+const BLUE = "#8E9BFF";
+const ROTATING_WORDS = ["further.", "faster.", "smarter.", "bolder.", "sharper.", "clearer."];
+const HOLD_MS = 10000;
+
+function useWordRotator(start: boolean, reduced: boolean) {
     const [idx, setIdx] = useState(0);
-    const [stage, setStage] = useState<"in" | "out">("in");
-    const word = WORDS[idx];
+    useEffect(() => {
+        if (!start || reduced) return;
+        const t = setTimeout(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), HOLD_MS);
+        return () => clearTimeout(t);
+    }, [idx, start, reduced]);
+    return ROTATING_WORDS[idx];
+}
+
+function DotFadeWord({ word, start }: { word: string; start: boolean }) {
+    const [phase, setPhase] = useState<"dot" | "sharp">("dot");
 
     useEffect(() => {
-        if (!active) return;
-        if (reduced) {
-            const id = setInterval(() => setIdx((i) => (i + 1) % WORDS.length), 3000);
-            return () => clearInterval(id);
-        }
-        let t: ReturnType<typeof setTimeout>;
-        if (stage === "in") {
-            t = setTimeout(() => setStage("out"), 900 + word.length * 70 + 1800);
-        } else {
-            t = setTimeout(() => {
-                setIdx((i) => (i + 1) % WORDS.length);
-                setStage("in");
-            }, 700 + word.length * 45);
-        }
+        if (!start) return;
+        setPhase("dot");
+        const t = setTimeout(() => setPhase("sharp"), 40);
         return () => clearTimeout(t);
-    }, [active, reduced, stage, idx, word.length]);
+    }, [word, start]);
 
     return (
-        <h1
-            aria-label={WORDS.join(", ")}
-            className="relative mx-auto max-w-[1100px] text-center font-display text-[clamp(3.25rem,8vw,7rem)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F5FA] [text-shadow:0_0_70px_rgba(47,123,255,0.22)] max-[560px]:text-[clamp(2.7rem,11vw,4rem)]"
-            style={{ perspective: 800 }}
+        <span
+            style={{ color: BLUE }}
+            className="inline-flex flex-nowrap items-baseline whitespace-nowrap"
+            aria-label={word}
         >
-            <span aria-hidden="true" className="invisible block">
-                &nbsp;
-            </span>
-            {active && (
-                <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center whitespace-nowrap px-2">
-                    {word.split("").map((ch, i) => (
-                        <span
-                            key={`${idx}-${i}`}
-                            className="ms-letter inline-block"
-                            style={{
-                                transformOrigin: "50% 100%",
-                                animation:
-                                    stage === "in"
-                                        ? `ms-in 900ms ${EASE_OUT} ${i * 70}ms both`
-                                        : `ms-out 650ms ${EASE} ${i * 45}ms both`,
-                            }}
-                        >
-                            {ch}
-                        </span>
-                    ))}
+            {word.split("").map((ch, i) => (
+                <span
+                    key={`${word}-${i}`}
+                    aria-hidden="true"
+                    className="inline-block will-change-[opacity,filter,transform]"
+                    style={{
+                        opacity: start ? (phase === "sharp" ? 1 : 0.15) : 0,
+                        filter: start
+                            ? phase === "sharp"
+                                ? "blur(0px)"
+                                : "blur(6px)"
+                            : "blur(6px)",
+                        transform: start
+                            ? phase === "sharp"
+                                ? "translate3d(0,0,0) scale(1)"
+                                : "translate3d(0,0.15em,0) scale(0.55)"
+                            : "translate3d(0,0.15em,0) scale(0.55)",
+                        transition: `opacity 620ms ease ${i * 55}ms, filter 700ms ease ${i * 55}ms, transform 700ms cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
+                    }}
+                >
+                    {ch}
                 </span>
-            )}
-        </h1>
+            ))}
+        </span>
+    );
+}
+
+function RotatingLastWord({ start, reduced }: { start: boolean; reduced: boolean }) {
+    const word = useWordRotator(start, reduced);
+    if (reduced) return <span style={{ color: BLUE }}>{word}</span>;
+    return <DotFadeWord word={word} start={start} />;
+}
+
+function DotRevealHeading({
+    text,
+    visible,
+    reduced,
+}: {
+    text: string;
+    visible: boolean;
+    reduced: boolean;
+}) {
+    const parts = text.trim().split(" ");
+    parts.pop();
+    const lead = parts.join(" ") + (parts.length ? " " : "");
+
+    const [animate, setAnimate] = useState(false);
+    useEffect(() => {
+        if (!visible || reduced) {
+            setAnimate(reduced);
+            return;
+        }
+        const t = setTimeout(() => setAnimate(true), 900);
+        return () => clearTimeout(t);
+    }, [visible, reduced]);
+
+    return (
+        <span className="inline-flex flex-wrap items-baseline" aria-label={text}>
+            {lead.split("").map((char, index) => (
+                <span
+                    key={`lead-${char}-${index}`}
+                    aria-hidden="true"
+                    className="inline-block"
+                    style={{
+                        opacity: visible || reduced ? 1 : 0,
+                        transform:
+                            visible || reduced
+                                ? "translate3d(0,0,0)"
+                                : "translate3d(0,0.42em,0)",
+                        filter: visible || reduced ? "blur(0)" : "blur(5px)",
+                        transition: reduced
+                            ? "none"
+                            : `opacity 650ms ease ${index * 24}ms, transform 750ms cubic-bezier(0.22,1,0.36,1) ${index * 24
+                            }ms, filter 650ms ease ${index * 24}ms`,
+                        whiteSpace: char === " " ? "pre" : "normal",
+                    }}
+                >
+                    {char === " " ? "\u00A0" : char}
+                </span>
+            ))}
+
+            <span className="inline-block">
+                <RotatingLastWord start={animate} reduced={reduced} />
+            </span>
+        </span>
     );
 }
 
 /* ============================================================
-   SHOWCASE CAROUSEL
-   next clip waits on the right -> big centre frame (plays) -> bottom-left -> out
+   DOT MATRIX BACKGROUND
+============================================================ */
+
+function DotMatrixBackground() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        let animationFrameId: number;
+        let width = 0;
+        let height = 0;
+        let reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        const resize = () => {
+            const parent = canvas.parentElement;
+            if (!parent) return;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = parent.clientWidth;
+            height = parent.clientHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        const DOT_SPACING = 16;
+        const DOT_RADIUS = 1.5;
+
+        const render = (time: number) => {
+            ctx.clearRect(0, 0, width, height);
+
+            const speed = 0.08;
+            const rawProgress = (time * speed) % (width * 2);
+            const sweepX = rawProgress <= width ? rawProgress : width * 2 - rawProgress;
+
+            for (let x = 0; x < width; x += DOT_SPACING) {
+                for (let y = 0; y < height; y += DOT_SPACING) {
+                    const dx = Math.abs(x - sweepX);
+                    const wave = Math.max(0, 1 - dx / 300);
+                    const vWave = Math.sin(y * 0.02 + time * 0.002) * 0.5 + 0.5;
+
+                    if (wave > 0.05) {
+                        const radius = DOT_RADIUS + wave * 1.5 * vWave;
+                        const alpha = wave * 0.3 * vWave;
+
+                        ctx.beginPath();
+                        ctx.fillStyle = `rgba(20, 60, 150, ${alpha})`;
+                        ctx.arc(x, y, radius, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        if (dx < 50 && vWave > 0.6) {
+                            ctx.fillStyle = `rgba(142, 155, 255, ${alpha * 1.5})`;
+                            ctx.arc(x, y, radius * 1.2, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+            if (!reduced) animationFrameId = requestAnimationFrame(render);
+        };
+
+        animationFrameId = requestAnimationFrame(render);
+
+        const onMotionChange = () => {
+            reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (reduced) cancelAnimationFrame(animationFrameId);
+            else animationFrameId = requestAnimationFrame(render);
+        };
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        mq.addEventListener("change", onMotionChange);
+
+        return () => {
+            window.removeEventListener("resize", resize);
+            mq.removeEventListener("change", onMotionChange);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return (
+        <canvas
+            ref={canvasRef}
+            className="pointer-events-none absolute inset-0 h-full w-full z-0 opacity-80"
+        />
+    );
+}
+
+/* ============================================================
+   CAROUSEL
 ============================================================ */
 
 type Rect = { left: number; top: number; width: number; height: number; opacity: number };
@@ -134,12 +279,12 @@ const SLOTS_WIDE = {
 } satisfies Record<string, Rect>;
 
 const SLOTS_COMPACT = {
-    exit: { left: -16, top: 18, width: 12, height: 64, opacity: 0 },
-    left: { left: 0, top: 18, width: 12, height: 64, opacity: 1 },
-    center: { left: 13.5, top: 0, width: 73, height: 100, opacity: 1 },
-    r1: { left: 88, top: 18, width: 12, height: 64, opacity: 1 },
-    r2: { left: 102, top: 18, width: 12, height: 64, opacity: 0 },
-    enter: { left: 104, top: 18, width: 12, height: 64, opacity: 0 },
+    exit: { left: -18, top: 18, width: 10, height: 64, opacity: 0 },
+    left: { left: 0, top: 18, width: 10, height: 64, opacity: 1 },
+    center: { left: 11, top: 0, width: 78, height: 100, opacity: 1 },
+    r1: { left: 91, top: 18, width: 10, height: 64, opacity: 1 },
+    r2: { left: 103, top: 18, width: 10, height: 64, opacity: 0 },
+    enter: { left: 104, top: 18, width: 10, height: 64, opacity: 0 },
 } satisfies Record<string, Rect>;
 
 function slotFor(off: number, compact: boolean): Rect {
@@ -158,38 +303,70 @@ function CarouselCard({
     rect,
     transition,
     revealed,
+    cycle,
     onEnded,
-    onFail,
 }: {
     clip: Clip;
     off: number;
     rect: Rect;
     transition: string;
     revealed: boolean;
+    cycle: number;
     onEnded: () => void;
-    onFail: () => void;
 }) {
-    const [posterFailed, setPosterFailed] = useState(false);
+    const [imgFailed, setImgFailed] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
+
     const isCenter = off === 0;
-    const mountVideo = off >= -1 && off <= 1;
+    const isPhoto = clip.type === "photo";
+    const isVideo = clip.type === "video";
+    const imgSrc = isPhoto ? clip.src : clip.poster;
+
+    const advancedRef = useRef(false);
 
     useEffect(() => {
-        const v = videoRef.current;
-        if (!v) return;
-        if (isCenter && revealed) {
-            v.currentTime = 0;
-            v.play().catch(() => onFail());
-        } else {
-            v.pause();
-            if (off === 1) v.currentTime = 0;
+        if (!isCenter || !revealed) return;
+        const v = isVideo ? videoRef.current : null;
+        let cancelled = false;
+        advancedRef.current = false;
+        setVideoReady(false);
+
+        const finish = () => {
+            if (cancelled || advancedRef.current) return;
+            advancedRef.current = true;
+            onEnded();
+        };
+
+        if (v) {
+            try {
+                v.currentTime = 0;
+            } catch {
+                /* metadata may not be loaded yet */
+            }
+            v.play().catch(() => {
+                /* autoplay blocked — timer still advances */
+            });
         }
+
+        const timer = window.setTimeout(finish, CLIP_DURATION_MS);
+        return () => {
+            cancelled = true;
+            window.clearTimeout(timer);
+            v?.pause();
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isCenter, revealed, off]);
+    }, [isCenter, isVideo, revealed, cycle]);
+
+    const finishVideo = () => {
+        if (advancedRef.current) return;
+        advancedRef.current = true;
+        onEnded();
+    };
 
     return (
         <div
-            className="absolute overflow-hidden rounded-[20px] border border-white/[0.13] bg-[#0D121D] md:rounded-[24px]"
+            className="absolute overflow-hidden rounded-[16px] border border-white/10 bg-[#0D121D] md:rounded-[24px]"
             style={{
                 left: `${rect.left}%`,
                 top: `${rect.top}%`,
@@ -199,33 +376,46 @@ function CarouselCard({
                 transition,
                 zIndex: isCenter ? 2 : 1,
                 boxShadow: isCenter
-                    ? "0 28px 90px rgba(47,123,255,0.18), 0 0 0 1px rgba(47,123,255,0.12)"
-                    : "0 12px 35px rgba(0,0,0,0.18)",
+                    ? "0 24px 70px rgba(47,123,255,0.18), 0 0 0 1px rgba(47,123,255,0.12)"
+                    : "0 10px 30px rgba(0,0,0,0.4)",
             }}
         >
-            {posterFailed ? (
+            {imgFailed ? (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#17294B] via-[#0D121D] to-[#07090F]" />
             ) : (
                 <img
-                    src={clip.poster}
+                    src={imgSrc}
                     alt=""
                     draggable={false}
-                    onError={() => setPosterFailed(true)}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    onError={() => setImgFailed(true)}
+                    className="absolute inset-0 h-full w-full object-cover will-change-transform"
+                    style={{
+                        transform: isPhoto && isCenter && revealed ? "scale(1.08)" : "scale(1)",
+                        transition:
+                            isPhoto && isCenter
+                                ? `transform ${CLIP_DURATION_MS}ms linear`
+                                : "transform 800ms ease",
+                    }}
                 />
             )}
-            {mountVideo && (
+
+            {isVideo && isCenter && (
                 <video
+                    key={`${clip.src}-${cycle}`}
                     ref={videoRef}
                     src={clip.src}
                     poster={clip.poster}
                     muted
                     playsInline
-                    preload={off >= 0 ? "auto" : "metadata"}
-                    onEnded={isCenter ? onEnded : undefined}
-                    onError={isCenter ? onFail : undefined}
+                    preload="auto"
+                    onLoadedData={() => setVideoReady(true)}
+                    onEnded={finishVideo}
+                    onError={finishVideo}
                     className="absolute inset-0 h-full w-full object-cover"
-                    style={{ opacity: isCenter ? 1 : 0, transition: "opacity 700ms ease" }}
+                    style={{
+                        opacity: videoReady ? 1 : 0,
+                        transition: "opacity 500ms ease",
+                    }}
                 />
             )}
         </div>
@@ -261,7 +451,7 @@ function AudienceTile({
 
     const face = (item: { value: string; label: string }, base: number) => (
         <div
-            className="absolute inset-0 flex flex-col justify-end bg-[#0D121D] p-5 lg:p-6"
+            className="absolute inset-0 flex flex-col justify-end bg-[#0D121D] p-4 border border-white/5 lg:p-6"
             style={{
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
@@ -273,10 +463,10 @@ function AudienceTile({
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#2F7BFF]/20 blur-3xl"
             />
-            <span className="relative font-display text-[1.6rem] font-medium leading-none tracking-[-0.05em] text-[#F3F5FA] lg:text-[2.1rem]">
+            <span className="relative font-display text-[1.25rem] font-medium leading-none tracking-[-0.04em] text-[#F3F5FA] lg:text-[2.1rem]">
                 {item.value}
             </span>
-            <span className="relative mt-3 max-w-[150px] text-[11px] leading-[1.55] tracking-[0.01em] text-[#A0A9BA] lg:text-xs">
+            <span className="relative mt-2 max-w-[150px] text-[10px] leading-[1.5] tracking-[0.01em] text-[#A0A9BA] lg:mt-3 lg:text-xs">
                 {item.label}
             </span>
         </div>
@@ -284,7 +474,7 @@ function AudienceTile({
 
     return (
         <div
-            className="absolute hidden overflow-hidden rounded-[24px] border border-white/[0.13] bg-[#0D121D] shadow-[0_18px_55px_rgba(0,0,0,0.2)] md:block"
+            className="absolute hidden overflow-hidden rounded-[20px] border border-white/10 bg-[#0D121D] shadow-[0_18px_55px_rgba(0,0,0,0.4)] md:block lg:rounded-[24px]"
             style={{
                 left: `${pos.left}%`,
                 top: `${pos.top}%`,
@@ -293,7 +483,9 @@ function AudienceTile({
                 perspective: 900,
                 opacity: revealed ? 1 : 0,
                 transform: revealed ? "none" : "translateX(60px)",
-                transition: reduced ? "none" : `opacity 800ms ease 500ms, transform 1000ms ${EASE_OUT} 500ms`,
+                transition: reduced
+                    ? "none"
+                    : `opacity 800ms ease 500ms, transform 1000ms ${EASE_OUT} 500ms`,
             }}
         >
             {face(faces[0], 0)}
@@ -306,9 +498,11 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
     const n = CLIPS.length;
     const [cur, setCur] = useState(0);
     const [prev, setPrev] = useState(0);
-    const [failed, setFailed] = useState<Record<number, boolean>>({});
     const [compact, setCompact] = useState(false);
     const [settled, setSettled] = useState(false);
+    const [cycle, setCycle] = useState(0);
+
+    const advancingRef = useRef(false);
 
     useEffect(() => {
         const mq = window.matchMedia("(max-width: 767px)");
@@ -325,16 +519,15 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
     }, [revealed]);
 
     const advance = () => {
+        if (advancingRef.current) return;
+        advancingRef.current = true;
         setPrev(cur);
         setCur((cur + 1) % n);
+        setCycle((c) => c + 1);
+        requestAnimationFrame(() => {
+            advancingRef.current = false;
+        });
     };
-
-    useEffect(() => {
-        if (!revealed || !failed[cur]) return;
-        const t = setTimeout(advance, FALLBACK_MS);
-        return () => clearTimeout(t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [revealed, failed, cur]);
 
     const offOf = (i: number, c: number) => ((((i - c + 2) % n) + n) % n) - 2;
 
@@ -342,7 +535,7 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
         <div
             role="group"
             aria-label="Project showcase"
-            className="relative mt-10 h-[64vw] max-h-[420px] w-full overflow-hidden md:h-[min(54vh,520px)] md:max-h-none"
+            className="relative w-full max-w-[1350px] overflow-hidden mt-6 md:mt-10 h-[58vw] max-h-[400px] md:h-[min(58vh,520px)] md:max-h-none"
         >
             {CLIPS.map((clip, i) => {
                 const off = offOf(i, cur);
@@ -363,14 +556,21 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
                         rect={rect}
                         transition={transition}
                         revealed={revealed}
+                        cycle={cycle}
                         onEnded={advance}
-                        onFail={() => setFailed((f) => ({ ...f, [i]: true }))}
                     />
                 );
             })}
 
             {AUDIENCES.map((a, i) => (
-                <AudienceTile key={i} pos={a.pos} faces={a.faces} offset={a.offset} revealed={revealed} reduced={reduced} />
+                <AudienceTile
+                    key={i}
+                    pos={a.pos}
+                    faces={a.faces}
+                    offset={a.offset}
+                    revealed={revealed}
+                    reduced={reduced}
+                />
             ))}
         </div>
     );
@@ -378,9 +578,6 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
 
 /* ============================================================
    HERO
-   The logo intro hands over to the navbar, and the hero starts revealing the
-   moment the mark begins flying (not after it lands), so the whole opening is
-   one continuous motion with no dead time.
 ============================================================ */
 
 export default function HeroBanner() {
@@ -393,49 +590,41 @@ export default function HeroBanner() {
 
     const rise = (delay: number): CSSProperties => ({
         opacity: shown ? 1 : 0,
-        transform: shown ? "none" : "translateY(28px)",
-        transition: reduced ? "none" : `opacity 900ms ease ${delay}ms, transform 1000ms ${EASE_OUT} ${delay}ms`,
+        transform: shown ? "none" : "translateY(20px)",
+        transition: reduced
+            ? "none"
+            : `opacity 900ms ease ${delay}ms, transform 1000ms ${EASE_OUT} ${delay}ms`,
     });
 
     return (
         <>
-            <style>{CSS}</style>
+            <section
+                className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
+                style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+            >
+                <DotMatrixBackground />
 
-            <section className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#07090F] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white">
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 opacity-[0.035]"
-                    style={{
-                        backgroundImage:
-                            "linear-gradient(to right, rgba(255,255,255,.9) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.9) 1px, transparent 1px)",
-                        backgroundSize: "80px 80px",
-                        maskImage: "radial-gradient(circle at 85% 95%, black 0%, transparent 60%)",
-                        WebkitMaskImage: "radial-gradient(circle at 85% 95%, black 0%, transparent 60%)",
-                    }}
-                />
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -left-40 -top-40 h-[560px] w-[560px] rounded-full bg-[#2F7BFF]/[0.12] blur-[160px]"
-                />
+                {/* Headline */}
+                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-16 sm:gap-12 sm:px-8 sm:pt-20 md:flex-row md:px-12 md:pt-24 lg:px-20">
+                    <div className="flex w-full flex-col md:w-[65%]">
+                        <div
+                            className="relative overflow-hidden px-2 pt-2 sm:px-6 sm:pt-6 md:-ml-7 md:px-6 md:py-4 md:pt-14 md:sm:px-10"
+                            style={rise(200)}
+                        >
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                            <h1 className="relative z-10 max-w-[900px] font-sans text-[clamp(2rem,8vw,3rem)] font-medium leading-[1.02] tracking-[-0.045em] text-[#F3F5FA] sm:text-[clamp(2.4rem,7vw,3.4rem)] md:text-[clamp(2.7rem,6.2vw,4.6rem)] md:leading-[0.98] md:tracking-[-0.065em]">
+                                <DotRevealHeading
+                                    text="Learn. Build. Go further."
+                                    visible={shown}
+                                    reduced={reduced}
+                                />
+                            </h1>
+                        </div>
+                    </div>
+                </div>
 
-                <div className="relative z-20 mx-auto flex w-full max-w-[1440px] flex-1 flex-col items-center justify-center px-5 pb-14 pt-28 sm:px-8 lg:px-[clamp(32px,6vw,92px)]">
-                    {/* who we serve, in one line */}
-                    <p
-                        className="mb-5 text-center text-[11px] uppercase tracking-[0.32em] text-[#7EA9FF]"
-                        style={rise(150)}
-                    >
-                        Technology · Study abroad · Training · Careers
-                    </p>
-
-                    <RotatingHeadline active={shown} reduced={reduced} />
-
-                    <p
-                        className="mx-auto mt-5 max-w-[620px] text-center text-[14px] font-normal leading-[1.85] tracking-[0.005em] text-[#A0A9BA] sm:text-[15px]"
-                        style={rise(500)}
-                    >
-                        {heroContent.body}
-                    </p>
-
+                {/* Carousel */}
+                <div className="relative z-10 mx-auto mt-4 flex w-full max-w-[1490px] flex-1 flex-col items-center justify-center px-4 pb-8 sm:mt-6 sm:px-8 md:mt-10 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
                     <Carousel revealed={shown} reduced={reduced} />
                 </div>
             </section>
