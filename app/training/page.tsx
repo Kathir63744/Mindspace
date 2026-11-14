@@ -1,113 +1,62 @@
 import type { Metadata } from "next";
-import PillarLanding, { type PillarLandingData } from "../components/pillar/PillarLanding";
+import Link from "next/link";
+import Navbar from "@/app/components/consultant/Navbar";
+import Footer from "@/app/components/consultant/Footer";
 
 export const metadata: Metadata = {
     title: "Training — MindSpace",
-    description:
-        "Hands-on technical programmes, real projects and certificates built around what employers are hiring for.",
+    description: "Practical technical programmes.",
 };
 
-const data: PillarLandingData = {
-    slug: "training",
-    label: "Training",
-    eyebrow: "Practical learning",
-    headline: ["Skills that", "ship to production."],
-    sub: "Hands-on programmes, real projects and certificates — built around what employers are actually hiring for.",
-    hero: {
-        src: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1800&q=85",
-        alt: "Technical training session",
-    },
-    proofPoints: [
-        { value: "6", label: "Core tracks" },
-        { value: "3–5", label: "Portfolio projects" },
-        { value: "100%", label: "Live instructors" },
-        { value: "1:12", label: "Mentor ratio" },
-    ],
-    services: [
-        {
-            title: "Programming foundations",
-            href: "/training/programming-foundations",
-            need: "you're starting from basics and want a real footing",
-        },
-        {
-            title: "Web development",
-            href: "/training/web-development",
-            need: "you want to build and ship real web products",
-        },
-        {
-            title: "Mobile app development",
-            href: "/training/app-development",
-            need: "you want to build cross-platform mobile apps",
-        },
-        {
-            title: "Data & AI basics",
-            href: "/training/data-ai",
-            need: "SQL, Pandas, and practical ML workflows are your next step",
-        },
-        {
-            title: "Cloud & DevOps",
-            href: "/training/cloud-devops",
-            need: "you want deployable infrastructure skills",
-        },
-        {
-            title: "Portfolio & certification",
-            href: "/training/portfolio-certification",
-            need: "you want a public portfolio and a certificate",
-        },
-    ],
-    gallery: [
-        {
-            src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85",
-            alt: "Live coding session",
-            caption: "Live coding",
-            span: "md:col-span-5",
-        },
-        {
-            src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85",
-            alt: "Team working with laptops",
-            caption: "Team projects",
-            span: "md:col-span-7",
-        },
-        {
-            src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=85",
-            alt: "Pair programming",
-            caption: "Pair work",
-            span: "md:col-span-7",
-        },
-        {
-            src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=85",
-            alt: "Code editor",
-            caption: "Build sessions",
-            span: "md:col-span-5",
-        },
-    ],
-    whyTitle: "Learning that produces work.",
-    whyBody:
-        "A certificate is only useful when it comes with something you can point to. Every track ends with shipped projects.",
-    whyItems: [
-        {
-            title: "Hands-on by design",
-            body: "Projects every week, not just at the end.",
-        },
-        {
-            title: "Live instructors",
-            body: "Sessions led by working practitioners.",
-        },
-        {
-            title: "Portfolio-ready",
-            body: "You leave with code, case studies and a certificate.",
-        },
-    ],
-    quote: {
-        text: "The project work got me my first interview. The certificate opened the door; the portfolio walked me through it.",
-        source: "Web development track, 2024",
-    },
-    closing: {
-        title: "Start with a roadmap.",
-        body: "Tell us your goal and where you're starting from. We'll map the first three milestones.",
-    },
-};
+const SERVICES = [
+    { title: "Programming foundations", href: "/training/programming-foundations", tag: "Foundation" },
+    { title: "Web development", href: "/training/web-development", tag: "Frontend & Backend" },
+    { title: "Mobile app development", href: "/training/app-development", tag: "React Native" },
+    { title: "Data & AI basics", href: "/training/data-ai", tag: "Data Science" },
+    { title: "Cloud & DevOps", href: "/training/cloud-devops", tag: "Infrastructure" },
+    { title: "Portfolio & certification", href: "/training/portfolio-certification", tag: "Career Prep" },
+];
 
 export default function TrainingPage() {
-    return <PillarLanding data={data} />;
+    return (
+        <main className="bg-[#050505] text-white selection:bg-[#2F7BFF]">
+            <Navbar />
+
+            {/* CENTERED MINIMAL HERO */}
+            <section className="relative flex min-h-[70svh] flex-col items-center justify-center overflow-hidden pt-32 pb-20 text-center">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(47,123,255,0.15),transparent_50%)]" />
+                <div className="relative z-10 mx-auto max-w-3xl px-6">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2F7BFF] mb-6">Practical Learning</p>
+                    <h1 className="font-display text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[1.05] tracking-[-0.04em]">
+                        Skills that ship<br />to production.
+                    </h1>
+                    <p className="mx-auto mt-6 max-w-xl text-[16px] leading-[1.7] text-[#8A96A8]">
+                        Hands-on programmes, real projects and certificates — built around what employers are actually hiring for.
+                    </p>
+                </div>
+            </section>
+
+            {/* SYLLABUS GRID */}
+            <section className="mx-auto max-w-[1200px] px-6 pb-32">
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {SERVICES.map((svc, i) => (
+                        <Link key={i} href={svc.href} className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0B0F17] p-8 transition-colors hover:border-[#2F7BFF] hover:bg-[#0F1522]">
+                            <div>
+                                <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#8A96A8] mb-4">
+                                    {svc.tag}
+                                </span>
+                                <h3 className="font-display text-2xl text-white group-hover:text-[#2F7BFF] transition-colors">{svc.title}</h3>
+                            </div>
+                            <div className="mt-8 flex items-center justify-between text-sm text-[#8A96A8]">
+                                <span>View curriculum</span>
+                                <span className="text-xl">→</span>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+
+            <Footer />
+        </main>
+    );
 }

@@ -47,7 +47,7 @@ const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 const MOVE_MS = 1100;
 
 /* ============================================================
-   TYPOGRAPHY — dot fade reveal + always-changing blue last word
+   TYPOGRAPHY
 ============================================================ */
 
 const BLUE = "#8E9BFF";
@@ -279,12 +279,12 @@ const SLOTS_WIDE = {
 } satisfies Record<string, Rect>;
 
 const SLOTS_COMPACT = {
-    exit: { left: -18, top: 18, width: 10, height: 64, opacity: 0 },
-    left: { left: 0, top: 18, width: 10, height: 64, opacity: 1 },
-    center: { left: 11, top: 0, width: 78, height: 100, opacity: 1 },
-    r1: { left: 91, top: 18, width: 10, height: 64, opacity: 1 },
-    r2: { left: 103, top: 18, width: 10, height: 64, opacity: 0 },
-    enter: { left: 104, top: 18, width: 10, height: 64, opacity: 0 },
+    exit: { left: -25, top: 15, width: 14, height: 70, opacity: 0 },
+    left: { left: -2, top: 15, width: 14, height: 70, opacity: 1 },
+    center: { left: 14, top: 0, width: 72, height: 100, opacity: 1 },
+    r1: { left: 88, top: 15, width: 14, height: 70, opacity: 1 },
+    r2: { left: 100, top: 15, width: 14, height: 70, opacity: 0 },
+    enter: { left: 105, top: 15, width: 14, height: 70, opacity: 0 },
 } satisfies Record<string, Rect>;
 
 function slotFor(off: number, compact: boolean): Rect {
@@ -535,7 +535,7 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
         <div
             role="group"
             aria-label="Project showcase"
-            className="relative w-full max-w-[1350px] overflow-hidden mt-6 md:mt-10 h-[58vw] max-h-[400px] md:h-[min(58vh,520px)] md:max-h-none"
+            className="relative w-full max-w-[1350px] overflow-hidden mt-6 md:mt-10 aspect-[4/5] max-h-[60svh] md:aspect-auto md:h-[min(58vh,520px)] md:max-h-none"
         >
             {CLIPS.map((clip, i) => {
                 const off = offOf(i, cur);
@@ -600,12 +600,12 @@ export default function HeroBanner() {
         <>
             <section
                 className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
-                style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+                style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 92px)" }}
             >
                 <DotMatrixBackground />
 
                 {/* Headline */}
-                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-16 sm:gap-12 sm:px-8 sm:pt-20 md:flex-row md:px-12 md:pt-24 lg:px-20">
+                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-2 sm:gap-12 sm:px-8 sm:pt-6 md:flex-row md:px-12 md:pt-8 lg:px-20">
                     <div className="flex w-full flex-col md:w-[65%]">
                         <div
                             className="relative overflow-hidden px-2 pt-2 sm:px-6 sm:pt-6 md:-ml-7 md:px-6 md:py-4 md:pt-14 md:sm:px-10"
@@ -624,7 +624,7 @@ export default function HeroBanner() {
                 </div>
 
                 {/* Carousel */}
-                <div className="relative z-10 mx-auto mt-4 flex w-full max-w-[1490px] flex-1 flex-col items-center justify-center px-4 pb-8 sm:mt-6 sm:px-8 md:mt-10 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
+                <div className="relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-center px-4 pb-8 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
                     <Carousel revealed={shown} reduced={reduced} />
                 </div>
             </section>

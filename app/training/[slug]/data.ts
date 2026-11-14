@@ -1,12 +1,30 @@
-import type { DetailService, DetailVisual } from "@/app/components/pillar/PillarDetail";
+import { DetailService, DetailVisual } from "@/app/components/pillar/PillarDetail";
 
 export const SERVICES: DetailService[] = [
-    { title: "Programming foundations", slug: "programming-foundations", need: "you're starting from basics and want a real footing" },
-    { title: "Web development", slug: "web-development", need: "you want to build and ship real web products" },
-    { title: "Mobile app development", slug: "app-development", need: "you want to build cross-platform mobile apps" },
-    { title: "Data & AI basics", slug: "data-ai", need: "SQL, Pandas, and practical ML workflows are your next step" },
-    { title: "Cloud & DevOps", slug: "cloud-devops", need: "you want deployable infrastructure skills" },
-    { title: "Portfolio & certification", slug: "portfolio-certification", need: "you want a public portfolio and a certificate" },
+    {
+        title: "Programming foundations", slug: "programming-foundations", need: "you're starting from basics and want a real footing",
+        pillar: undefined
+    },
+    {
+        title: "Web development", slug: "web-development", need: "you want to build and ship real web products",
+        pillar: undefined
+    },
+    {
+        title: "Mobile app development", slug: "app-development", need: "you want to build cross-platform mobile apps",
+        pillar: undefined
+    },
+    {
+        title: "Data & AI basics", slug: "data-ai", need: "SQL, Pandas, and practical ML workflows are your next step",
+        pillar: undefined
+    },
+    {
+        title: "Cloud & DevOps", slug: "cloud-devops", need: "you want deployable infrastructure skills",
+        pillar: undefined
+    },
+    {
+        title: "Portfolio & certification", slug: "portfolio-certification", need: "you want a public portfolio and a certificate",
+        pillar: undefined
+    },
 ];
 
 export const VISUALS: Record<string, DetailVisual> = {

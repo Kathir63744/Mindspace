@@ -1,4 +1,4 @@
-// app/components/consultant/services/servicesData.ts
+// app/components/consultant/services/ServicesData.ts
 
 export type IconName =
     | "monitor"
@@ -23,6 +23,7 @@ export type IconName =
     | "plus"
     | "globe"
     | "users";
+
 /* ---------- Pillars (the four pillars) ---------- */
 
 export type Pillar = {
@@ -58,7 +59,7 @@ export const PILLARS: Pillar[] = [
             { icon: "mobile", title: "Mobile apps", text: "iOS and Android apps people keep opening." },
             { icon: "code", title: "Custom software", text: "Internal tools and platforms shaped around your workflow." },
         ],
-        cta: { label: "Explore technology", href: "/services/technology" },
+        cta: { label: "Explore technology", href: "/services" },
         cardTitle: "Websites, apps & custom software",
         cardBullets: [
             "Website & web app development",
@@ -70,7 +71,7 @@ export const PILLARS: Pillar[] = [
     {
         id: "study-abroad",
         number: "02",
-        tag: "Study Abroad",
+        tag: "Study abroad",
         title: "Clear guidance from shortlist to visa.",
         lead: "University selection, applications and visa support for students taking their education overseas.",
         image: { src: "/images/pillar-study-abroad.jpg", alt: "Student on campus abroad" },
@@ -163,6 +164,9 @@ export type Service = {
 };
 
 export const SERVICES: Service[] = [
+    // ==============================
+    // TECHNOLOGY
+    // ==============================
     {
         icon: "globe",
         pillar: "Technology",
@@ -190,58 +194,178 @@ export const SERVICES: Service[] = [
         href: "/services/software-development",
         linked: true,
     },
+
+    // ==============================
+    // STUDY ABROAD (Matches your data.ts)
+    // ==============================
     {
-        icon: "cap",
-        pillar: "Study Abroad",
-        title: "University selection",
-        need: "you are unsure which course or country fits",
-        gets: ["Course shortlist", "Cost & timeline plan", "Realistic options"],
-        href: "/study-abroad/university-selection",
+        icon: "globe",
+        pillar: "Study abroad",
+        title: "Country & course mapping",
+        need: "you need to match goals and budgets to real destinations",
+        gets: ["Destination matching", "Course mapping", "Cost analysis"],
+        href: "/study-abroad/country-course-mapping",
         linked: true,
     },
     {
-        icon: "briefcase",
-        pillar: "Study Abroad",
-        title: "Visa support",
-        need: "the paperwork feels overwhelming",
-        gets: ["Document checklist", "Application review", "Interview prep"],
+        icon: "cap",
+        pillar: "Study abroad",
+        title: "University shortlisting",
+        need: "you want universities that fit your profile",
+        gets: ["Profile review", "Fit ranking", "Ambition vs safety"],
+        href: "/study-abroad/university-shortlisting",
+        linked: true,
+    },
+    {
+        icon: "file",
+        pillar: "Study abroad",
+        title: "Admission & SOP support",
+        need: "essays and applications need to be handled end-to-end",
+        gets: ["SOP & essay drafts", "Application filing", "Follow-ups"],
+        href: "/study-abroad/admission-support",
+        linked: true,
+    },
+    {
+        icon: "trend",
+        pillar: "Study abroad",
+        title: "Financial documentation",
+        need: "proof of funds, scholarships or loans need structuring",
+        gets: ["Proof of funds", "Scholarship guidance", "Loan coordination"],
+        href: "/study-abroad/financial-documentation",
+        linked: true,
+    },
+    {
+        icon: "shield",
+        pillar: "Study abroad",
+        title: "Visa filing",
+        need: "the visa file, mocks and filing must be done right",
+        gets: ["File preparation", "Mock interviews", "Application tracking"],
         href: "/study-abroad/visa-support",
         linked: true,
     },
     {
+        icon: "briefcase",
+        pillar: "Study abroad",
+        title: "Pre-departure",
+        need: "accommodation, travel and arrival need orientation",
+        gets: ["Accommodation", "Travel planning", "Arrival orientation"],
+        href: "/study-abroad/pre-departure",
+        linked: true,
+    },
+
+    // ==============================
+    // TRAINING (Matches your data.ts)
+    // ==============================
+    {
         icon: "code",
         pillar: "Training",
-        title: "Technical tracks",
-        need: "you want hands-on, employer-ready skills",
-        gets: ["Live projects", "Mentoring", "Certificate"],
-        href: "/training/technical-tracks",
+        title: "Programming foundations",
+        need: "you're starting from basics and want a real footing",
+        gets: ["Syntax & logic", "Small projects", "Debug habits"],
+        href: "/training/programming-foundations",
         linked: true,
     },
     {
-        icon: "cap",
+        icon: "globe",
         pillar: "Training",
-        title: "Professional skills",
-        need: "your team needs upskilling",
-        gets: ["Communication", "Project management", "Workshops"],
-        href: "/training/professional-skills",
-        linked: false,
+        title: "Web development",
+        need: "you want to build and ship real web products",
+        gets: ["Frontend", "Backend", "Deploy"],
+        href: "/training/web-development",
+        linked: true,
     },
     {
-        icon: "briefcase",
+        icon: "mobile",
+        pillar: "Training",
+        title: "Mobile app development",
+        need: "you want to build cross-platform mobile apps",
+        gets: ["React Native", "APIs & state", "Ship to store"],
+        href: "/training/app-development",
+        linked: true,
+    },
+    {
+        icon: "trend",
+        pillar: "Training",
+        title: "Data & AI basics",
+        need: "SQL, Pandas, and practical ML workflows are your next step",
+        gets: ["SQL & Pandas", "Visualisation", "ML basics"],
+        href: "/training/data-ai",
+        linked: true,
+    },
+    {
+        icon: "layers",
+        pillar: "Training",
+        title: "Cloud & DevOps",
+        need: "you want deployable infrastructure skills",
+        gets: ["Git workflows", "CI/CD", "Containers"],
+        href: "/training/cloud-devops",
+        linked: true,
+    },
+    {
+        icon: "file",
+        pillar: "Training",
+        title: "Portfolio & certification",
+        need: "you want a public portfolio and a certificate",
+        gets: ["Portfolio site", "Case studies", "Certificate"],
+        href: "/training/portfolio-certification",
+        linked: true,
+    },
+
+    // ==============================
+    // CAREERS (Matches your data.ts)
+    // ==============================
+    {
+        icon: "trend",
+        pillar: "Careers",
+        title: "Career direction",
+        need: "you need clarity on which roles to target",
+        gets: ["Role fit", "Industry mapping", "Next steps"],
+        href: "/careers/career-direction",
+        linked: true,
+    },
+    {
+        icon: "file",
+        pillar: "Careers",
+        title: "Resume & LinkedIn",
+        need: "your resume needs restructuring for ATS",
+        gets: ["ATS structure", "Bullet rewrites", "LinkedIn polish"],
+        href: "/careers/resume-linkedin",
+        linked: true,
+    },
+    {
+        icon: "users",
+        pillar: "Careers",
+        title: "Interview coaching",
+        need: "you need mock interviews with feedback",
+        gets: ["Behavioral rounds", "Technical rounds", "Feedback rounds"],
+        href: "/careers/interview-coaching",
+        linked: true,
+    },
+    {
+        icon: "layers",
+        pillar: "Careers",
+        title: "Internships",
+        need: "you want matched internship opportunities",
+        gets: ["Match", "Prepare", "Support"],
+        href: "/careers/internships",
+        linked: true,
+    },
+    {
+        icon: "shield",
         pillar: "Careers",
         title: "Placement support",
-        need: "you need introductions, not job boards",
-        gets: ["CV review", "Company intros", "Offer negotiation"],
-        href: "/careers/placement",
+        need: "you want warm introductions and follow-ups",
+        gets: ["Partner intros", "Follow-ups", "Negotiation"],
+        href: "/careers/placement-support",
         linked: true,
     },
     {
-        icon: "check",
+        icon: "code",
         pillar: "Careers",
-        title: "Interview preparation",
-        need: "interviews feel unpredictable",
-        gets: ["Mock interviews", "Feedback", "Prep materials"],
-        href: "/careers/interview-preparation",
+        title: "On-the-job readiness",
+        need: "you want tools and communication ready for day one",
+        gets: ["Tools", "Communication", "First weeks"],
+        href: "/careers/on-the-job-readiness",
         linked: true,
     },
 ];

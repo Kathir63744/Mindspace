@@ -4,6 +4,7 @@ import { DM_Sans, Manrope } from "next/font/google";
 
 import Navbar from "../consultant/Navbar";
 import Footer from "../consultant/Footer";
+import { ReactNode } from "react";
 
 const headingFont = Manrope({
     subsets: ["latin"],
@@ -22,6 +23,7 @@ const bodyFont = DM_Sans({
 
 
 export type DetailService = {
+    pillar: ReactNode;
     title: string;
     slug: string;
     need: string;

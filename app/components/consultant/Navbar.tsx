@@ -28,50 +28,78 @@ const PILLAR_ROUTE: Record<string, string> = {
     "Study abroad": "/study-abroad",
     Training: "/training",
     Careers: "/careers",
+    Technology: "/services", // Technology pillar has no landing, so go to /services index
 };
 
-const SERVICE_ROUTE: Record<string, string> = {
-    // Study abroad
-    "country-course-mapping": "/study-abroad/country-course-mapping",
-    "university-shortlisting": "/study-abroad/university-shortlisting",
-    "admission-support": "/study-abroad/admission-support",
-    "financial-documentation": "/study-abroad/financial-documentation",
-    "visa-support": "/study-abroad/visa-support",
-    "pre-departure": "/study-abroad/pre-departure",
-    // Training
-    "programming-foundations": "/training/programming-foundations",
-    "web-development": "/training/web-development",
-    "app-development": "/training/app-development",
-    "data-ai": "/training/data-ai",
-    "cloud-devops": "/training/cloud-devops",
-    "portfolio-certification": "/training/portfolio-certification",
-    // Careers
-    "career-direction": "/careers/career-direction",
-    "resume-linkedin": "/careers/resume-linkedin",
-    "interview-coaching": "/careers/interview-coaching",
-    internships: "/careers/internships",
-    "placement-support": "/careers/placement-support",
-    "on-the-job-readiness": "/careers/on-the-job-readiness",
+/* Per-pillar service route maps.
+   This prevents slug collisions across pillars (e.g. "app-development"). */
+const SERVICE_ROUTE_BY_PILLAR: Record<string, Record<string, string>> = {
+    "Study abroad": {
+        "country-course-mapping": "/study-abroad/country-course-mapping",
+        "university-shortlisting": "/study-abroad/university-shortlisting",
+        "admission-support": "/study-abroad/admission-support",
+        "financial-documentation": "/study-abroad/financial-documentation",
+        "visa-support": "/study-abroad/visa-support",
+        "pre-departure": "/study-abroad/pre-departure",
+    },
+    Training: {
+        "programming-foundations": "/training/programming-foundations",
+        "web-development": "/training/web-development",
+        "app-development": "/training/app-development",
+        "data-ai": "/training/data-ai",
+        "cloud-devops": "/training/cloud-devops",
+        "portfolio-certification": "/training/portfolio-certification",
+    },
+    Careers: {
+        "career-direction": "/careers/career-direction",
+        "resume-linkedin": "/careers/resume-linkedin",
+        "interview-coaching": "/careers/interview-coaching",
+        "internships": "/careers/internships",
+        "placement-support": "/careers/placement-support",
+        "on-the-job-readiness": "/careers/on-the-job-readiness",
+    },
+    Technology: {
+        // Technology services live under /services/[slug]
+        "website-development": "/services/website-development",
+        "app-development": "/services/app-development",
+        "software-development": "/services/software-development",
+    },
 };
 
 function resolveHref(rawHref: string, pillarTag?: string): string {
+    // Already a valid route — return as-is
     if (
         rawHref.startsWith("/study-abroad") ||
         rawHref.startsWith("/training") ||
-        rawHref.startsWith("/careers")
+        rawHref.startsWith("/careers") ||
+        rawHref.startsWith("/services")
     ) {
         return rawHref;
     }
 
     const slug = rawHref.split("/").filter(Boolean).pop() ?? "";
-    if (SERVICE_ROUTE[slug]) return SERVICE_ROUTE[slug];
+
+    // Resolve by pillar first (handles slug collisions)
+    if (pillarTag) {
+        const pillarMap = SERVICE_ROUTE_BY_PILLAR[pillarTag];
+        if (pillarMap && pillarMap[slug]) return pillarMap[slug];
+    }
+
+    // Fallback: search all pillars for any match
+    for (const map of Object.values(SERVICE_ROUTE_BY_PILLAR)) {
+        if (map[slug]) return map[slug];
+    }
+
+    // Pillar fallback
     if (pillarTag && PILLAR_ROUTE[pillarTag]) return PILLAR_ROUTE[pillarTag];
     return rawHref;
 }
 
 const MENUS: Menu[] = [
     ...PILLARS.map((p) => {
-        const pillarServices = SERVICES.filter((s) => s.pillar === p.tag && s.linked);
+        const pillarServices = SERVICES.filter(
+            (s) => s.pillar === p.tag && s.linked
+        );
         const pillarHref = PILLAR_ROUTE[p.tag] ?? resolveHref(p.cta.href, p.tag);
 
         return {
