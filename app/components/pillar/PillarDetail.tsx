@@ -23,7 +23,7 @@ const bodyFont = DM_Sans({
 
 
 export type DetailService = {
-    pillar: ReactNode;
+    pillar?: string;
     title: string;
     slug: string;
     need: string;
