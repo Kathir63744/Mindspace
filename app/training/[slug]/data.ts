@@ -1,33 +1,125 @@
-import { DetailService, DetailVisual } from "@/app/components/pillar/PillarDetail";
+// app/training/[slug]/data.ts
+
+export type DetailService = {
+    title: string;
+    slug: string;
+    need: string;
+    pillar?: string;
+};
+
+export type DetailVisual = {
+    eyebrow: string;
+    headline: [string, string];
+    sub: string;
+    hero: { src: string; alt: string };
+    mosaic: { src: string; alt: string; caption: string; span?: string }[];
+    highlights: { title: string; body: string }[];
+    process: { step: string; title: string; body: string }[];
+    faq: { q: string; a: string }[];
+};
 
 export const SERVICES: DetailService[] = [
     {
-        title: "Programming foundations", slug: "programming-foundations", need: "you're starting from basics and want a real footing",
-        pillar: undefined
+        title: "Built-in Courses",
+        slug: "courses",
+        need: "you want to master the exact systems you are buying",
+        pillar: "Training"
     },
     {
-        title: "Web development", slug: "web-development", need: "you want to build and ship real web products",
-        pillar: undefined
+        title: "Ready-made Products",
+        slug: "products",
+        need: "you want an off-the-shelf solution deployed instantly",
+        pillar: "Training"
     },
     {
-        title: "Mobile app development", slug: "app-development", need: "you want to build cross-platform mobile apps",
-        pillar: undefined
+        title: "Programming foundations",
+        slug: "programming-foundations",
+        need: "you're starting from basics and want a real footing",
+        pillar: "Training"
     },
     {
-        title: "Data & AI basics", slug: "data-ai", need: "SQL, Pandas, and practical ML workflows are your next step",
-        pillar: undefined
+        title: "Web development",
+        slug: "web-development",
+        need: "you want to build and ship real web products",
+        pillar: "Training"
     },
     {
-        title: "Cloud & DevOps", slug: "cloud-devops", need: "you want deployable infrastructure skills",
-        pillar: undefined
+        title: "Mobile app development",
+        slug: "app-development",
+        need: "you want to build cross-platform mobile apps",
+        pillar: "Training"
     },
     {
-        title: "Portfolio & certification", slug: "portfolio-certification", need: "you want a public portfolio and a certificate",
-        pillar: undefined
+        title: "Data & AI basics",
+        slug: "data-ai",
+        need: "SQL, Pandas, and practical ML workflows are your next step",
+        pillar: "Training"
+    },
+    {
+        title: "Cloud & DevOps",
+        slug: "cloud-devops",
+        need: "you want deployable infrastructure skills",
+        pillar: "Training"
+    },
+    {
+        title: "Portfolio & certification",
+        slug: "portfolio-certification",
+        need: "you want a public portfolio and a certificate",
+        pillar: "Training"
     },
 ];
 
 export const VISUALS: Record<string, DetailVisual> = {
+    "courses": {
+        eyebrow: "Academy Track",
+        headline: ["Master the", "tools you use."],
+        sub: "Learn the exact systems you are purchasing or building with our structured courses.",
+        hero: { src: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1800&q=85", alt: "Classroom learning" },
+        mosaic: [
+            { src: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=85", alt: "Classroom", caption: "Instructor", span: "md:col-span-7" },
+            { src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85", alt: "Learning", caption: "Online", span: "md:col-span-5" },
+        ],
+        highlights: [
+            { title: "Product Mastery", body: "Learn to administer the systems you purchase." },
+            { title: "Developer Handover", body: "For teams taking over codebases we've built." },
+            { title: "Certification", body: "Verify your team's skills with our exams." },
+        ],
+        process: [
+            { step: "01", title: "Enroll", body: "Choose your track." },
+            { step: "02", title: "Learn", body: "Follow the structured curriculum." },
+            { step: "03", title: "Build", body: "Complete hands-on assignments." },
+            { step: "04", title: "Certify", body: "Pass the assessment." },
+        ],
+        faq: [
+            { q: "Is this self-paced?", a: "Yes, but we also offer live cohorts." },
+            { q: "Do I get a certificate?", a: "Yes, upon completion." },
+        ],
+    },
+    "products": {
+        eyebrow: "Off-the-shelf",
+        headline: ["Deploy", "instantly."],
+        sub: "Skip the custom build timeline and deploy our ready-made SaaS solutions.",
+        hero: { src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1800&q=85", alt: "Software dashboard" },
+        mosaic: [
+            { src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85", alt: "Dashboard", caption: "SaaS", span: "md:col-span-7" },
+            { src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=85", alt: "Analytics", caption: "Analytics", span: "md:col-span-5" },
+        ],
+        highlights: [
+            { title: "Analytics Dashboard", body: "A ready-to-deploy data visualization tool." },
+            { title: "E-Commerce Kit", body: "Launch a full storefront in days." },
+            { title: "CRM System", body: "A lightweight CRM for agencies." },
+        ],
+        process: [
+            { step: "01", title: "Select", body: "Pick the product you need." },
+            { step: "02", title: "Configure", body: "Set up your branding and data." },
+            { step: "03", title: "Deploy", body: "We launch it on your domain." },
+            { step: "04", title: "Handover", body: "Training and support included." },
+        ],
+        faq: [
+            { q: "Can I customize it?", a: "Basic configuration is included; custom code is an add-on." },
+            { q: "How long does deployment take?", a: "Typically 3–5 business days." },
+        ],
+    },
     "programming-foundations": {
         eyebrow: "Practical learning",
         headline: ["Start from", "the ground up."],
