@@ -34,10 +34,9 @@ export default async function StudyAbroadDetail({ params }: Props) {
                 <img src={visual.hero.src} alt={visual.hero.alt} className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/80 to-transparent" />
-                <div className="relative mx-auto flex h-full max-w-[1200px] flex-col justify-end px-6 pb-20">
+                <div className="relative  flex h-full max-w-[1200px] flex-col mx-24 justify-end  pb-20">
                     <nav className="mb-6 flex items-center gap-2 text-xs uppercase tracking-widest text-[#A9C7FF]">
-                        <Link href="/">Home</Link> <span>/</span>
-                        <Link href="/study-abroad">Study Abroad</Link> <span>/</span>
+
                         <span className="text-white">{service.title}</span>
                     </nav>
                     <h1 className="max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.04em]">

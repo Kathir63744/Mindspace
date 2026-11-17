@@ -535,7 +535,7 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
         <div
             role="group"
             aria-label="Project showcase"
-            className="relative w-full max-w-[1350px] overflow-hidden mt-6 md:mt-10 aspect-[4/5] max-h-[60svh] md:aspect-auto md:h-[min(58vh,520px)] md:max-h-none"
+            className="relative w-full max-w-[1350px] overflow-hidden mt-2 md:mt-4 aspect-[4/5] max-h-[65svh] md:aspect-auto md:h-[min(58vh,520px)] md:max-h-none"
         >
             {CLIPS.map((clip, i) => {
                 const off = offOf(i, cur);
@@ -600,15 +600,15 @@ export default function HeroBanner() {
         <>
             <section
                 className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
-                style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 92px)" }}
+                style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 72px)" }}
             >
                 <DotMatrixBackground />
 
-                {/* Headline */}
-                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-2 sm:gap-12 sm:px-8 sm:pt-6 md:flex-row md:px-12 md:pt-8 lg:px-20">
+                {/* Headline - Removed top padding entirely to pull it tight */}
+                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-0 sm:gap-12 sm:px-8 md:flex-row md:px-12 lg:px-20">
                     <div className="flex w-full flex-col md:w-[65%]">
                         <div
-                            className="relative overflow-hidden px-2 pt-2 sm:px-6 sm:pt-6 md:-ml-7 md:px-6 md:py-4 md:pt-14 md:sm:px-10"
+                            className="relative overflow-hidden px-2 pt-0 sm:px-6 md:-ml-7 md:px-6 md:py-4 md:pt-14 md:sm:px-10"
                             style={rise(200)}
                         >
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
@@ -623,8 +623,8 @@ export default function HeroBanner() {
                     </div>
                 </div>
 
-                {/* Carousel */}
-                <div className="relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-center px-4 pb-8 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
+                {/* Carousel - Tightened bottom padding to fill screen */}
+                <div className="relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-start px-4 pb-4 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
                     <Carousel revealed={shown} reduced={reduced} />
                 </div>
             </section>

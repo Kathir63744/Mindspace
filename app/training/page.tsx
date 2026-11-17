@@ -1,3 +1,4 @@
+// app/training/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/app/components/consultant/Navbar";
@@ -5,10 +6,12 @@ import Footer from "@/app/components/consultant/Footer";
 
 export const metadata: Metadata = {
     title: "Training — MindSpace",
-    description: "Practical technical programmes.",
+    description: "Practical technical programmes, courses, and ready-made products.",
 };
 
 const SERVICES = [
+    { title: "Built-in Courses", href: "/training/courses", tag: "Mastery" },
+    { title: "Ready-made Products", href: "/training/products", tag: "Deploy Instantly" },
     { title: "Programming foundations", href: "/training/programming-foundations", tag: "Foundation" },
     { title: "Web development", href: "/training/web-development", tag: "Frontend & Backend" },
     { title: "Mobile app development", href: "/training/app-development", tag: "React Native" },
@@ -31,7 +34,7 @@ export default function TrainingPage() {
                         Skills that ship<br />to production.
                     </h1>
                     <p className="mx-auto mt-6 max-w-xl text-[16px] leading-[1.7] text-[#8A96A8]">
-                        Hands-on programmes, real projects and certificates — built around what employers are actually hiring for.
+                        Hands-on programmes, real projects and certificates — or buy our ready-made systems.
                     </p>
                 </div>
             </section>
@@ -48,7 +51,7 @@ export default function TrainingPage() {
                                 <h3 className="font-display text-2xl text-white group-hover:text-[#2F7BFF] transition-colors">{svc.title}</h3>
                             </div>
                             <div className="mt-8 flex items-center justify-between text-sm text-[#8A96A8]">
-                                <span>View curriculum</span>
+                                <span>View details</span>
                                 <span className="text-xl">→</span>
                             </div>
                         </Link>
