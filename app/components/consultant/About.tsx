@@ -32,7 +32,7 @@ const DEFAULT_CONTENT: AboutContent = {
     headlineLine1: "We turn bold",
     headlineLine2: "ideas into impact.",
     paragraph:
-        "MindSpace is a creative digital studio shaping thoughtful brands, meaningful experiences, and high-performing digital products. We bring strategy, design, and technology together to make every interaction count.",
+        "MindSpace provides technology solutions, professional training, and job placement and career support for businesses and individuals. We help businesses build digital products and help people develop practical skills and prepare for employment opportunities.",
     stats: [
         { value: "08+", label: "Years of making" },
         { value: "120+", label: "Projects delivered" },
@@ -315,8 +315,6 @@ export default function About({ content, id = "about" }: AboutProps) {
                         </motion.div>
                     )}
 
-                    {/* Marquee */}
-                    <Marquee items={c.ticker} />
                 </div>
             </section>
         </>

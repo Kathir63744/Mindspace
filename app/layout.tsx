@@ -24,16 +24,16 @@ export const questrial = Questrial({
 
 export const metadata: Metadata = {
   title: {
-    default: "Consultancy | Education Consultants",
+    default: "MindSpace | Technology, Training & Career Support",
     template: "%s | Consultancy",
   },
   description:
-    "Course selection, applications, and visa guidance for students going abroad.",
-  metadataBase: new URL("https://your-domain.com"), // ← replace with real domain
+    "MindSpace provides website, app and software development, professional training, and job placement and career support for businesses and individuals.",
+  metadataBase: new URL("https://your-domain.com"),
   openGraph: {
-    title: "Consultancy | Education Consultants",
+    title: "MindSpace | Technology, Training & Career Support",
     description:
-      "Course selection, applications, and visa guidance for students going abroad.",
+      "MindSpace provides website, app and software development, professional training, and job placement and career support for businesses and individuals.",
     type: "website",
   },
 };

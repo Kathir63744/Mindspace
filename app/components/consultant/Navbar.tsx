@@ -5,112 +5,70 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { siteConfig } from "./data";
 import LogoMark from "./LogoMark";
-import { PILLARS, SERVICES } from "./services/ServicesData";
+
+/* ============================================================
+   MENU CONFIGURATION
+============================================================ */
 
 type MenuItem = { label: string; href: string; note: string };
 type Menu = {
     label: string;
-    href?: string;
+    href: string;
     intro?: string;
-    all?: { label: string; href: string };
     items?: MenuItem[];
 };
 
-const PILLAR_ROUTE: Record<string, string> = {
-    Training: "/training",
-    Careers: "/careers",
-    Technology: "/services",
-};
-
-const SERVICE_ROUTE_BY_PILLAR: Record<string, Record<string, string>> = {
-    Training: {
-        "programming-foundations": "/training/programming-foundations",
-        "web-development": "/training/web-development",
-        "app-development": "/training/app-development",
-        "data-ai": "/training/data-ai",
-        "cloud-devops": "/training/cloud-devops",
-        "portfolio-certification": "/training/portfolio-certification",
-    },
-    Careers: {
-        "career-direction": "/careers/career-direction",
-        "resume-linkedin": "/careers/resume-linkedin",
-        "interview-coaching": "/careers/interview-coaching",
-        "internships": "/careers/internships",
-        "placement-support": "/careers/placement-support",
-        "on-the-job-readiness": "/careers/on-the-job-readiness",
-    },
-    Technology: {
-        "website-development": "/services/website-development",
-        "app-development": "/services/app-development",
-        "software-development": "/services/software-development",
-    },
-};
-
-function resolveHref(rawHref: string, pillarTag?: string): string {
-    if (rawHref.startsWith("/training") || rawHref.startsWith("/careers") || rawHref.startsWith("/services")) {
-        return rawHref;
-    }
-    const slug = rawHref.split("/").filter(Boolean).pop() ?? "";
-    if (pillarTag && SERVICE_ROUTE_BY_PILLAR[pillarTag]?.[slug]) return SERVICE_ROUTE_BY_PILLAR[pillarTag][slug];
-    for (const map of Object.values(SERVICE_ROUTE_BY_PILLAR)) {
-        if (map[slug]) return map[slug];
-    }
-    if (pillarTag && PILLAR_ROUTE[pillarTag]) return PILLAR_ROUTE[pillarTag];
-    return rawHref;
-}
-
 const MENUS: Menu[] = [
-    // 1. Custom Tech
-    ...PILLARS.filter((p) => p.tag === "Technology").map((p) => {
-        const pillarServices = SERVICES.filter((s) => s.pillar === p.tag && s.linked);
-        return {
-            label: "Custom Tech",
-            href: PILLAR_ROUTE[p.tag],
-            intro: p.lead,
-            all: { label: p.cta.label, href: PILLAR_ROUTE[p.tag] },
-            items: pillarServices.map((s) => ({
-                label: s.title,
-                href: resolveHref(s.href, p.tag),
-                note: s.need,
-            })),
-        };
-    }),
-
-    // 2. Everything Training (Courses, Products, Careers)
     {
-        label: "Training",
+        label: "Technology Solutions",
+        href: "/services",
+        intro: "Digital products, websites, and custom software built to scale.",
+        items: [
+            { label: "Website Development", href: "/services/website-development", note: "you need a fast, responsive site" },
+            { label: "Mobile App Development", href: "/services/app-development", note: "you need an app for customers or staff" },
+            { label: "Web Application Development", href: "/services/web-application", note: "you need a cloud-based platform" },
+            { label: "Custom Software Development", href: "/services/software-development", note: "off-the-shelf tools no longer fit" },
+        ],
+    },
+    {
+        label: "Professional Training",
         href: "/training",
-        intro: "Master the tools with our built-in courses, or deploy ready-made products.",
-        all: { label: "Explore Training", href: "/training" },
+        intro: "Hands-on programmes and courses to master the tools.",
         items: [
-            { label: "Built-in Courses", href: "/training/courses", note: "you want to learn to build it yourself" },
-            { label: "Ready-made Products", href: "/training/products", note: "you want an off-the-shelf solution deployed" },
-            { label: "Programming Foundations", href: "/training/programming-foundations", note: "you are starting from scratch" },
-            { label: "Web Development", href: "/training/web-development", note: "you want to build real web products" },
-            { label: "Data & AI Basics", href: "/training/data-ai", note: "you want practical ML workflows" },
-            { label: "Career Direction", href: "/careers/career-direction", note: "you need clarity on which roles to target" },
+            { label: "Technical & Programming Training", href: "/training/programming-foundations", note: "you are starting from scratch" },
+            { label: "Practical Projects", href: "/training/web-development", note: "you want to build real products" },
+            { label: "Job Readiness Training", href: "/training/portfolio-certification", note: "you want to prove your skills" },
+            { label: "Corporate & Communication Training", href: "/training/communication", note: "your team needs upskilling" },
         ],
     },
-
-    // 3. Team & Portfolio
     {
-        label: "Team & Portfolio",
-        href: "/portfolio",
-        intro: "The people who build also teach and hire. See our work and the team behind it.",
-        all: { label: "View our Portfolio", href: "/portfolio" },
+        label: "Jobs & Career Support",
+        href: "/careers",
+        intro: "Placement, interviews, and career direction.",
         items: [
-            { label: "Meet the Team", href: "/team", note: "you want to know the people building your systems" },
-            { label: "Our Portfolio", href: "/portfolio", note: "you want to see real examples of our work" },
-        ],
+            { label: "Career Guidance", href: "/careers/career-direction", note: "you need clarity on which roles to target" },
+            { label: "Resume & LinkedIn Profile Support", href: "/careers/resume-linkedin", note: "your resume needs restructuring" },
+            { label: "Interview Preparation", href: "/careers/interview-coaching", note: "you need mock interviews with feedback" },
+            { label: "Job Search Support", href: "/careers/placement-support", note: "you want warm introductions and follow-ups" },
+            { label: "Internship Assistance", href: "/careers/internships", note: "you want real experience early" },
+            { label: "Job Placement Assistance", href: "/careers/placement-support", note: "you want warm introductions and offer negotiation" },],
     },
-
-    // 4. About
-    { label: "About", href: "/about" },
+    {
+        label: "About",
+        href: "/about",
+        intro: "Learn more about who we are and what we do.",
+    },
+    {
+        label: "Contact",
+        href: "/contact",
+        intro: "Get in touch with our team.",
+    },
 ];
 
 const CTA = { label: "Talk to an Expert", href: "/contact" };
 const BLUE = "#2F7BFF";
-const focus = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4aa3ff]";
+const focus =
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4aa3ff]";
 
 type IntroFlag = { __mindspaceIntro?: "playing" | "docking" | "done" };
 
@@ -132,14 +90,6 @@ function ArrowUpRight({ className = "" }: { className?: string }) {
     return (
         <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M6 14L14 6M7 6h7v7" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-    );
-}
-
-function ArrowRight({ className = "" }: { className?: string }) {
-    return (
-        <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M4 10h12M11 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
 }
@@ -168,40 +118,80 @@ export default function Navbar() {
     const activeMenu = MENUS.find((m) => m.label === active && m.items) ?? MENUS[0];
 
     const isActive = (m: Menu) => {
-        if (m.href) return pathname === m.href || pathname.startsWith(m.href + "/");
-        return !!m.items?.some((i) => pathname === i.href || pathname.startsWith(i.href + "/"));
+        if (m.items) {
+            return !!m.items.some((i) => pathname === i.href || pathname.startsWith(i.href + "/")) || pathname === m.href;
+        }
+        return pathname === m.href || pathname.startsWith(m.href + "/");
     };
 
     useEffect(() => {
-        if (pathname !== "/") { setLinksReady(true); setLogoReady(true); return; }
+        if (pathname !== "/") {
+            setLinksReady(true);
+            setLogoReady(true);
+            return;
+        }
         const flag = (window as unknown as IntroFlag).__mindspaceIntro;
-        if (flag === "done") { setLinksReady(true); setLogoReady(true); return; }
+        if (flag === "done") {
+            setLinksReady(true);
+            setLogoReady(true);
+            return;
+        }
         setLinksReady(flag === "docking");
         setLogoReady(false);
         const onDock = () => setLinksReady(true);
-        const onDone = () => { setLinksReady(true); setLogoReady(true); };
+        const onDone = () => {
+            setLinksReady(true);
+            setLogoReady(true);
+        };
         window.addEventListener("mindspace:intro-dock", onDock);
         window.addEventListener("mindspace:intro-done", onDone);
-        return () => { window.removeEventListener("mindspace:intro-dock", onDock); window.removeEventListener("mindspace:intro-done", onDone); };
+        return () => {
+            window.removeEventListener("mindspace:intro-dock", onDock);
+            window.removeEventListener("mindspace:intro-done", onDone);
+        };
     }, [pathname]);
 
     useEffect(() => {
-        const onScroll = () => { setScrolled(window.scrollY > 16); setHideTopBar(window.scrollY > 10); };
+        const onScroll = () => {
+            const scrollY = window.scrollY;
+            setScrolled(scrollY > 16);
+            setHideTopBar(scrollY > 10);
+        };
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     useEffect(() => {
-        const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); setMobileOpen(false); } };
-        const onPointer = (e: MouseEvent) => { if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false); };
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setOpen(false);
+                setMobileOpen(false);
+            }
+        };
+        const onPointer = (e: MouseEvent) => {
+            if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+        };
         document.addEventListener("keydown", onKey);
         document.addEventListener("mousedown", onPointer);
-        return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onPointer); };
+        return () => {
+            document.removeEventListener("keydown", onKey);
+            document.removeEventListener("mousedown", onPointer);
+        };
     }, []);
 
-    useEffect(() => { setOpen(false); setMobileOpen(false); setMobileGroup(null); }, [pathname]);
-    useEffect(() => { document.body.style.overflow = mobileOpen ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [mobileOpen]);
+    useEffect(() => {
+        setOpen(false);
+        setMobileOpen(false);
+        setMobileGroup(null);
+    }, [pathname]);
+
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? "hidden" : "";
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [mobileOpen]);
 
     useEffect(() => {
         const el = innerRef.current;
@@ -220,19 +210,32 @@ export default function Navbar() {
         setNotchX(t.left + t.width / 2 - p.left);
     }, [active]);
 
-    useEffect(() => { placeNotch(); }, [placeNotch, open, linksReady]);
-    useEffect(() => { window.addEventListener("resize", placeNotch); return () => window.removeEventListener("resize", placeNotch); }, [placeNotch]);
+    useEffect(() => {
+        placeNotch();
+    }, [placeNotch, open, linksReady]);
+
+    useEffect(() => {
+        window.addEventListener("resize", placeNotch);
+        return () => window.removeEventListener("resize", placeNotch);
+    }, [placeNotch]);
 
     const scheduleOpen = (label: string) => {
-        window.clearTimeout(closeTimer.current); window.clearTimeout(openTimer.current);
-        openTimer.current = window.setTimeout(() => { setActive(label); setOpen(true); }, open ? 0 : 80);
+        window.clearTimeout(closeTimer.current);
+        window.clearTimeout(openTimer.current);
+        openTimer.current = window.setTimeout(() => {
+            setActive(label);
+            setOpen(true);
+        }, open ? 0 : 80);
     };
     const scheduleClose = () => {
-        window.clearTimeout(openTimer.current); window.clearTimeout(closeTimer.current);
+        window.clearTimeout(openTimer.current);
+        window.clearTimeout(closeTimer.current);
         closeTimer.current = window.setTimeout(() => setOpen(false), 180);
     };
     const keepOpen = () => window.clearTimeout(closeTimer.current);
-    const focusFirst = () => window.setTimeout(() => panelRef.current?.querySelector<HTMLElement>("a[href]")?.focus(), 60);
+
+    const focusFirst = () =>
+        window.setTimeout(() => panelRef.current?.querySelector<HTMLElement>("a[href]")?.focus(), 60);
 
     const reveal = (i: number): CSSProperties => ({
         opacity: linksReady ? 1 : 0,
@@ -244,13 +247,6 @@ export default function Navbar() {
     return (
         <header className="fixed inset-x-0 top-0 z-50 flex flex-col transition-all duration-300">
             <style>{CSS}</style>
-
-            <div className={`relative z-50 flex w-full items-center justify-center gap-2 bg-[#2F7BFF] px-4 text-center text-sm text-white overflow-hidden border-b border-white/10 transition-all duration-300 ${hideTopBar ? "max-h-0 py-0 border-transparent opacity-0" : "max-h-[60px] py-2.5 opacity-100"}`}>
-                <span className="hidden sm:inline opacity-80">Our perspective on deep tech for defence</span>
-                <span className="hidden text-white/30 sm:inline">|</span>
-                <span className="font-semibold">Watch the Defending India series</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-200" />
-            </div>
 
             <div className={`w-full border-b transition-colors duration-300 ${solid ? "border-white/10 bg-[#07090F]/85 backdrop-blur-xl" : "border-transparent bg-transparent"}`}>
                 <nav className="mx-auto grid h-[72px] max-w-[90rem] grid-cols-[auto_1fr] items-center px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-12">
@@ -275,13 +271,30 @@ export default function Navbar() {
                                 return (
                                     <li key={m.label} style={reveal(i)}>
                                         {m.items ? (
-                                            <button ref={(el) => { triggerRefs.current[m.label] = el; }} type="button" aria-expanded={isOpen} aria-haspopup="true" aria-controls="nav-panel" onPointerEnter={(e) => e.pointerType === "mouse" && scheduleOpen(m.label)} onClick={() => { setActive(m.label); setOpen(!isOpen); }} onKeyDown={(e) => { if (e.key === "ArrowDown") { e.preventDefault(); setActive(m.label); setOpen(true); focusFirst(); } }} className={base}>
+                                            <button
+                                                ref={(el) => { triggerRefs.current[m.label] = el; }}
+                                                type="button"
+                                                aria-expanded={isOpen}
+                                                aria-haspopup="true"
+                                                aria-controls="nav-panel"
+                                                onPointerEnter={(e) => e.pointerType === "mouse" && scheduleOpen(m.label)}
+                                                onClick={() => { setActive(m.label); setOpen(!isOpen); }}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "ArrowDown") {
+                                                        e.preventDefault();
+                                                        setActive(m.label);
+                                                        setOpen(true);
+                                                        focusFirst();
+                                                    }
+                                                }}
+                                                className={base}
+                                            >
                                                 {m.label}
                                                 <Chevron open={isOpen} />
                                                 {underline}
                                             </button>
                                         ) : (
-                                            <Link ref={(el) => { triggerRefs.current[m.label] = el; }} href={m.href ?? "#"} onPointerEnter={(e) => e.pointerType === "mouse" && scheduleClose()} className={base}>
+                                            <Link ref={(el) => { triggerRefs.current[m.label] = el; }} href={m.href} onPointerEnter={(e) => e.pointerType === "mouse" && scheduleClose()} className={base}>
                                                 {m.label}
                                                 {underline}
                                             </Link>
@@ -291,7 +304,25 @@ export default function Navbar() {
                             })}
                         </ul>
 
-                        <div ref={panelRef} id="nav-panel" role="region" aria-label={`${activeMenu.label} menu`} className="absolute left-1/2 top-full w-[680px] pt-4" style={{ opacity: open ? 1 : 0, visibility: open ? "visible" : "hidden", transform: `translateX(-50%) translateY(${open ? 0 : -8}px)`, transition: `opacity 220ms ease, transform 280ms cubic-bezier(0.22,1,0.36,1), visibility 0s linear ${open ? "0s" : "220ms"}` }} onKeyDown={(e) => { if (e.key === "Escape") { setOpen(false); triggerRefs.current[active]?.focus(); } }}>
+                        <div
+                            ref={panelRef}
+                            id="nav-panel"
+                            role="region"
+                            aria-label={`${activeMenu.label} menu`}
+                            className="absolute left-1/2 top-full w-[680px] pt-4"
+                            style={{
+                                opacity: open ? 1 : 0,
+                                visibility: open ? "visible" : "hidden",
+                                transform: `translateX(-50%) translateY(${open ? 0 : -8}px)`,
+                                transition: `opacity 220ms ease, transform 280ms cubic-bezier(0.22,1,0.36,1), visibility 0s linear ${open ? "0s" : "220ms"}`,
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Escape") {
+                                    setOpen(false);
+                                    triggerRefs.current[active]?.focus();
+                                }
+                            }}
+                        >
                             <div className="relative">
                                 <span aria-hidden="true" className="absolute -top-[7px] z-10 h-3.5 w-3.5 -translate-x-1/2 rotate-45 rounded-[3px] border-l border-t bg-white" style={{ left: notchX, borderColor: BLUE, transition: "left 320ms cubic-bezier(0.22,1,0.36,1)" }} />
                                 <div className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: BLUE, height: panelH, boxShadow: "0 30px 80px -24px rgba(47,123,255,0.45), 0 0 0 4px rgba(47,123,255,0.10)", transition: "height 320ms cubic-bezier(0.22,1,0.36,1)" }}>
@@ -302,12 +333,10 @@ export default function Navbar() {
                                                     <p className="text-[11px] uppercase tracking-[0.28em]" style={{ color: BLUE }}>{activeMenu.label}</p>
                                                     <p className="mt-3 text-[15px] leading-6 text-[#0B1020]">{activeMenu.intro}</p>
                                                 </div>
-                                                {activeMenu.all && (
-                                                    <Link href={activeMenu.all.href} className={`group/all mt-8 inline-flex items-center gap-1.5 self-start rounded-md text-[14px] ${focus}`} style={{ color: BLUE }}>
-                                                        <span className="border-b border-transparent transition-colors group-hover/all:border-current">{activeMenu.all.label}</span>
-                                                        <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover/all:-translate-y-0.5 group-hover/all:translate-x-0.5" />
-                                                    </Link>
-                                                )}
+                                                <Link href={activeMenu.href} className={`group/all mt-8 inline-flex items-center gap-1.5 self-start rounded-md text-[14px] ${focus}`} style={{ color: BLUE }}>
+                                                    <span className="border-b border-transparent transition-colors group-hover/all:border-current">View all {activeMenu.label}</span>
+                                                    <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover/all:-translate-y-0.5 group-hover/all:translate-x-0.5" />
+                                                </Link>
                                             </div>
                                             <ul className="p-3">
                                                 {activeMenu.items?.map((item, idx) => (
@@ -354,7 +383,7 @@ export default function Navbar() {
                                 if (!m.items) {
                                     return (
                                         <li key={m.label} className="border-b border-white/10">
-                                            <Link href={m.href ?? "#"} className={`flex items-center justify-between py-4 text-lg text-white ${focus}`}>
+                                            <Link href={m.href} className={`flex items-center justify-between py-4 text-lg text-white ${focus}`}>
                                                 {m.label}
                                                 <ArrowUpRight className="h-5 w-5 text-white/50" />
                                             </Link>
@@ -381,12 +410,10 @@ export default function Navbar() {
                                                             </li>
                                                         ))}
                                                     </ul>
-                                                    {m.all && (
-                                                        <Link href={m.all.href} className={`mt-1 flex items-center gap-1.5 rounded-xl px-3 py-3 text-[14px] ${focus}`} style={{ color: BLUE }}>
-                                                            {m.all.label}
-                                                            <ArrowUpRight className="h-4 w-4" />
-                                                        </Link>
-                                                    )}
+                                                    <Link href={m.href} className={`mt-1 flex items-center gap-1.5 rounded-xl px-3 py-3 text-[14px] ${focus}`} style={{ color: BLUE }}>
+                                                        View all {m.label}
+                                                        <ArrowUpRight className="h-4 w-4" />
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

@@ -17,10 +17,10 @@ export default function FeatureHighlight() {
                             </span>
                             <span className="h-px max-w-24 flex-1 bg-white/10" />
                         </div>
-                        <h2 className="max-w-3xl text-5xl font-medium leading-[0.98] tracking-[-0.065em] sm:text-6xl lg:text-[88px]">
-                            Learning meets
+                        <h2 className="max-w-3xl text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
+                            Practical Skills
                             <span className="block text-[#7FAEFF]">
-                                new possibilities.
+                                Professional Progress
                             </span>
                         </h2>
                     </div>
@@ -89,8 +89,8 @@ export default function FeatureHighlight() {
                                         Discover
                                     </span>
 
-                                    <div className="flex flex-wrap gap-2">
-                                        {["Global Education", "New Cultures", "New Opportunities"].map(
+                                    <div className="flex flex-wrap gap-4">
+                                        {["Build practical knowledge", "Strengthen your confidence", "Prepare for your next professional opportunity"].map(
                                             (tag) => (
                                                 <span
                                                     key={tag}
@@ -107,7 +107,6 @@ export default function FeatureHighlight() {
                     </div>
 
                     {/* Small frame accent */}
-                    <div className="absolute -bottom-2 right-10 h-[2px] w-24 rounded-full bg-[#2F7BFF] sm:right-16 sm:w-36" />
                 </div>
             </div>
         </section>

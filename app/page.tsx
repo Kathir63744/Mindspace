@@ -34,9 +34,6 @@ export default function Home() {
         {/* 04 — How MindSpace creates value */}
         <MindSpaceApproach />
 
-        {/* 05 — Our actual services */}
-        <Services />
-
         {/* 06 — Capabilities and expertise */}
         <Expertise />
 
@@ -45,9 +42,6 @@ export default function Home() {
 
         {/* 08 — How our services work */}
         <Process />
-
-        {/* 09 — Experiences across our divisions */}
-        <JourneyShowcase />
 
         {/* 10 — Projects, experience and outcomes */}
         <ExperienceSlider />
@@ -61,8 +55,6 @@ export default function Home() {
         {/* 13 — Common questions */}
         <Faq />
 
-        {/* 14 — Find and visit MindSpace */}
-        <GoogleMap />
       </main>
 
       <Footer />

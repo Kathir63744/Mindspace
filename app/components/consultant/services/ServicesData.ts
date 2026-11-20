@@ -161,6 +161,10 @@ export type Service = {
     gets: string[];
     href: string;
     linked: boolean;
+    /* Optional rich detail — used by the technology cards on /services */
+    stack?: string[];
+    explain?: string;
+    deliverables?: string[];
 };
 
 export const SERVICES: Service[] = [
@@ -175,6 +179,15 @@ export const SERVICES: Service[] = [
         gets: ["Responsive design", "SEO foundations", "CMS integration"],
         href: "/services/website-development",
         linked: true,
+        stack: ["Next.js", "React", "Tailwind CSS", "Sanity / Contentful", "Vercel"],
+        explain:
+            "Your website is the first impression of your business. We design and build fast, responsive, SEO-ready sites — marketing pages, landing pages and content platforms — that load in under a second, work on every screen, and let your team edit content without touching code.",
+        deliverables: [
+            "Custom design system and component library",
+            "Headless CMS so your team can publish without a developer",
+            "SEO, analytics and Core Web Vitals tuning",
+            "Lighthouse 95+ performance target",
+        ],
     },
     {
         icon: "mobile",
@@ -184,6 +197,33 @@ export const SERVICES: Service[] = [
         gets: ["iOS & Android", "Native performance", "Store launch"],
         href: "/services/app-development",
         linked: true,
+        stack: ["React Native", "Flutter", "Expo", "Firebase / Supabase", "App Store / Play Store"],
+        explain:
+            "When your users live on their phones, a website isn't enough. We ship native-quality apps for iOS and Android from one codebase — with accounts, notifications, payments and offline support — and handle the store submission process end to end.",
+        deliverables: [
+            "One React Native or Flutter codebase for iOS + Android",
+            "Auth, push notifications, payments, offline support",
+            "App Store & Play Store submission handled",
+            "OTA updates so you can ship without waiting on review",
+        ],
+    },
+    {
+        icon: "layers",
+        pillar: "Technology",
+        title: "Web application development",
+        need: "you need a cloud-based platform, not just a site",
+        gets: ["Auth & roles", "APIs & integrations", "Billing"],
+        href: "/services/web-application",
+        linked: true,
+        stack: ["Next.js", "Node.js", "PostgreSQL", "Prisma", "AWS / Vercel", "Stripe"],
+        explain:
+            "Web applications are products, not pages: logins, roles, dashboards, data and workflows. We design and build cloud-based platforms — internal portals, customer dashboards and SaaS products — with the security, scalability and integrations your business needs to grow into.",
+        deliverables: [
+            "Auth, role-based access control, multi-tenant architecture",
+            "Billing and subscription flows (Stripe)",
+            "REST / GraphQL APIs and third-party integrations",
+            "CI/CD pipeline and staging environment",
+        ],
     },
     {
         icon: "code",
@@ -193,6 +233,15 @@ export const SERVICES: Service[] = [
         gets: ["Discovery & scoping", "Custom build", "Handover & support"],
         href: "/services/software-development",
         linked: true,
+        stack: ["Node.js", "Python", "PostgreSQL", "Docker", "AWS", "GitHub Actions"],
+        explain:
+            "Sometimes the right answer isn't another subscription — it's software built around how your business actually works. We design and build custom internal systems, integrations and automations, and you own the source code and IP so you are never locked in.",
+        deliverables: [
+            "Bespoke internal systems and workflow automations",
+            "Integrations between the SaaS tools you already use",
+            "Docker + AWS deployment, documented infrastructure",
+            "Full source code, IP and repo access handed over",
+        ],
     },
 
     // ==============================
@@ -370,20 +419,23 @@ export const SERVICES: Service[] = [
     },
 ];
 
-/* ---------- Chaos → confidence section data ---------- */
+/* ============================================================
+   CHAOS -> CONFIDENCE
+   Technology-only framing (used by the /services page).
+============================================================ */
 
 export const PROBLEMS: string[] = [
-    "One vendor builds the site, another runs training, a third handles admissions.",
-    "Every handover loses context and time.",
-    "Nobody owns the next step.",
-    "You end up project managing your own providers.",
+    "Frontend, backend and mobile usually sit with three different vendors and three different stacks.",
+    "Every handover loses context, conventions and time.",
+    "Nobody owns the integration layer between services.",
+    "You end up coordinating frameworks, deploys and environments yourself.",
 ];
 
 export const BENEFITS: string[] = [
-    "One team across technology, study abroad, training and careers.",
-    "One clear plan from where you are to where you want to be.",
-    "One contact who stays with you across every step.",
-    "One place to add the next stage when you are ready.",
+    "One team across Next.js, React Native, Node.js and PostgreSQL.",
+    "One shared design system and component library across every surface.",
+    "One CI/CD pipeline, one staging environment, one release process.",
+    "One codebase owner from architecture to maintenance.",
 ];
 
 /* ---------- End-to-end flow ---------- */
@@ -431,3 +483,233 @@ export const FAQ: FaqItem[] = [
     { q: "Do you work with small teams and individuals?", a: "Yes. Most of our clients are small and mid-sized, from solo founders to growing teams." },
     { q: "Can you take over something another team started?", a: "Usually yes. We audit what exists first, then tell you honestly whether fix, rebuild or partial replacement is cheaper." },
 ];
+
+/* ============================================================
+   DETAILED SERVICE PAGES — /services/[slug]
+   (Used by app/services/[slug]/page.tsx)
+============================================================ */
+
+export type ServiceStat = { label: string; value: string };
+export type ServiceStep = { step: string; title: string; body: string };
+export type ServiceHighlight = { title: string; body: string };
+export type ServiceFaq = { q: string; a: string };
+export type ServiceCta = { label: string; sub: string };
+
+export type ServiceDetail = {
+    slug: string;
+    title: string;
+    eyebrow: string;
+    headline: [string, string];
+    sub: string;
+    mind: string;
+    icon: IconName;
+    stack: string[];
+    stats: ServiceStat[];
+    highlights: ServiceHighlight[];
+    process: ServiceStep[];
+    deliverables: string[];
+    faq: ServiceFaq[];
+    cta: ServiceCta;
+};
+
+export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
+    /* ==========================================================
+       WEBSITE DEVELOPMENT
+    ========================================================== */
+    "website-development": {
+        slug: "website-development",
+        title: "Website Development",
+        eyebrow: "Websites · Step 01",
+        headline: ["A website that", "works as hard as you do."],
+        sub: "Fast, responsive, SEO-ready websites — from marketing sites to content platforms — built on Next.js and tuned for performance.",
+        mind: "Your site is the first impression of your business. If it loads slowly or looks dated, you're losing customers before they read a word.",
+        icon: "globe",
+        stack: ["Next.js", "React", "Tailwind CSS", "Sanity / Contentful", "Vercel"],
+        stats: [
+            { label: "Timeline", value: "3–6 weeks" },
+            { label: "Performance", value: "<1s LCP target" },
+            { label: "CMS", value: "Sanity / Contentful" },
+        ],
+        highlights: [
+            { title: "Design that converts", body: "We design around your funnel — not a template. Every section earns its place." },
+            { title: "Built to be edited", body: "Headless CMS so your team can publish pages, posts and updates without a developer." },
+            { title: "Performance as a feature", body: "Lighthouse 95+ target, tuned Core Web Vitals, image and font optimisation baked in." },
+            { title: "SEO foundations", body: "Semantic HTML, structured data, sitemaps and analytics wired in from day one." },
+        ],
+        process: [
+            { step: "01", title: "Discover", body: "Goals, audience, pages, content sources and success metrics. We audit any existing site." },
+            { step: "02", title: "Architecture", body: "Sitemap, page templates, component library and CMS model agreed before design starts." },
+            { step: "03", title: "Design", body: "Wireframes → high-fidelity design → interactive prototype, reviewed in weekly demos." },
+            { step: "04", title: "Build", body: "Next.js build with CMS integration, responsive layouts and SEO structures in place." },
+            { step: "05", title: "QA & Launch", body: "Cross-browser and mobile testing, performance tuning, redirects and go-live." },
+            { step: "06", title: "Support", body: "Post-launch monitoring, content support and ongoing iteration under an agreed retainer." },
+        ],
+        deliverables: [
+            "Custom-designed site on Next.js",
+            "Headless CMS configured for your content team",
+            "Component library and style guide",
+            "SEO, analytics and Core Web Vitals tuning",
+            "Staging environment and deployment pipeline",
+            "30-day post-launch support window",
+        ],
+        faq: [
+            { q: "Do you work with an existing brand?", a: "Yes. We either work from your brand guidelines or design a refreshed system in the same engagement." },
+            { q: "Can my team edit content?", a: "Yes. Every build ships with a CMS and a walkthrough for the people who'll update it." },
+            { q: "What about hosting?", a: "We deploy to Vercel by default, or to your existing host — your call, and you own the account." },
+        ],
+        cta: {
+            label: "Start your website brief",
+            sub: "Tell us about your business, pages and goals — we'll come back with a scope, timeline and fixed price.",
+        },
+    },
+
+    /* ==========================================================
+       MOBILE APP DEVELOPMENT
+    ========================================================== */
+    "app-development": {
+        slug: "app-development",
+        title: "Mobile App Development",
+        eyebrow: "Mobile · Step 02",
+        headline: ["An app people", "actually keep."],
+        sub: "Native-quality iOS and Android apps from one React Native or Flutter codebase — with the features your product actually needs.",
+        mind: "If your users live on their phones, a mobile web experience isn't enough. You need an app that feels native, ships updates fast, and doesn't drain the battery.",
+        icon: "mobile",
+        stack: ["React Native", "Flutter", "Expo", "Firebase / Supabase", "App Store / Play Store"],
+        stats: [
+            { label: "Timeline", value: "8–14 weeks" },
+            { label: "Platforms", value: "iOS + Android" },
+            { label: "Codebase", value: "1 (RN or Flutter)" },
+        ],
+        highlights: [
+            { title: "One codebase, two stores", body: "React Native or Flutter — a single codebase ships to iOS and Android, cutting cost and drift." },
+            { title: "Real product features", body: "Auth, push notifications, payments, offline storage, deep links — the features real apps need." },
+            { title: "Store submission handled", body: "We prepare listings, screenshots, and handle submission to the App Store and Play Store." },
+            { title: "OTA updates", body: "Push code updates without waiting on review, where the platform allows." },
+        ],
+        process: [
+            { step: "01", title: "Discover", body: "Users, core flows, must-have features and constraints. We cut scope to what ships first." },
+            { step: "02", title: "Prototype", body: "Clickable prototype so you can feel the flow before a line of code is written." },
+            { step: "03", title: "Build", body: "React Native or Flutter build, with backend and third-party integrations wired in." },
+            { step: "04", title: "Test", body: "Device testing across screen sizes, iOS and Android versions, and edge cases." },
+            { step: "05", title: "Store Launch", body: "App Store and Play Store submission, review handling and first release." },
+            { step: "06", title: "Iterate", body: "Analytics, crash reporting and a release cadence for the versions after v1." },
+        ],
+        deliverables: [
+            "iOS and Android apps from one codebase",
+            "Auth, push, payments and offline support",
+            "App Store and Play Store submission",
+            "Crash reporting and analytics",
+            "OTA update pipeline",
+            "Handover docs and store credentials",
+        ],
+        faq: [
+            { q: "React Native or Flutter?", a: "It depends on your team, feature set and integrations. We recommend one in discovery and explain the tradeoffs." },
+            { q: "Can you work with an existing backend?", a: "Yes. We integrate with your existing APIs, or we build a backend alongside the app if there isn't one." },
+            { q: "Do you handle the App Store reviews?", a: "Yes. We prepare the listing and manage the review process through first release." },
+        ],
+        cta: {
+            label: "Scope my mobile app",
+            sub: "Tell us the core flows and platform targets — we'll return a feature list, timeline and fixed price.",
+        },
+    },
+
+    /* ==========================================================
+       WEB APPLICATION DEVELOPMENT
+    ========================================================== */
+    "web-application": {
+        slug: "web-application",
+        title: "Web Application Development",
+        eyebrow: "Platforms · Step 03",
+        headline: ["A platform that", "grows with you."],
+        sub: "Cloud-based web applications — dashboards, portals, SaaS products — with auth, roles, billing and APIs built to scale.",
+        mind: "Web apps are products, not pages. If logins, roles, data and workflows aren't architected properly, you'll hit a wall the moment you try to grow.",
+        icon: "layers",
+        stack: ["Next.js", "Node.js", "PostgreSQL", "Prisma", "AWS / Vercel", "Stripe"],
+        stats: [
+            { label: "Timeline", value: "10–18 weeks" },
+            { label: "Architecture", value: "Multi-tenant" },
+            { label: "Security", value: "SSO / RBAC" },
+        ],
+        highlights: [
+            { title: "Multi-tenant from day one", body: "Isolation, permissions and billing built as first-class — not bolted on later." },
+            { title: "Auth and roles", body: "SSO, OAuth, RBAC and audit logging — designed for teams, not just a single user table." },
+            { title: "Billing and subscriptions", body: "Stripe-powered plans, trials and invoices, wired into your data model." },
+            { title: "APIs and integrations", body: "REST or GraphQL APIs, webhooks and integrations with the tools your customers already use." },
+        ],
+        process: [
+            { step: "01", title: "Discovery", body: "Users, roles, workflows, data and integrations mapped in detail before design starts." },
+            { step: "02", title: "Data & API design", body: "Data model, permissions model and API contracts agreed up front." },
+            { step: "03", title: "Design", body: "Screens, flows and admin tooling designed against real data scenarios." },
+            { step: "04", title: "Build", body: "Next.js front end, Node.js services and PostgreSQL database, with CI/CD from day one." },
+            { step: "05", title: "QA & Launch", body: "Integration tests, load testing, security review and staged rollout." },
+            { step: "06", title: "Iterate", body: "Post-launch roadmap, monitoring and a release cadence under an agreed retainer." },
+        ],
+        deliverables: [
+            "Multi-tenant Next.js + Node.js application",
+            "PostgreSQL schema, migrations and seed data",
+            "Auth, roles and audit logging",
+            "Stripe billing and subscription flows",
+            "REST or GraphQL API with docs",
+            "CI/CD, staging and production environments",
+        ],
+        faq: [
+            { q: "Can you take over an existing platform?", a: "Yes. We start with a technical audit, then propose refactor, extend or rebuild based on cost and risk." },
+            { q: "How do you handle scale?", a: "Multi-tenant data models, caching, and infrastructure-as-code — all designed for growth from v1." },
+            { q: "Who owns the platform?", a: "You do. Source, IP and cloud accounts are yours from day one." },
+        ],
+        cta: {
+            label: "Scope my platform",
+            sub: "Share your user roles, workflows and integrations — we'll return an architecture plan, timeline and price.",
+        },
+    },
+
+    /* ==========================================================
+       CUSTOM SOFTWARE DEVELOPMENT
+    ========================================================== */
+    "software-development": {
+        slug: "software-development",
+        title: "Custom Software Development",
+        eyebrow: "Custom · Step 04",
+        headline: ["Software that fits", "how you actually work."],
+        sub: "When off-the-shelf tools no longer fit, we build custom internal systems, integrations and automations — and you own the source.",
+        mind: "The spreadsheet-and-three-subscriptions workaround has a ceiling. At some point it costs more than building the system your business actually needs.",
+        icon: "code",
+        stack: ["Node.js", "Python", "PostgreSQL", "Docker", "AWS", "GitHub Actions"],
+        stats: [
+            { label: "Timeline", value: "6–16 weeks" },
+            { label: "Scope", value: "Bespoke" },
+            { label: "Ownership", value: "Source + IP yours" },
+        ],
+        highlights: [
+            { title: "Built around your workflow", body: "No forced processes. The system matches how your team already operates — then improves it." },
+            { title: "Integration-first", body: "Talks to the SaaS tools you already pay for: CRMs, ERPs, payment systems, data warehouses." },
+            { title: "Automation where it saves hours", body: "We identify the workflows costing the most manual time and automate them." },
+            { title: "You own everything", body: "Source code, IP and infrastructure accounts are yours from day one. No lock-in." },
+        ],
+        process: [
+            { step: "01", title: "Discovery", body: "Current tools, manual workflows and pain points mapped with the people who use them." },
+            { step: "02", title: "Scope", body: "We define the minimum system that removes the biggest pains — then plan extensions." },
+            { step: "03", title: "Design", body: "Data model, integrations, screens and automations designed against real scenarios." },
+            { step: "04", title: "Build", body: "Iterative build with weekly demos, so you see progress and steer early." },
+            { step: "05", title: "Test & Handover", body: "Testing against real workflows, documentation, and a handover session with your team." },
+            { step: "06", title: "Support", body: "Maintenance, patches and new features under an agreed arrangement." },
+        ],
+        deliverables: [
+            "Custom internal system or automation",
+            "Integrations with your existing SaaS tools",
+            "Docker + AWS deployment with docs",
+            "Source code, repo and IP transferred to you",
+            "Handover training session",
+            "Optional maintenance and iteration retainer",
+        ],
+        faq: [
+            { q: "How is this different from buying a SaaS tool?", a: "You get exactly the workflow you need, without paying per seat forever — and you own the code." },
+            { q: "How big is a typical project?", a: "From a focused automation (6 weeks) to a full internal system (3–4 months). We scope before committing." },
+            { q: "Do you build on top of what we already have?", a: "Yes. Where the current stack is solid, we extend it; where it isn't, we replace with a clear plan." },
+        ],
+        cta: {
+            label: "Scope my custom build",
+            sub: "Describe the workflow that's costing you time — we'll map the system that removes the pain.",
+        },
+    },
+};

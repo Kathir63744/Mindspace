@@ -410,9 +410,9 @@ export default function Stories() {
                 <div className="mb-12 flex flex-col justify-between gap-6 md:mb-14 md:flex-row md:items-end">
                     <div>
                         <span className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A9C7FF] before:h-px before:w-6 before:bg-[#2F7BFF] before:content-['']">
-                            Student experiences
+                            Client & Learner Experiences
                         </span>
-                        <h2 className="mt-6 max-w-2xl font-display text-4xl font-medium leading-[1.08] tracking-[-0.055em] text-white sm:text-5xl lg:text-6xl">
+                        <h2 className="mt-6 max-w-2xl font-display text-white text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
                             {storiesContent.heading.split(" ").slice(0, 2).join(" ")}
                             <span className="block text-[#A9C7FF]">
                                 {storiesContent.heading.split(" ").slice(2).join(" ")}

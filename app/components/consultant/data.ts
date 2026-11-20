@@ -156,8 +156,8 @@ export const stories = [
 ];
 
 export const storiesContent = {
-    heading: "Real success from real learners",
-    body: "With the right skills, anything's possible. See how real learners are evolving their careers with Mind Space.",
+    heading: "Experiences with MindSpace",
+    body: "Hear from businesses, learners and job seekers who have worked with MindSpace.",
 };
 
 export const faqs = [

@@ -30,10 +30,6 @@ type ReportDetail = {
         outcome: string;
     }[];
     challenge: string;
-    approach: {
-        title: string;
-        text: string;
-    }[];
     useCases: {
         title: string;
         text: string;
@@ -49,54 +45,49 @@ type ReportDetail = {
 };
 
 const REPORTS: Record<string, ReportDetail> = {
+    /* ==========================================================
+       WEBSITE DEVELOPMENT
+    ========================================================== */
     "website-development": {
         tagline: "Digital experiences that make the next step obvious.",
-        intro: "A website should do more than look current. It should help the right people understand your offer, trust your business and take action — on every screen.",
+        intro:
+            "A website should do more than look current. It should help the right people understand your offer, trust your business and take action — on every screen.",
         audience: [
             {
                 title: "Growing businesses",
-                description: "Your current website no longer reflects the quality or direction of the business.",
+                description:
+                    "Your current website no longer reflects the quality or direction of the business.",
                 need: "A stronger digital presence",
-                outcome: "A clear, credible website that can grow with the business.",
+                outcome:
+                    "A clear, credible website that can grow with the business.",
             },
             {
                 title: "New ventures & startups",
-                description: "You need a confident first impression and a clear place to introduce a new offer.",
+                description:
+                    "You need a confident first impression and a clear place to introduce a new offer.",
                 need: "A launch-ready platform",
-                outcome: "A focused launch experience with a clear path to enquiry or conversion.",
+                outcome:
+                    "A focused launch experience with a clear path to enquiry or conversion.",
             },
             {
                 title: "Marketing & sales teams",
-                description: "Visitors arrive, but the site does not guide them towards the right action.",
+                description:
+                    "Visitors arrive, but the site does not guide them towards the right action.",
                 need: "A conversion-focused journey",
-                outcome: "Better page structure, clearer calls to action and useful measurement.",
+                outcome:
+                    "Better page structure, clearer calls to action and useful measurement.",
             },
             {
                 title: "Teams managing content",
-                description: "Updating pages is slow, technical or dependent on a developer for every change.",
+                description:
+                    "Updating pages is slow, technical or dependent on a developer for every change.",
                 need: "A manageable content workflow",
-                outcome: "An editing setup that supports everyday updates and future growth.",
+                outcome:
+                    "An editing setup that supports everyday updates and future growth.",
             },
         ],
-        challenge: "A slow, unclear or difficult-to-maintain website creates friction before a conversation even begins. Visitors should not have to work hard to understand what you do, why it matters or what to do next.",
-        approach: [
-            {
-                title: "Discover the real job",
-                text: "We map your audience, offer, content and business goals before deciding what the website needs to do.",
-            },
-            {
-                title: "Shape the experience",
-                text: "We organise pages and user journeys, then translate the direction into a distinctive visual system.",
-            },
-            {
-                title: "Build for real use",
-                text: "We develop responsive pages, connect the required systems and pay attention to accessibility and performance.",
-            },
-            {
-                title: "Test, launch and improve",
-                text: "We check the experience across devices, prepare the launch and give your team a clear handover.",
-            },
-        ],
+        challenge:
+            "A slow, unclear or difficult-to-maintain website creates friction before a conversation even begins. Visitors should not have to work hard to understand what you do, why it matters or what to do next.",
         useCases: [
             {
                 label: "01 / Presence",
@@ -137,59 +128,55 @@ const REPORTS: Record<string, ReportDetail> = {
                 text: "Analytics and agreed conversion events to help understand how the site is used.",
             },
         ],
-        outcome: "A useful digital front door: clear to navigate, easier to maintain and ready to support the next stage of the business.",
+        outcome:
+            "A useful digital front door: clear to navigate, easier to maintain and ready to support the next stage of the business.",
         timeline: "Scoped after discovery",
         investment: "Quoted against the agreed scope",
     },
 
+    /* ==========================================================
+       MOBILE APP DEVELOPMENT
+    ========================================================== */
     "app-development": {
         tagline: "Mobile products built around the moments people use them.",
-        intro: "A mobile product needs to fit naturally into real routines. We plan and build connected app experiences for customers, members and internal teams.",
+        intro:
+            "A mobile product needs to fit naturally into real routines. We plan and build connected app experiences for customers, members and internal teams.",
         audience: [
             {
                 title: "Customer-facing businesses",
-                description: "Your customers need a simpler way to access services, information or transactions.",
+                description:
+                    "Your customers need a simpler way to access services, information or transactions.",
                 need: "A useful customer app",
-                outcome: "A focused mobile journey for the tasks customers repeat.",
+                outcome:
+                    "A focused mobile journey for the tasks customers repeat.",
             },
             {
                 title: "Operations teams",
-                description: "Your staff rely on manual steps or disconnected tools while away from their desks.",
+                description:
+                    "Your staff rely on manual steps or disconnected tools while away from their desks.",
                 need: "Mobile workflows",
-                outcome: "A more accessible way to complete and track operational work.",
+                outcome:
+                    "A more accessible way to complete and track operational work.",
             },
             {
                 title: "Product startups",
-                description: "You have an app-first idea and need to validate the smallest useful product.",
+                description:
+                    "You have an app-first idea and need to validate the smallest useful product.",
                 need: "A practical first release",
-                outcome: "A clear MVP scope that can be tested and improved with users.",
+                outcome:
+                    "A clear MVP scope that can be tested and improved with users.",
             },
             {
                 title: "Membership services",
-                description: "Your community needs a connected place for updates, accounts and participation.",
+                description:
+                    "Your community needs a connected place for updates, accounts and participation.",
                 need: "A connected member experience",
-                outcome: "A consistent app experience supported by the right data and services.",
+                outcome:
+                    "A consistent app experience supported by the right data and services.",
             },
         ],
-        challenge: "An app adds complexity when the user journey, data and operational workflow are not designed together. The product must feel simple on the surface and dependable underneath.",
-        approach: [
-            {
-                title: "Define the product",
-                text: "We clarify user groups, core jobs, platform needs and the smallest useful first release.",
-            },
-            {
-                title: "Prototype the journey",
-                text: "We map key screens and interactions so the experience can be reviewed before development.",
-            },
-            {
-                title: "Build the connected system",
-                text: "We develop the app alongside the APIs, data model and integrations it depends on.",
-            },
-            {
-                title: "Prepare the release",
-                text: "We test on target devices, resolve edge cases and prepare release support and handover.",
-            },
-        ],
+        challenge:
+            "An app adds complexity when the user journey, data and operational workflow are not designed together. The product must feel simple on the surface and dependable underneath.",
         useCases: [
             {
                 label: "01 / Customer",
@@ -230,59 +217,146 @@ const REPORTS: Record<string, ReportDetail> = {
                 text: "Technical notes and guidance for the people responsible for the product.",
             },
         ],
-        outcome: "A mobile experience that gives people a clear way to complete important tasks and gives your team a platform to improve over time.",
+        outcome:
+            "A mobile experience that gives people a clear way to complete important tasks and gives your team a platform to improve over time.",
         timeline: "Scoped after product discovery",
         investment: "Quoted against the agreed scope",
     },
 
+    /* ==========================================================
+       WEB APPLICATION DEVELOPMENT
+    ========================================================== */
+    "web-application": {
+        tagline:
+            "Cloud platforms that turn scattered workflows into one product.",
+        intro:
+            "A web application is a product, not a page. We design and build cloud-based platforms — portals, dashboards, SaaS products — where logins, roles, data and workflows are architected properly from day one.",
+        audience: [
+            {
+                title: "Product startups",
+                description:
+                    "You have a platform idea and need a real, working product — not another prototype.",
+                need: "A production-ready MVP",
+                outcome:
+                    "A cloud application with auth, roles and core workflows tested with real users.",
+            },
+            {
+                title: "Operations-heavy businesses",
+                description:
+                    "Your team relies on spreadsheets, email threads and disconnected tools to run operations.",
+                need: "A unified internal portal",
+                outcome:
+                    "One authenticated platform for tasks, data and hand-offs — with clear permissions.",
+            },
+            {
+                title: "Customer-facing services",
+                description:
+                    "Your customers need a self-service portal for accounts, billing, requests or data.",
+                need: "A customer portal",
+                outcome:
+                    "A branded, secure portal that reduces support load and gives customers control.",
+            },
+            {
+                title: "Growing SaaS products",
+                description:
+                    "You've outgrown your first version and need architecture that scales with demand.",
+                need: "A scalable, multi-tenant platform",
+                outcome:
+                    "Cleaner data models, billing, permissions and CI/CD — ready for growth.",
+            },
+        ],
+        challenge:
+            "Web applications are products, not pages. If logins, roles, data and workflows aren't architected properly, you'll hit a wall the moment you try to grow — whether that's multi-tenancy, billing, permissions or integrations.",
+        useCases: [
+            {
+                label: "01 / Access",
+                title: "Auth and roles",
+                text: "Logins, SSO, OAuth, role-based access control and audit logging — designed for teams, not a single user table.",
+            },
+            {
+                label: "02 / Billing",
+                title: "Subscriptions and invoices",
+                text: "Stripe-powered plans, trials, invoices and upgrade flows, wired into the same data model as the rest of the app.",
+            },
+            {
+                label: "03 / Data",
+                title: "Dashboards and workflows",
+                text: "Role-appropriate views, filters and actions — so each user sees exactly what they need and can act on it.",
+            },
+            {
+                label: "04 / Integration",
+                title: "APIs and third parties",
+                text: "REST or GraphQL APIs, webhooks and integrations with the tools your customers already use.",
+            },
+        ],
+        deliverables: [
+            {
+                title: "Multi-tenant application",
+                text: "Next.js front end, Node.js services and a PostgreSQL schema designed for tenant isolation and growth.",
+            },
+            {
+                title: "Auth, roles and audit log",
+                text: "SSO / OAuth, RBAC permissions and an audit log covering the actions that matter.",
+            },
+            {
+                title: "Billing and subscriptions",
+                text: "Stripe-powered plans, trials and invoices — including webhook handling and receipt emails.",
+            },
+            {
+                title: "APIs and CI/CD",
+                text: "Documented REST or GraphQL APIs, plus CI/CD pipelines, staging and production environments.",
+            },
+        ],
+        outcome:
+            "A cloud application with the architecture, security and integrations your business can grow into — not a prototype that has to be rebuilt at scale.",
+        timeline: "Scoped after discovery and architecture",
+        investment: "Quoted against the agreed scope",
+    },
+
+    /* ==========================================================
+       CUSTOM SOFTWARE DEVELOPMENT
+    ========================================================== */
     "software-development": {
-        tagline: "Custom systems shaped around the way your organisation works.",
-        intro: "When generic tools stop matching the way your organisation works, custom software can bring workflows, information and people into one coherent system.",
+        tagline:
+            "Custom systems shaped around the way your organisation works.",
+        intro:
+            "When generic tools stop matching the way your organisation works, custom software can bring workflows, information and people into one coherent system.",
         audience: [
             {
                 title: "Growing operations",
-                description: "Spreadsheets and manual workarounds are becoming difficult to coordinate.",
+                description:
+                    "Spreadsheets and manual workarounds are becoming difficult to coordinate.",
                 need: "A more connected workflow",
-                outcome: "A system that makes process, ownership and information easier to follow.",
+                outcome:
+                    "A system that makes process, ownership and information easier to follow.",
             },
             {
                 title: "Specialist businesses",
-                description: "Your process is specific enough that off-the-shelf tools create compromises.",
+                description:
+                    "Your process is specific enough that off-the-shelf tools create compromises.",
                 need: "Software shaped to your process",
-                outcome: "A platform designed around agreed business rules and real work.",
+                outcome:
+                    "A platform designed around agreed business rules and real work.",
             },
             {
                 title: "Distributed teams",
-                description: "People work across locations and need shared information and clear permissions.",
+                description:
+                    "People work across locations and need shared information and clear permissions.",
                 need: "A shared operating platform",
-                outcome: "A consistent place to manage tasks, information and access.",
+                outcome:
+                    "A consistent place to manage tasks, information and access.",
             },
             {
                 title: "Established organisations",
-                description: "Several tools hold overlapping data and teams repeat the same work.",
+                description:
+                    "Several tools hold overlapping data and teams repeat the same work.",
                 need: "System integration",
-                outcome: "Connected data flows that reduce avoidable duplication.",
+                outcome:
+                    "Connected data flows that reduce avoidable duplication.",
             },
         ],
-        challenge: "Workarounds multiply when systems do not reflect the real process. Information gets repeated, ownership becomes unclear and teams spend time managing tools instead of doing the work.",
-        approach: [
-            {
-                title: "Map the operation",
-                text: "We document roles, decisions, data and hand-offs to understand what the system must support.",
-            },
-            {
-                title: "Design the architecture",
-                text: "We plan the data model, permissions, integrations and system boundaries before implementation.",
-            },
-            {
-                title: "Deliver in useful modules",
-                text: "We build in reviewable stages so the people using the system can validate it as it takes shape.",
-            },
-            {
-                title: "Deploy and enable the team",
-                text: "We prepare the environment, migrate agreed data, document the system and support adoption.",
-            },
-        ],
+        challenge:
+            "Workarounds multiply when systems do not reflect the real process. Information gets repeated, ownership becomes unclear and teams spend time managing tools instead of doing the work.",
         useCases: [
             {
                 label: "01 / Workflow",
@@ -323,11 +397,16 @@ const REPORTS: Record<string, ReportDetail> = {
                 text: "Technical notes, operating guidance and structured knowledge transfer.",
             },
         ],
-        outcome: "A more connected way of working, with fewer avoidable hand-offs and software that reflects how the organisation operates.",
+        outcome:
+            "A more connected way of working, with fewer avoidable hand-offs and software that reflects how the organisation operates.",
         timeline: "Scoped after workflow discovery",
         investment: "Quoted against the agreed scope",
     },
-}
+};
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
 
 const NAV = [
     { id: "highlights", label: "Highlights" },
@@ -335,10 +414,47 @@ const NAV = [
     { id: "audience", label: "Who it helps" },
     { id: "use-cases", label: "Core uses" },
     { id: "impact", label: "Impact" },
-    { id: "approach", label: "Approach" },
+    { id: "how-we-work", label: "How We Work" },
     { id: "delivery", label: "Deliverables" },
     { id: "outcome", label: "Outcome" },
 ];
+
+/* ============================================================
+   HOW WE WORK — Technology 5-step process
+   (Replaces the previous per-service "approach" section)
+============================================================ */
+
+const HOW_WE_WORK_STEPS = [
+    {
+        step: "01",
+        title: "Discuss Your Requirements",
+        body: "Tell us about your business, users and project goals.",
+    },
+    {
+        step: "02",
+        title: "Define the Scope",
+        body: "We agree on features, deliverables, pricing and timelines.",
+    },
+    {
+        step: "03",
+        title: "Design & Develop",
+        body: "We create the solution and share progress for review.",
+    },
+    {
+        step: "04",
+        title: "Test & Launch",
+        body: "We test the agreed functionality and prepare the solution for launch.",
+    },
+    {
+        step: "05",
+        title: "Support & Maintain",
+        body: "We provide support and maintenance according to the agreed arrangement.",
+    },
+];
+
+/* ============================================================
+   SMALL HELPERS
+============================================================ */
 
 function SectionLabel({ children }: { children: ReactNode }) {
     return (
@@ -378,6 +494,10 @@ function PersonMark({
     );
 }
 
+/* ============================================================
+   MAIN COMPONENT
+============================================================ */
+
 export default function ServiceReportExperience({
     service,
     pillar,
@@ -403,37 +523,20 @@ export default function ServiceReportExperience({
 
     const audience = detail?.audience ?? fallbackAudience;
 
-    const approach = detail?.approach ?? [
-        {
-            title: "Understand your starting point",
-            text: `We begin with your context: ${service.need}. We clarify the people involved, constraints and what a useful result should look like.`,
-        },
-        {
-            title: "Build a practical plan",
-            text: `We turn the goal into manageable steps, using ${service.gets[0]?.toLowerCase() ?? "the right foundations"
-                } as a starting point.`,
-        },
-        {
-            title: "Work through the details",
-            text: `The work is shaped around ${service.gets.slice(1).join(", ") || "the agreed requirements"
-                }, with progress reviewed as it develops.`,
-        },
-        {
-            title: "Prepare the next step",
-            text: "We bring the work together, explain what has been completed and clarify what happens next.",
-        },
-    ];
+    const useCases =
+        detail?.useCases ??
+        service.gets.map((item, index) => ({
+            label: `0${index + 1} / Core use`,
+            title: item,
+            text: `Apply ${item.toLowerCase()} to the real needs, people and goals defined during the engagement.`,
+        }));
 
-    const useCases = detail?.useCases ?? service.gets.map((item, index) => ({
-        label: `0${index + 1} / Core use`,
-        title: item,
-        text: `Apply ${item.toLowerCase()} to the real needs, people and goals defined during the engagement.`,
-    }));
-
-    const deliverables = detail?.deliverables ?? service.gets.map((item) => ({
-        title: item,
-        text: `A defined part of the ${service.title.toLowerCase()} engagement, agreed during planning and delivered with clear guidance.`,
-    }));
+    const deliverables =
+        detail?.deliverables ??
+        service.gets.map((item) => ({
+            title: item,
+            text: `A defined part of the ${service.title.toLowerCase()} engagement, agreed during planning and delivered with clear guidance.`,
+        }));
 
     const intro =
         detail?.intro ??
@@ -451,14 +554,12 @@ export default function ServiceReportExperience({
         detail?.tagline ??
         `${service.title} with a clear purpose, practical direction and a result you can use.`;
 
-    // Meaning section content is derived from the service's actual use cases.
     const meaningItems = useCases.slice(0, 4).map((item) => ({
         label: item.label,
         title: item.title,
         description: item.text,
     }));
 
-    // Impact section uses the service's existing use cases and deliverables.
     const impactSource = [
         ...useCases.map((item) => ({
             title: item.title,
@@ -485,7 +586,6 @@ export default function ServiceReportExperience({
     }));
 
     const [activeNav, setActiveNav] = useState("highlights");
-    const [activeStep, setActiveStep] = useState(0);
     const [activeAudience, setActiveAudience] = useState(0);
 
     const audienceRail = useRef<HTMLDivElement>(null);
@@ -637,7 +737,7 @@ export default function ServiceReportExperience({
         }
       `}</style>
 
-            {/* Hero: keep the background video and signal animation together. */}
+            {/* Hero */}
             <header
                 id="highlights"
                 className="relative flex min-h-[88svh] w-full flex-col justify-center overflow-hidden bg-[#05070c] text-white"
@@ -689,7 +789,7 @@ export default function ServiceReportExperience({
                 </div>
             </div>
 
-            {/* Executive highlights */}
+            {/* Highlights */}
             <section
                 id="highlights-content"
                 className="report-shell report-section py-12 sm:py-16"
@@ -761,7 +861,7 @@ export default function ServiceReportExperience({
                 />
             </div>
 
-            {/* Audience explorer */}
+            {/* Audience */}
             <section
                 id="audience"
                 className="report-section border-y border-white/10 bg-[#0d1119]"
@@ -775,9 +875,10 @@ export default function ServiceReportExperience({
                         </h2>
 
                         <p className="mt-5 text-[13px] leading-6 text-white/55">
-                            Drag the audience strip to explore the people this service can
-                            support. Select a profile to see the need behind the work and
-                            the outcome it is designed to create.
+                            Drag the audience strip to explore the people this
+                            service can support. Select a profile to see the need
+                            behind the work and the outcome it is designed to
+                            create.
                         </p>
 
                         <div className="mt-7 flex items-center gap-3 text-[9px] font-semibold uppercase tracking-[.16em] text-white/45">
@@ -894,7 +995,7 @@ export default function ServiceReportExperience({
                 </div>
             </section>
 
-            {/* Usage highlights — this component owns the use-cases anchor. */}
+            {/* Usage Highlights */}
             <ServiceUsageHighlights
                 serviceTitle={service.title}
                 items={useCases}
@@ -954,124 +1055,60 @@ export default function ServiceReportExperience({
                 </div>
             </section>
 
-            {/* Process */}
+            {/* ================= HOW WE WORK ================= */}
             <section
-                id="approach"
-                className="report-section report-shell py-14 sm:py-20"
+                id="how-we-work"
+                className="report-section border-y border-white/10 bg-[#0a1020]"
             >
-                <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr] lg:gap-20">
-                    <div>
-                        <SectionLabel>05 / How the work moves</SectionLabel>
+                <div className="report-shell py-14 sm:py-20">
+                    <div className="mb-10 max-w-[720px]">
+                        <SectionLabel>05 / How we work</SectionLabel>
 
                         <h2 className="text-3xl font-medium leading-[1.03] tracking-[-.06em] text-white sm:text-5xl">
-                            A sequence you can see and shape.
+                            How We Work
                         </h2>
 
-                        <p className="mt-5 max-w-md text-[13px] leading-6 text-white/55">
-                            Select a stage to understand what happens, why it matters and
-                            how it moves the work forward.
+                        <p className="mt-5 text-[13px] leading-6 text-white/55">
+                            Select a service to see the steps involved.
                         </p>
-
-                        <div
-                            className="mt-8 space-y-1"
-                            role="tablist"
-                            aria-label="Service approach"
-                        >
-                            {approach.map((step, i) => (
-                                <button
-                                    key={step.title}
-                                    type="button"
-                                    role="tab"
-                                    aria-selected={activeStep === i}
-                                    onClick={() => setActiveStep(i)}
-                                    className={`flex w-full items-center justify-between border-b border-white/10 px-3 py-4 text-left transition ${activeStep === i
-                                        ? "bg-[#14233b] text-white"
-                                        : "text-white/65 hover:bg-white/[.04] hover:text-white"
-                                        }`}
-                                >
-                                    <span className="flex items-center gap-4">
-                                        <span
-                                            className={`text-[10px] ${activeStep === i
-                                                ? "text-[#75a5ff]"
-                                                : "text-[#2F7BFF]"
-                                                }`}
-                                        >
-                                            {String(i + 1).padStart(2, "0")}
-                                        </span>
-
-                                        <span className="text-[12px] font-medium">
-                                            {step.title}
-                                        </span>
-                                    </span>
-
-                                    <span className="text-lg">
-                                        {activeStep === i ? "−" : "+"}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
                     </div>
 
-                    <div className="flex min-h-[340px] flex-col justify-between border border-white/10 bg-[#111722] p-6 sm:p-10">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-white/45">
-                                Selected stage
-                            </span>
+                    <div className="mb-8 flex items-center gap-3">
+                        <span className="rounded-full border border-[#2F7BFF] bg-[#2F7BFF]/15 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[.16em] text-[#8eb7ff]">
+                            Technology
+                        </span>
+                        <span className="h-px flex-1 bg-white/10" />
+                        <span className="text-[9px] uppercase tracking-[.15em] text-white/35">
+                            Steps 01 — 05
+                        </span>
+                    </div>
 
-                            <span className="text-[10px] text-white/45">
-                                {String(activeStep + 1).padStart(2, "0")} /{" "}
-                                {String(approach.length).padStart(2, "0")}
-                            </span>
-                        </div>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                        {HOW_WE_WORK_STEPS.map((step) => (
+                            <div
+                                key={step.step}
+                                className="relative flex flex-col rounded-2xl border border-white/10 bg-[#111722] p-5 transition-colors hover:border-[#2F7BFF]/50 sm:p-6"
+                            >
+                                <span className="font-mono text-[11px] tracking-[.15em] text-[#2F7BFF]">
+                                    {step.step}
+                                </span>
 
-                        <div className="my-10">
-                            <p className="report-number text-[clamp(4rem,10vw,8rem)] font-light leading-[.8] text-[#2F7BFF]">
-                                {String(activeStep + 1).padStart(2, "0")}
-                            </p>
+                                <h3 className="mt-4 text-[14px] font-semibold leading-snug text-white">
+                                    {step.title}
+                                </h3>
 
-                            <h3 className="mt-7 text-3xl font-medium tracking-[-.06em] text-white sm:text-4xl">
-                                {approach[activeStep].title}
-                            </h3>
-
-                            <p className="mt-4 max-w-[540px] text-[14px] leading-7 text-white/65">
-                                {approach[activeStep].text}
-                            </p>
-                        </div>
-
-                        <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                            <span className="text-[9px] uppercase tracking-[.15em] text-white/40">
-                                Explore another chapter
-                            </span>
-
-                            <div className="flex gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setActiveStep((v) => Math.max(0, v - 1))
-                                    }
-                                    disabled={activeStep === 0}
-                                    className="h-9 w-9 border border-white/20 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]/10 disabled:opacity-30"
-                                    aria-label="Previous stage"
-                                >
-                                    ←
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setActiveStep((v) =>
-                                            Math.min(approach.length - 1, v + 1),
-                                        )
-                                    }
-                                    disabled={activeStep === approach.length - 1}
-                                    className="h-9 w-9 border border-white/20 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]/10 disabled:opacity-30"
-                                    aria-label="Next stage"
-                                >
-                                    →
-                                </button>
+                                <p className="mt-2 text-[12px] leading-6 text-white/55">
+                                    {step.body}
+                                </p>
                             </div>
-                        </div>
+                        ))}
                     </div>
+
+                    <p className="mt-8 rounded-2xl border border-white/10 bg-[#0a0f18] p-5 text-[12px] leading-6 text-white/55">
+                        <strong className="text-[#7CC4FF]">Note:</strong>{" "}
+                        Scope, pricing and timelines are agreed before work
+                        begins. Changes to agreed scope are handled in writing.
+                    </p>
                 </div>
             </section>
 
@@ -1162,13 +1199,6 @@ export default function ServiceReportExperience({
                             </p>
                         </div>
 
-                        <Link
-                            href="/contact"
-                            className="mt-8 flex items-center justify-between bg-[#2F7BFF] px-5 py-4 text-[11px] font-bold uppercase tracking-[.13em] text-white transition hover:bg-white hover:text-[#101a2c]"
-                        >
-                            Start a conversation
-                            <span className="text-lg">↗</span>
-                        </Link>
                     </div>
                 </div>
             </section>

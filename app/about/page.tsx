@@ -244,14 +244,6 @@ const divisions = [
         link: "#portfolio",
     },
     {
-        title: "Study abroad",
-        subtitle: "We guide international education.",
-        description:
-            "Country and course exploration, university selection, admission guidance, documentation and student visa assistance.",
-        words: "Destinations · Admissions · Visa support",
-        link: "#portfolio",
-    },
-    {
         title: "Careers",
         subtitle: "We help people prepare for work.",
         description:
@@ -400,22 +392,18 @@ export default function AboutPage() {
                     <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-8">
                         <Reveal delay={80} className="lg:col-span-9">
                             <h1 className="max-w-[1150px] text-[clamp(2.4rem,7.2vw,7.6rem)] font-semibold leading-[0.96] tracking-[-0.075em] [font-family:var(--about-heading)] sm:leading-[0.94] sm:tracking-[-0.085em]">
-                                We bring
+                                Technology, Training & Careers
                                 <br />
                                 <span className="text-[#86ACFF]">
-                                    different disciplines
+                                    One MindSpace
                                 </span>
-                                <br />
-                                into one direction.
+
                             </h1>
                         </Reveal>
 
                         <Reveal delay={180} className="max-w-[360px] pb-1 lg:col-span-3 lg:justify-self-end">
                             <p className="text-[14px] leading-[1.9] text-[#B9C5D6] sm:text-[15px] sm:leading-[1.95]">
-                                MindSpace is a technology, education and career
-                                development company. We build digital solutions
-                                for businesses and support people through
-                                learning, global education and career pathways.
+                                MindSpace provides technology solutions, professional training, and job placement and career support. We work with businesses, learners and job seekers to understand their needs and provide practical support.
                             </p>
 
                             <Link
@@ -518,10 +506,10 @@ export default function AboutPage() {
                             </p>
 
                             <h2 className="max-w-[800px] text-[clamp(2.2rem,6vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.07em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.01] sm:tracking-[-0.08em]">
-                                One company.
+                                One Company.
                                 <br />
                                 <span className="text-[#2F7BFF]">
-                                    Four areas of focus.
+                                    Three Areas of Focus.
                                 </span>
                             </h2>
                         </Reveal>
@@ -740,8 +728,7 @@ export default function AboutPage() {
                                 </p>
 
                                 <h3 className="relative mt-auto max-w-[560px] pt-10 text-[clamp(1.7rem,4vw,3.7rem)] font-semibold leading-[1.1] tracking-[-0.055em] [font-family:var(--about-heading)] sm:leading-[1.08] sm:tracking-[-0.065em]">
-                                    Make technology, learning and opportunity
-                                    more accessible through meaningful support.
+                                    Help businesses grow through technology and help individuals progress through practical training and career support.
                                 </h3>
 
                                 <div className="pointer-events-none absolute bottom-0 right-0 h-24 w-24 opacity-70 sm:h-28 sm:w-28">
@@ -760,8 +747,7 @@ export default function AboutPage() {
                                 </p>
 
                                 <h3 className="relative mt-auto max-w-[450px] pt-10 text-[clamp(1.6rem,3.6vw,3rem)] font-semibold leading-[1.12] tracking-[-0.05em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.1] sm:tracking-[-0.06em]">
-                                    One connected platform for business,
-                                    education and career progress.
+                                    To be a trusted partner for digital solutions, practical learning and career development.
                                 </h3>
 
                                 <p className="relative mt-5 max-w-[400px] text-[13px] leading-[1.85] text-[#9AA6B7] sm:mt-6 sm:leading-[1.9]">

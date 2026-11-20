@@ -128,9 +128,9 @@ export default function ExperienceSlider() {
 
                     {/* Heading and introduction */}
                     <div className="relative">
-                        <h2 className="max-w-xl text-4xl font-semibold leading-[1.08] tracking-[-0.055em] sm:text-5xl lg:text-[58px]">
+                        <h2 className="max-w-4xl text-[clamp(38px,7.4vw,70px)] leading-[0.84] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
                             Beyond the destination,
-                            <span className="mt-3 block bg-gradient-to-r from-[#A9C7FF] to-[#2F7BFF] bg-clip-text text-transparent">
+                            <span className="mt-3 block bg-#A9C7FF text-[#A9C7FF] ">
                                 it’s how you get there.
                             </span>
                         </h2>
@@ -175,7 +175,7 @@ export default function ExperienceSlider() {
                         <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/35">
                             MindSpace · A different perspective
                         </span>
-                        
+
                     </div>
                 </div>
             </div>

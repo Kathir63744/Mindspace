@@ -66,37 +66,6 @@ const approaches = {
         footer: "For students, graduates and professionals",
     },
 
-    study: {
-        number: "03",
-        label: "Study abroad",
-        heading: "Make international education a considered decision.",
-        description:
-            "Choosing to study abroad involves more than selecting a country. Academic goals, course suitability, finances and application requirements all matter.",
-        steps: [
-            {
-                number: "01",
-                title: "Understand the student profile",
-                description:
-                    "Review academic background, interests, intended study level, budget and future goals.",
-            },
-            {
-                number: "02",
-                title: "Explore suitable options",
-                description:
-                    "Research relevant destinations, institutions, courses, entry requirements and available funding options.",
-            },
-            {
-                number: "03",
-                title: "Navigate the application journey",
-                description:
-                    "Assist with applications, documentation and student visa preparation, subject to university and immigration requirements.",
-            },
-        ],
-        outcome:
-            "A clearer study plan and guidance through the relevant application stages. Admission and visa decisions remain with the respective authorities.",
-        footer: "For students and families",
-    },
-
     careers: {
         number: "04",
         label: "Careers & placements",
@@ -134,8 +103,7 @@ type ApproachKey = keyof typeof approaches;
 const tabs: { key: ApproachKey; label: string }[] = [
     { key: "technology", label: "Technology" },
     { key: "training", label: "Training" },
-    { key: "study", label: "Study abroad" },
-    { key: "careers", label: "Careers" },
+    { key: "careers", label: "Careers & Placements" },
 ];
 
 export default function MindSpaceApproach() {
@@ -164,10 +132,10 @@ export default function MindSpaceApproach() {
                             <span className="h-px max-w-24 flex-1 bg-white/10" />
                         </div>
 
-                        <h2 className="max-w-[850px] text-[clamp(2.8rem,6vw,6rem)] font-medium leading-[0.98] tracking-[-0.07em]">
+                        <h2 className="max-w-[850px] text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
                             Different challenges.
                             <br />
-                            <span className="text-[clamp(2.8rem,6vw,6rem)] font-medium leading-[0.98] tracking-[-0.07em]">
+                            <span className="text-[clamp(38px,6.4vw,80px)] text-[#A9C7FF] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
                                 A considered way forward.
                             </span>
                         </h2>
@@ -175,10 +143,7 @@ export default function MindSpaceApproach() {
 
                     <div className="lg:col-span-4 lg:pb-2">
                         <p className="max-w-[390px] text-[14px] leading-[1.9] text-[#A2AAB8]">
-                            Technology projects, professional learning,
-                            international education and career development
-                            need different kinds of support. Explore how we
-                            approach each one.
+                            Every technology project, training goal and career plan needs a different approach. Choose a service to see how we work.
                         </p>
                     </div>
                 </div>

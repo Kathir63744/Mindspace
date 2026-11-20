@@ -1,72 +1,65 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 
 type Service = {
     number: string;
     title: string;
     summary: string;
-    items: string[];
+    items: { label: string; href: string }[];
     symbol: "technology" | "global" | "career";
     href: string;
     linkLabel: string;
 };
 
-type MindSpaceEcosystemProps = {
-    id?: string;
-    eyebrow?: string;
-    titleLine1?: string;
-    titleAccent?: string;
-    description?: string;
-    services?: Service[];
-    contactHref?: string;
-};
-
 const DEFAULT_SERVICES: Service[] = [
     {
         number: "01",
-        title: "Technology & Digital Solutions",
+        title: "Technology Solutions",
         summary:
-            "We help businesses turn ideas into reliable digital products, from the first concept to development and launch.",
+            "We build websites, mobile applications, web applications and custom software around your business requirements.",
         items: [
-            "Website development",
-            "Mobile app development",
-            "Custom software development",
-            "Digital solutions",
+            { label: "Website Development", href: "/services/website-development" },
+            { label: "Mobile App Development", href: "/services/app-development" },
+            { label: "Web Application Development", href: "/services/web-application" },
+            { label: "Custom Software Development", href: "/services/software-development" },
         ],
         symbol: "technology",
-        href: "#technology",
-        linkLabel: "Explore technology",
+        href: "/services",
+        linkLabel: "Explore Technology Solutions",
     },
     {
         number: "02",
-        title: "Global Education",
+        title: "Professional Training",
         summary:
-            "We help students navigate international education opportunities and understand the steps involved in studying abroad.",
+            "Develop practical skills through technical training, hands-on projects, and professional communication programmes.",
         items: [
-            "Study abroad guidance",
-            "Student visa assistance",
-            "University application support",
-            "Education pathway guidance",
+            { label: "Technical & Programming Training", href: "/training/programming-foundations" },
+            { label: "Practical Projects", href: "/training/web-development" },
+            { label: "Job Readiness Training", href: "/training/portfolio-certification" },
+            { label: "Corporate & Communication Training", href: "/training/communication" },
         ],
         symbol: "global",
-        href: "#global-education",
-        linkLabel: "Explore global education",
+        href: "/training",
+        linkLabel: "Explore Professional Training",
     },
     {
         number: "03",
-        title: "Skills & Career Development",
+        title: "Job Placement & Career Support",
         summary:
-            "We support learners as they build practical skills, work towards certifications, and prepare for career opportunities.",
+            "Prepare for your next opportunity with career guidance, resume support, interview preparation and placement assistance.",
         items: [
-            "Professional training",
-            "Practical skill development",
-            "Certification programs",
-            "Placement assistance",
+            { label: "Career Guidance", href: "/careers/career-direction" },
+            { label: "Resume & LinkedIn Profile Support", href: "/careers/resume-linkedin" },
+            { label: "Interview Preparation", href: "/careers/interview-coaching" },
+            { label: "Job Search Support", href: "/careers/placement-support" },
+            { label: "Internship Assistance", href: "/careers/internships" },
+            { label: "Job Placement Assistance", href: "/careers/on-the-job-readiness" },
         ],
         symbol: "career",
-        href: "#careers",
-        linkLabel: "Explore career development",
+        href: "/careers",
+        linkLabel: "Explore Career Support",
     },
 ];
 
@@ -118,7 +111,7 @@ function ServiceCard({
 }) {
     return (
         <motion.article
-            className="group flex min-w-0 flex-col bg-white/[0.012] p-[clamp(22px,2.7vw,38px)] transition-colors duration-300 hover:bg-[#111B2C] max-md:min-h-0"
+            className="group flex h-full min-w-0 flex-col bg-white/[0.012] p-[clamp(22px,2.7vw,38px)] transition-colors duration-300 hover:bg-[#111B2C] max-md:min-h-0"
             initial={reducedMotion ? false : { opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -146,14 +139,16 @@ function ServiceCard({
 
             <ul className="my-7 grid gap-3 p-0 list-none max-md:grid-cols-2 max-md:max-sm:grid-cols-1">
                 {service.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-base leading-normal text-[#D3D8E2]">
-                        <span className="text-[13px] text-[#A9C7FF]" aria-hidden="true">↗</span>
-                        {item}
+                    <li key={item.href}>
+                        <Link href={item.href} className="group/item flex items-start gap-2.5 text-base leading-normal text-[#D3D8E2] transition-colors hover:text-[#A9C7FF]">
+                            <span className="text-[13px] text-[#A9C7FF]" aria-hidden="true">↗</span>
+                            {item.label}
+                        </Link>
                     </li>
                 ))}
             </ul>
 
-            <a
+            <Link
                 className="mt-auto flex items-center justify-between gap-4 border-t border-white/[0.13] pt-[17px] text-[11px] font-[650] text-[#F3F5FA] no-underline transition-colors duration-250 hover:text-[#A9C7FF]"
                 href={service.href}
             >
@@ -161,26 +156,28 @@ function ServiceCard({
                 <span className="text-[17px] text-[#A9C7FF] transition-transform duration-250 group-hover:translate-x-[3px] group-hover:-translate-y-[3px]" aria-hidden="true">
                     ↗
                 </span>
-            </a>
+            </Link>
         </motion.article>
     );
 }
 
-/**
- * MindSpaceEcosystem
- *
- * A clear About / platform overview for a business combining:
- * technology services, international education support, and career development.
- */
 export default function MindSpaceEcosystem({
     id = "about",
     eyebrow = "ONE PLATFORM. MORE POSSIBILITIES.",
-    titleLine1 = "Technology, education",
-    titleAccent = " & careers.",
-    description = "MindSpace brings digital services, global education guidance, and career development together in one place. Whether you're building a business, planning to study abroad, or preparing for your next opportunity, we're here to help you take the next step.",
+    titleLine1 = "Technology, Training ",
+    titleAccent = " & Career Support",
+    description = "Whether you need a digital solution, practical training, or support with your next career move, MindSpace helps you take the next step with a clear plan.",
     services = DEFAULT_SERVICES,
-    contactHref = "#contact",
-}: MindSpaceEcosystemProps) {
+    contactHref = "/contact",
+}: {
+    id?: string;
+    eyebrow?: string;
+    titleLine1?: string;
+    titleAccent?: string;
+    description?: string;
+    services?: Service[];
+    contactHref?: string;
+}) {
     const reducedMotion = useReducedMotion();
 
     return (
@@ -190,17 +187,14 @@ export default function MindSpaceEcosystem({
             aria-labelledby={`${id}-heading`}
         >
             <div className="relative z-10 mx-auto max-w-[1440px]">
+                <div className="mx-auto mb-4 flex max-w-7xl items-center gap-3 px-6">
+                    <span className="h-px w-9 bg-[#2F7BFF]" />
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                        MINDSPACE / WHAT WE DO
+                    </span>
+                    <span className="h-px max-w-24 flex-1 bg-white/10" />
+                </div>
 
-                {/* Header */}
-                <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
-                            <span className="h-px w-9 bg-[#2F7BFF]" />
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
-                                MINDSPACE / WHAT WE DO
-                            </span>
-                            <span className="h-px max-w-24 flex-1 bg-white/10" />
-                        </div>
-
-                {/* Intro */}
                 <div className="grid grid-cols-1 items-end gap-[clamp(30px,7vw,100px)] py-[clamp(48px,7vw,94px)] md:grid-cols-[minmax(0,1.35fr)_minmax(260px,.65fr)] md:pb-[clamp(48px,6vw,76px)]">
                     <motion.div
                         initial={reducedMotion ? false : { opacity: 0, y: 24 }}
@@ -208,7 +202,7 @@ export default function MindSpaceEcosystem({
                         viewport={{ once: true }}
                         transition={{ duration: 0.85, ease: EASE }}
                     >
-                        <h2 id={`${id}-heading`} className="m-0 max-w-[900px] text-[clamp(48px,7.4vw,108px)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F5FA] max-sm:text-[clamp(43px,12vw,66px)]">
+                        <h2 id={`${id}-heading`} className="m-0 max-w-[900px] text-[clamp(48px,7.4vw,98px)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F5FA] max-sm:text-[clamp(43px,12vw,66px)]">
                             {titleLine1}
                             <span className="text-[#A9C7FF]">{titleAccent}</span>
                         </h2>
@@ -236,41 +230,31 @@ export default function MindSpaceEcosystem({
                     </motion.div>
                 </div>
 
-                {/* Section Label */}
                 <div className="flex justify-between gap-[18px] border-t border-white/[0.13] py-[17px] text-[9px] font-[650] uppercase tracking-[0.16em] text-[#8993A6] max-sm:text-[8px] max-sm:tracking-[0.1em]">
                     <span className="text-[#A9C7FF]">OUR SERVICES</span>
-                    <span>THREE WAYS WE HELP YOU MOVE FORWARD</span>
+                    <span>Three Services. One MindSpace.</span>
                 </div>
 
-                {/* Cards */}
                 <div className="grid grid-cols-1 border border-white/[0.13] md:grid-cols-3">
                     {services.map((service, index) => (
                         <div key={`${service.number}-${service.title}`} className={`flex flex-col ${index > 0 ? "border-t border-white/[0.13] md:border-t-0 md:border-l" : ""}`}>
-                            <ServiceCard
-                                service={service}
-                                reducedMotion={Boolean(reducedMotion)}
-                            />
+                            <ServiceCard service={service} reducedMotion={Boolean(reducedMotion)} />
                         </div>
                     ))}
                 </div>
 
-                {/* Footer */}
-                <footer className="flex items-center justify-between gap-5 pt-[26px] max-sm:flex-col max-sm:items-start">
-                    <div className="flex items-center gap-3.5">
-                        <span className="text-2xl font-[750] tracking-[-0.1em] text-[#A9C7FF]" aria-hidden="true">
-                            M.
-                        </span>
-                        <p className="m-0 text-xs text-[#A0A9BA]">
-                            Different goals. One place to get moving.
-                        </p>
-                    </div>
-                    <a href={contactHref} className="inline-flex items-center gap-4 text-[9px] font-[650] uppercase tracking-[0.16em] text-[#F3F5FA] no-underline transition-colors duration-250 hover:text-[#A9C7FF]">
-                        Start a conversation
-                        <span className="text-[17px] text-[#A9C7FF]" aria-hidden="true">
-                            ↗
-                        </span>
-                    </a>
-                </footer>
+                <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-white/[0.13] pt-6 sm:flex-row sm:items-center">
+                    <p className="text-[11px] text-[#8993A6]">
+                        Ready to start? Choose a track above or contact our team for guidance.
+                    </p>
+                    <Link
+                        href="/contact"
+                        className="group inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-[#A9C7FF]"
+                    >
+                        Talk to an expert
+                        <span className="transition-transform group-hover:translate-x-1">↗</span>
+                    </Link>
+                </div>
             </div>
         </section>
     );

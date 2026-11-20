@@ -20,7 +20,7 @@ export default function EraOfMakers() {
 
                 {/* Section identity */}
                 <div className="mb-16 flex items-center gap-4">
-                    
+
                     <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
                         <span className="h-px w-9 bg-[#2F7BFF]" />
                         <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
@@ -42,21 +42,16 @@ export default function EraOfMakers() {
                             An era of connected possibilities
                         </p>
 
-                        <h2 className="max-w-[680px] text-[clamp(3rem,6.5vw,6.4rem)] font-medium leading-[0.96] tracking-[-0.075em]">
+                        <h2 className="max-w-[680px] text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
                             Different needs.
                             <br />
-                            <span className="text-[#2F7BFF]">
+                            <span className="text-[#A9C7FF]">
                                 One MindSpace.
                             </span>
                         </h2>
 
                         <p className="mt-8 max-w-[510px] text-[15px] leading-[1.95] text-[#A2AAB8] sm:text-base">
-                            MindSpace brings technology solutions, professional
-                            training, international education assistance and
-                            career support together in one platform. We help
-                            businesses build digital products while helping
-                            individuals develop skills, explore global education
-                            and move towards meaningful career opportunities.
+                            MindSpace brings technology solutions, professional training, and career support together in one place. We help businesses develop digital products and help individuals build skills, prepare for interviews, and connect with relevant job opportunities.
                         </p>
 
                         <div className="mt-9">

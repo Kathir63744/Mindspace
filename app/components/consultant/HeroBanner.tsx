@@ -47,123 +47,77 @@ const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 const MOVE_MS = 1100;
 
 /* ============================================================
-   TYPOGRAPHY
+   TYPOGRAPHY & ANIMATION
 ============================================================ */
 
 const BLUE = "#8E9BFF";
-const ROTATING_WORDS = ["further.", "faster.", "smarter.", "bolder.", "sharper.", "clearer."];
-const HOLD_MS = 10000;
 
-function useWordRotator(start: boolean, reduced: boolean) {
-    const [idx, setIdx] = useState(0);
+const PHRASES = [
+    { lead: "Build your ", blue: "business." },
+    { lead: "Develop your ", blue: "skills." },
+    { lead: "Advance your ", blue: "career." }
+];
+
+function TypewriterHeading({ start, reduced }: { start: boolean; reduced: boolean }) {
+    const [index, setIndex] = useState(0);
+    const [subIndex, setSubIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [blink, setBlink] = useState(true);
+
+    const currentPhrase = PHRASES[index];
+    const fullText = currentPhrase.lead + currentPhrase.blue;
+
+    // Blinking cursor
+    useEffect(() => {
+        const timer = setInterval(() => setBlink((b) => !b), 500);
+        return () => clearInterval(timer);
+    }, []);
+
     useEffect(() => {
         if (!start || reduced) return;
-        const t = setTimeout(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), HOLD_MS);
-        return () => clearTimeout(t);
-    }, [idx, start, reduced]);
-    return ROTATING_WORDS[idx];
-}
 
-function DotFadeWord({ word, start }: { word: string; start: boolean }) {
-    const [phase, setPhase] = useState<"dot" | "sharp">("dot");
+        let timeout: ReturnType<typeof setTimeout>;
 
-    useEffect(() => {
-        if (!start) return;
-        setPhase("dot");
-        const t = setTimeout(() => setPhase("sharp"), 40);
-        return () => clearTimeout(t);
-    }, [word, start]);
-
-    return (
-        <span
-            style={{ color: BLUE }}
-            className="inline-flex flex-nowrap items-baseline whitespace-nowrap"
-            aria-label={word}
-        >
-            {word.split("").map((ch, i) => (
-                <span
-                    key={`${word}-${i}`}
-                    aria-hidden="true"
-                    className="inline-block will-change-[opacity,filter,transform]"
-                    style={{
-                        opacity: start ? (phase === "sharp" ? 1 : 0.15) : 0,
-                        filter: start
-                            ? phase === "sharp"
-                                ? "blur(0px)"
-                                : "blur(6px)"
-                            : "blur(6px)",
-                        transform: start
-                            ? phase === "sharp"
-                                ? "translate3d(0,0,0) scale(1)"
-                                : "translate3d(0,0.15em,0) scale(0.55)"
-                            : "translate3d(0,0.15em,0) scale(0.55)",
-                        transition: `opacity 620ms ease ${i * 55}ms, filter 700ms ease ${i * 55}ms, transform 700ms cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
-                    }}
-                >
-                    {ch}
-                </span>
-            ))}
-        </span>
-    );
-}
-
-function RotatingLastWord({ start, reduced }: { start: boolean; reduced: boolean }) {
-    const word = useWordRotator(start, reduced);
-    if (reduced) return <span style={{ color: BLUE }}>{word}</span>;
-    return <DotFadeWord word={word} start={start} />;
-}
-
-function DotRevealHeading({
-    text,
-    visible,
-    reduced,
-}: {
-    text: string;
-    visible: boolean;
-    reduced: boolean;
-}) {
-    const parts = text.trim().split(" ");
-    parts.pop();
-    const lead = parts.join(" ") + (parts.length ? " " : "");
-
-    const [animate, setAnimate] = useState(false);
-    useEffect(() => {
-        if (!visible || reduced) {
-            setAnimate(reduced);
-            return;
+        if (isDeleting) {
+            if (subIndex === 0) {
+                setIsDeleting(false);
+                setIndex((prev) => (prev + 1) % PHRASES.length);
+            } else {
+                timeout = setTimeout(() => setSubIndex((prev) => prev - 1), 30);
+            }
+        } else {
+            if (subIndex === fullText.length) {
+                timeout = setTimeout(() => setIsDeleting(true), 2500);
+            } else {
+                timeout = setTimeout(() => setSubIndex((prev) => prev + 1), 70);
+            }
         }
-        const t = setTimeout(() => setAnimate(true), 900);
-        return () => clearTimeout(t);
-    }, [visible, reduced]);
+
+        return () => clearTimeout(timeout);
+    }, [subIndex, isDeleting, index, fullText, start, reduced]);
+
+    if (reduced) {
+        return (
+            <span className="whitespace-nowrap">
+                {currentPhrase.lead}
+                <span style={{ color: BLUE }}>{currentPhrase.blue}</span>
+            </span>
+        );
+    }
+
+    const currentLead = currentPhrase.lead.substring(0, Math.min(subIndex, currentPhrase.lead.length));
+    const currentBlue = subIndex > currentPhrase.lead.length
+        ? currentPhrase.blue.substring(0, subIndex - currentPhrase.lead.length)
+        : "";
 
     return (
-        <span className="inline-flex flex-wrap items-baseline" aria-label={text}>
-            {lead.split("").map((char, index) => (
-                <span
-                    key={`lead-${char}-${index}`}
-                    aria-hidden="true"
-                    className="inline-block"
-                    style={{
-                        opacity: visible || reduced ? 1 : 0,
-                        transform:
-                            visible || reduced
-                                ? "translate3d(0,0,0)"
-                                : "translate3d(0,0.42em,0)",
-                        filter: visible || reduced ? "blur(0)" : "blur(5px)",
-                        transition: reduced
-                            ? "none"
-                            : `opacity 650ms ease ${index * 24}ms, transform 750ms cubic-bezier(0.22,1,0.36,1) ${index * 24
-                            }ms, filter 650ms ease ${index * 24}ms`,
-                        whiteSpace: char === " " ? "pre" : "normal",
-                    }}
-                >
-                    {char === " " ? "\u00A0" : char}
-                </span>
-            ))}
-
-            <span className="inline-block">
-                <RotatingLastWord start={animate} reduced={reduced} />
-            </span>
+        <span className="whitespace-nowrap">
+            {currentLead}
+            <span style={{ color: BLUE }}>{currentBlue}</span>
+            <span
+                className="inline-block w-[3px] h-[1em] translate-y-[2px] ml-1 bg-[#8E9BFF]"
+                style={{ opacity: blink ? 1 : 0 }}
+            />
         </span>
     );
 }
@@ -535,7 +489,7 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
         <div
             role="group"
             aria-label="Project showcase"
-            className="relative w-full max-w-[1350px] overflow-hidden mt-2 md:mt-4 aspect-[4/5] max-h-[65svh] md:aspect-auto md:h-[min(58vh,520px)] md:max-h-none"
+            className="relative w-full max-w-[1350px] overflow-hidden aspect-[4/5] max-h-[70svh] md:aspect-auto md:h-[min(62vh,530px)] md:max-h-none"
         >
             {CLIPS.map((clip, i) => {
                 const off = offOf(i, cur);
@@ -598,33 +552,49 @@ export default function HeroBanner() {
 
     return (
         <>
+            <style>{`
+                /* Desktop Defaults */
+                .hero-heading-wrapper {
+                    padding-top: 30px;
+                }
+                .hero-carousel-wrapper {
+                    margin-top: 15px;
+                }
+
+                /* Mobile Overrides */
+                @media (max-width: 767px) {
+                    .hero-heading-wrapper {
+                        padding-top: 72px;
+                    }
+                    .hero-carousel-wrapper {
+                        margin-top: 20px; 
+                    }
+                }
+            `}</style>
+
             <section
-                className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
-                style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 72px)" }}
+                className="relative -mt-20 flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
+                style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 132px)" }}
             >
                 <DotMatrixBackground />
 
-                {/* Headline - Removed top padding entirely to pull it tight */}
-                <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-6 px-4 pt-0 sm:gap-12 sm:px-8 md:flex-row md:px-12 lg:px-20">
+                {/* Headline Wrapper */}
+                <div className="hero-heading-wrapper relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between px-4 sm:px-8 md:flex-row md:px-12 lg:px-20">
                     <div className="flex w-full flex-col md:w-[65%]">
                         <div
-                            className="relative overflow-hidden px-2 pt-0 sm:px-6 md:-ml-7 md:px-6 md:py-4 md:pt-14 md:sm:px-10"
+                            className="relative overflow-hidden px-2 md:-ml-7 md:px-6 md:py-4 md:sm:px-10"
                             style={rise(200)}
                         >
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                            <h1 className="relative z-10 max-w-[900px] font-sans text-[clamp(2rem,8vw,3rem)] font-medium leading-[1.02] tracking-[-0.045em] text-[#F3F5FA] sm:text-[clamp(2.4rem,7vw,3.4rem)] md:text-[clamp(2.7rem,6.2vw,4.6rem)] md:leading-[0.98] md:tracking-[-0.065em]">
-                                <DotRevealHeading
-                                    text="Learn. Build. Go further."
-                                    visible={shown}
-                                    reduced={reduced}
-                                />
+                            <h1 className="relative z-10 max-w-[900px] font-sans text-[clamp(1.8rem,7.5vw,2.8rem)] font-medium leading-[1.02] tracking-[-0.045em] text-[#F3F5FA] sm:text-[clamp(2.4rem,7vw,3.4rem)] md:text-[clamp(2.7rem,6.2vw,4.6rem)] md:leading-[0.98] md:tracking-[-0.065em]">
+                                <TypewriterHeading start={shown} reduced={reduced} />
                             </h1>
                         </div>
                     </div>
                 </div>
 
-                {/* Carousel - Tightened bottom padding to fill screen */}
-                <div className="relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-start px-4 pb-4 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
+                {/* Carousel Wrapper */}
+                <div className="hero-carousel-wrapper relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-start px-4 pb-6 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
                     <Carousel revealed={shown} reduced={reduced} />
                 </div>
             </section>

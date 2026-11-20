@@ -10,20 +10,28 @@ const faqData = [
         category: "General",
         items: [
             {
-                q: "What is Mind Space?",
-                a: "Mind Space is a premier educational consultancy that bridges the gap between ambitious students and top global universities. We provide end-to-end guidance for admissions, visas, and career planning.",
+                q: "What does MindSpace do?",
+                a: "MindSpace provides technology solutions, professional training, and job placement and career support for businesses and individuals.",
             },
             {
-                q: "What is included in a consultation?",
-                a: "A consultation includes a full profile evaluation, course and university shortlisting, and a clear roadmap covering finances, visa requirements, and application timelines.",
+                q: "What technology services do you offer?",
+                a: "We offer website development, mobile app development, web application development and custom software development. Each project is scoped around the client's requirements.",
             },
             {
-                q: "Where can I study?",
-                a: "We have direct partnerships and successful placements in top institutions across the UK, USA, Canada, Australia, Germany, and several other European countries.",
+                q: "What professional training do you offer?",
+                a: "We offer technical and programming training, practical projects, job readiness training, and corporate and communication training. Contact us for current programme availability.",
             },
             {
-                q: "Which courses are right for me?",
-                a: "Our expert counsellors assess your academic background, career goals, and budget to recommend suitable courses and universities.",
+                q: "What career support do you provide?",
+                a: "We provide career guidance, resume and LinkedIn profile support, interview preparation, job search support, internship assistance and placement assistance.",
+            },
+            {
+                q: "Do you guarantee a job?",
+                a: "No. We provide preparation and placement assistance, but hiring decisions are made by employers.",
+            },
+            {
+                q: "Is placement assistance included with training?",
+                a: "Placement assistance depends on the programme or service selected. We explain what is included before enrolment.",
             },
         ],
     },
@@ -32,19 +40,11 @@ const faqData = [
         items: [
             {
                 q: "How much do your services cost?",
-                a: "Our pricing varies based on the level of service and the country you are applying to. Contact us for a detailed, transparent pricing structure.",
+                a: "Fees depend on the project, programme or support required. We explain the scope and applicable fees before you proceed.",
             },
             {
-                q: "Are there hidden charges?",
-                a: "No. We believe in transparency. All service fees, university application fees, and visa charges are explained upfront before you commit.",
-            },
-            {
-                q: "Do you help with scholarships?",
-                a: "Yes. We help you identify and apply for merit-based and need-based scholarships to make your global education more affordable.",
-            },
-            {
-                q: "What is your visa success rate?",
-                a: "Our published information states a 98% visa success rate. Individual outcomes depend on eligibility, documentation, and the visa authority's decision.",
+                q: "How do I get started?",
+                a: "Select the service you need on our Contact page and tell us briefly about your requirements. Our team will explain the next steps.",
             },
         ],
     },
@@ -296,31 +296,7 @@ export default function Faq() {
                     </div>
                 </div>
 
-                {/* Contact CTA */}
-                <div className="relative mt-24 overflow-hidden border-y border-white/10 py-12 sm:py-16">
-                    <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-                        <div>
-                            <span className="mb-5 block text-[10px] font-semibold uppercase tracking-[0.24em] text-[#2F7BFF]">
-                                Still figuring things out?
-                            </span>
 
-                            <h3 className="max-w-3xl text-3xl font-medium leading-tight tracking-[-0.05em] sm:text-5xl">
-                                Your journey deserves
-                                <span className="text-[#7F8BA0]"> a conversation.</span>
-                            </h3>
-                        </div>
-
-                        <Link
-                            href="/contact"
-                            className="group inline-flex w-fit items-center gap-5 rounded-full bg-[#2F7BFF] px-7 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#1F68E8]"
-                        >
-                            Talk to our team
-                            <span className="transition-transform duration-300 group-hover:translate-x-1">
-                                →
-                            </span>
-                        </Link>
-                    </div>
-                </div>
 
                 {/* Bottom detail */}
                 <div className="mt-7 flex flex-col justify-between gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#596579] sm:flex-row">

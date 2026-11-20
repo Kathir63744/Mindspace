@@ -1,68 +1,66 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
 
 const categories = [
     "All",
-    "Admissions",
-    "University Guidance",
-    "Visa Support",
-    "Career Planning",
+    "Technology",
+    "Training",
+    "Career Support"
 ];
 
 const experts = [
     {
         id: 1,
-        name: "Advisor Name",
-        role: "Senior Education Consultant",
-        category: "Admissions",
+        name: "David Osei",
+        role: "Technology Consultant",
+        category: "Technology",
         image:
-            "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=85",
+            "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&auto=format&fit=crop&q=85",
         initials: "01",
-        experience: "Admissions & applications",
-        tags: ["Profile Evaluation", "Application Strategy", "Documentation"],
+        experience: "Cloud Architecture & Web Systems",
+        tags: ["Next.js", "AWS", "Custom Software"],
         description:
-            "Helping students understand admission requirements and prepare stronger applications.",
+            "Advising businesses on digital transformation and leading the architecture of custom software solutions.",
     },
     {
         id: 2,
-        name: "Advisor Name",
-        role: "University Guidance Specialist",
-        category: "University Guidance",
+        name: "Marcus Chen",
+        role: "Professional Trainer",
+        category: "Training",
         image:
-            "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=85",
+            "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=85",
         initials: "02",
-        experience: "University selection",
-        tags: ["Course Selection", "University Research", "Study Planning"],
+        experience: "Curriculum Design & Mentorship",
+        tags: ["Web Development", "Data & AI", "Programming"],
         description:
-            "Supporting students in finding suitable universities and academic pathways.",
+            "Designing and delivering hands-on training tracks that turn beginners into job-ready developers.",
     },
     {
         id: 3,
-        name: "Advisor Name",
-        role: "Visa Documentation Specialist",
-        category: "Visa Support",
+        name: "Priya Sharma",
+        role: "Career Advisor",
+        category: "Career Support",
         image:
-            "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&auto=format&fit=crop&q=85",
+            "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=900&auto=format&fit=crop&q=85",
         initials: "03",
-        experience: "Visa preparation",
-        tags: ["Document Review", "Visa Guidance", "Interview Preparation"],
+        experience: "Career Strategy & Interview Prep",
+        tags: ["Resume Building", "Mock Interviews", "Career Direction"],
         description:
-            "Guiding students through visa documentation and preparation requirements.",
+            "Guiding individuals through career transitions, resume optimization, and interview preparation.",
     },
     {
         id: 4,
-        name: "Advisor Name",
-        role: "Career Guidance Consultant",
-        category: "Career Planning",
+        name: "Sarah Jenkins",
+        role: "Placement Coordinator",
+        category: "Career Support",
         image:
-            "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=900&auto=format&fit=crop&q=85",
+            "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=85",
         initials: "04",
-        experience: "Career development",
-        tags: ["Career Direction", "Goal Planning", "Opportunity Mapping"],
+        experience: "Partner Networks & Internships",
+        tags: ["Job Placement", "Internships", "Employer Relations"],
         description:
-            "Helping students connect their education choices with future career goals.",
+            "Connecting trained talent with hiring partners and managing internship and placement opportunities.",
     },
 ];
 
@@ -100,23 +98,21 @@ export default function Expertise() {
                         <div className="mb-6 flex items-center gap-3">
                             <span className="h-px w-8 bg-[#2F7BFF]" />
                             <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#A9C7FF]">
-                                The people behind MindSpace
+                                Our Experts
                             </span>
                         </div>
 
-                        <h2 className="max-w-3xl font-display text-4xl font-medium leading-[1.08] tracking-[-0.06em] text-white sm:text-5xl lg:text-7xl">
-                            Expertise that moves
+                        <h2 className="max-w-3xl font-display text-white text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
+                            Meet the People
                             <span className="block text-[#A9C7FF]">
-                                your journey forward.
+                                Behind MindSpace
                             </span>
                         </h2>
                     </div>
 
                     <div className="lg:pb-2">
                         <p className="text-sm leading-7 text-white/50">
-                            Meet the specialists behind every important
-                            decision, offering focused guidance at each
-                            stage of your education journey.
+                            Our team brings together experience in technology, professional training, and career and placement support.
                         </p>
 
                         <div className="mt-5 flex items-center gap-3">
@@ -189,7 +185,7 @@ export default function Expertise() {
                                 <span className="absolute right-0 top-0 h-16 w-16 border-r border-t border-[#2F7BFF]/20 transition-all duration-500 group-hover:h-20 group-hover:w-20 group-hover:border-[#2F7BFF]/60" />
 
                                 <span className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
-                                    MindSpace specialist
+                                    MindSpace Specialist
                                 </span>
 
                                 <h3 className="font-display text-lg font-medium leading-tight tracking-tight text-white transition-colors group-hover:text-[#A9C7FF] sm:text-2xl">
