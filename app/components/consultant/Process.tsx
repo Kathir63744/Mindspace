@@ -2,8 +2,15 @@
 "use client";
 
 import Image from "next/image";
+import { Questrial } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
 import { processContent, processSteps } from "./data";
+
+const questrial = Questrial({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const stepVisuals = [
   {
@@ -88,28 +95,39 @@ export default function Process() {
   return (
     <section
       id="process"
-      className="relative overflow-hidden bg-[#080B12] py-20 text-[#F5F7FB] sm:py-28"
+      className={`${questrial.className} process-questrial relative isolate overflow-hidden bg-[#080B12] py-24 text-[#F5F7FB] sm:py-32`}
+      aria-labelledby="process-heading"
     >
-      {/* Top accent */}
+      <style jsx global>{`
+                .process-questrial,
+                .process-questrial * {
+                    font-family: ${questrial.style.fontFamily}, sans-serif !important;
+                }
+            `}</style>
 
-      <div className="mx-auto w-full max-w-[1800px]">
+      {/* Background Grid & Glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:64px_64px] opacity-[0.16] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+
+      <div className="pointer-events-none absolute -left-[10%] top-[20%] -z-10 aspect-square w-[min(40vw,500px)] rounded-full bg-[#2F7BFF] opacity-[0.08] blur-[150px]" />
+
+      <div className="mx-auto w-full max-w-[1440px] px-[clamp(18px,5vw,80px)]">
 
         {/* Section label */}
-        <div className="mb-12 px-6 sm:mb-16 sm:px-10 lg:px-16">
+        <div className="mb-12 sm:mb-16">
           <div className="flex items-center gap-3">
-            <span className="h-px w-9 shrink-0 bg-[#2F7BFF]" />
+            <span className="h-px w-8 bg-[#2F7BFF]" />
 
-            <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF] sm:text-[11px]">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#A9C7FF]">
               How the process works
             </span>
 
-            <span className="h-px w-11 bg-white/10" />
+            <span className="h-px max-w-20 flex-1 bg-white/10" />
           </div>
         </div>
 
         {/* Main layout */}
         <div
-          className="grid grid-cols-1 items-center gap-10 pl-6 sm:gap-12 sm:pl-10 lg:grid-cols-[minmax(280px,0.75fr)_minmax(0,2.25fr)] lg:gap-12 lg:pl-[6vw]"
+          className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[minmax(300px,0.8fr)_minmax(0,2.2fr)] lg:gap-16"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocusCapture={() => setPaused(true)}
@@ -121,22 +139,24 @@ export default function Process() {
         >
 
           {/* LEFT CONTENT */}
-          <div className="max-w-[390px] pb-6 pr-6 lg:py-5 lg:pb-9">
-
-            <span className="mb-5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5C9AFF]">
+          <div className="max-w-[440px] lg:sticky lg:top-32">
+            <span className="mb-5 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#5C9AFF]">
               The MindSpace Journey
             </span>
 
-            <h2 className="text-[36px] font-semibold leading-[1.16] tracking-[-0.055em] text-[#F5F7FB] sm:text-[40px] lg:text-[clamp(34px,3vw,46px)]">
+            <h2
+              id="process-heading"
+              className="text-[clamp(44px,6vw,72px)] font-semibold leading-[1.02] tracking-[-0.055em] text-[#F5F7FC] max-sm:text-[clamp(39px,10vw,56px)]"
+            >
               {processContent.heading}
             </h2>
 
-            <p className="mt-5 text-[14px] leading-[1.8] text-[#A2AAB8]">
+            <p className="mt-7 text-[17px] leading-[1.85] text-[#B5BECC]">
               {processContent.body}
             </p>
 
             {/* Pagination */}
-            <div className="mt-9 flex items-center gap-[15px]">
+            <div className="mt-10 flex items-center gap-[17px]">
               {processSteps.slice(0, total).map((step, index) => (
                 <button
                   key={step.title}
@@ -146,8 +166,8 @@ export default function Process() {
                   aria-current={
                     activeStep === index ? "step" : undefined
                   }
-                  className={`h-[7px] w-[7px] rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5C9AFF] ${activeStep === index
-                    ? "h-3 w-3 border-2 border-[#5C9AFF] bg-transparent"
+                  className={`h-[9px] w-[9px] rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5C9AFF] ${activeStep === index
+                    ? "h-[14px] w-[14px] border-2 border-[#5C9AFF] bg-transparent"
                     : "bg-[#465064] hover:bg-[#8AB5FF]"
                     }`}
                 />
@@ -155,14 +175,14 @@ export default function Process() {
             </div>
 
             {/* Current step indicator */}
-            <div className="mt-6 flex items-center gap-3">
-              <span className="text-[11px] font-semibold tabular-nums text-[#A9C7FF]">
+            <div className="mt-7 flex items-center gap-3">
+              <span className="text-[14px] font-semibold tabular-nums text-[#A9C7FF]">
                 {String(activeStep + 1).padStart(2, "0")}
               </span>
 
               <span className="h-px w-8 bg-white/15" />
 
-              <span className="text-[10px] uppercase tracking-[0.15em] text-[#737F92]">
+              <span className="text-[12px] uppercase tracking-[0.15em] text-[#8995A8]">
                 {String(total).padStart(2, "0")} Journey steps
               </span>
             </div>
@@ -183,16 +203,16 @@ export default function Process() {
                 <article
                   key={step.title}
                   ref={index === 0 ? firstCardRef : null}
-                  className="group min-w-0 flex-[0_0_82%] sm:flex-[0_0_min(55vw,420px)] lg:flex-[0_0_min(28vw,425px)]"
+                  className="group min-w-0 flex-[0_0_85%] sm:flex-[0_0_min(55vw,420px)] lg:flex-[0_0_min(32vw,440px)]"
                 >
                   {/* Image */}
-                  <div className="relative h-[320px] overflow-hidden rounded-[9px] border border-white/[0.09] bg-[#151C2B] sm:h-[380px] lg:h-[clamp(280px,23vw,420px)]">
+                  <div className="relative h-[360px] overflow-hidden rounded-[12px] border border-white/[0.09] bg-[#151C2B] sm:h-[420px] lg:h-[clamp(300px,26vw,480px)]">
                     <Image
                       src={stepVisuals[index].img}
                       alt={step.title}
                       fill
                       priority={index < 2}
-                      sizes="(max-width: 600px) 82vw, (max-width: 1000px) 55vw, 28vw"
+                      sizes="(max-width: 600px) 85vw, (max-width: 1000px) 55vw, 32vw"
                       className="object-cover brightness-[0.82] saturate-[0.85] transition-[transform,filter] duration-700 ease-out group-hover:scale-[1.045] group-hover:brightness-95 group-hover:saturate-100"
                     />
 
@@ -200,25 +220,25 @@ export default function Process() {
                     <div className="absolute inset-0 bg-gradient-to-b from-[#03070F]/55 via-transparent via-[38%] to-[#03070F]/35" />
 
                     {/* Card label */}
-                    <div className="absolute left-5 top-5 text-[11px] font-semibold leading-relaxed tracking-[0.01em] text-white drop-shadow-lg">
+                    <div className="absolute left-6 top-6 text-[13px] font-semibold leading-relaxed tracking-[0.02em] text-white drop-shadow-lg">
                       {stepVisuals[index].label}
                       <br />
                       MindSpace
                     </div>
 
                     {/* Card number */}
-                    <div className="absolute bottom-[17px] right-[17px] grid h-[38px] w-[38px] place-items-center rounded-full border border-white/45 bg-[#050A14]/50 text-[11px] text-white backdrop-blur-md">
+                    <div className="absolute bottom-5 right-5 grid h-[46px] w-[46px] place-items-center rounded-full border border-white/45 bg-[#050A14]/50 text-[13px] text-white backdrop-blur-md">
                       {String(index + 1).padStart(2, "0")}
                     </div>
                   </div>
 
                   {/* Card content */}
-                  <div className="pt-5">
-                    <h3 className="text-[19px] font-semibold leading-tight tracking-[-0.04em] text-[#F5F7FB] sm:text-[22px]">
+                  <div className="pt-7">
+                    <h3 className="text-[23px] font-semibold leading-tight tracking-[-0.03em] text-[#F5F7FB] sm:text-[27px]">
                       {step.title}
                     </h3>
 
-                    <p className="mt-2 max-w-[390px] text-[14px] leading-[1.65] text-[#A2AAB8]">
+                    <p className="mt-4 max-w-[390px] text-[16px] leading-[1.8] text-[#B5BECC]">
                       {step.body}
                     </p>
                   </div>
@@ -229,8 +249,8 @@ export default function Process() {
         </div>
 
         {/* Footer */}
-        <div className="mx-6 mt-10 flex items-center justify-between border-t border-white/10 pt-6 sm:mx-10 lg:mx-16">
-          <span className="text-[10px] uppercase tracking-[0.15em] text-[#737F92]">
+        <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-6">
+          <span className="text-[12px] uppercase tracking-[0.15em] text-[#8995A8]">
             {String(activeStep + 1).padStart(2, "0")} /{" "}
             {String(total).padStart(2, "0")} &nbsp; Journey steps
           </span>
@@ -238,7 +258,7 @@ export default function Process() {
           <button
             type="button"
             onClick={() => setPaused((current) => !current)}
-            className="text-[11px] font-semibold text-[#5C9AFF] transition-colors hover:text-[#A5C8FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5C9AFF]"
+            className="text-[13px] font-semibold text-[#5C9AFF] transition-colors hover:text-[#A5C8FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5C9AFF]"
           >
             {paused ? "Resume autoplay ↗" : "Pause autoplay ↗"}
           </button>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -115,36 +114,63 @@ export default function MindSpaceApproach() {
     return (
         <section
             id="mindspace-approach"
-            className="relative overflow-hidden bg-[#0B101A] py-24 text-[#F5F7FB] sm:py-32 lg:py-36"
+            className="relative overflow-hidden bg-[#0B101A] py-24 font-questrial text-[#F5F7FB] sm:py-32 lg:py-36"
         >
             <div className="pointer-events-none absolute -right-48 top-10 h-[400px] w-[400px] rounded-full bg-[#2F7BFF]/[0.06] blur-[130px]" />
 
             <div className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-14">
 
-                {/* Section introduction */}
-                <div className="grid gap-8 border-b border-white/10 pb-12 lg:grid-cols-12 lg:items-end">
-                    <div className="lg:col-span-8">
-                        <div className="mx-auto mb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
-                            <span className="h-px w-9 bg-[#2F7BFF]" />
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
-                                MindSpace / Our approaches
-                            </span>
-                            <span className="h-px max-w-24 flex-1 bg-white/10" />
-                        </div>
+                {/* Top eyebrow — matches About / MindSpaceEcosystem */}
+                <div className="flex justify-between items-center gap-4 mb-[clamp(24px,3.4vw,44px)] max-sm:items-start">
+                    <div className="flex max-w-7xl items-center gap-3">
+                        <span className="h-px w-8 bg-[#2F7BFF]" />
+                        <span className="font-questrial text-[10px] font-semibold uppercase tracking-[0.24em] text-[#A9C7FF]">
+                            MindSpace / Our approaches
+                        </span>
+                        <span className="h-px max-w-20 flex-1 bg-white/10" />
+                    </div>
+                    <span className="font-questrial text-white/90 text-[10px] tracking-[0.08em] uppercase max-sm:max-w-[100px] max-sm:text-right max-sm:leading-relaxed">
+                        Three paths. One plan.
+                    </span>
+                </div>
 
-                        <h2 className="max-w-[850px] text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
-                            Different challenges.
-                            <br />
-                            <span className="text-[clamp(38px,6.4vw,80px)] text-[#A9C7FF] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
+                {/* Hero text — two-line flush-left headline + paragraph, matches About */}
+                <div className="grid grid-cols-1 items-start gap-[clamp(24px,4vw,72px)] mb-[clamp(24px,3.4vw,44px)] md:grid-cols-[minmax(0,1.25fr)_minmax(320px,.75fr)]">
+                    {/* LEFT — headline, two lines, blue italic accent on line 2 */}
+                    <h2
+                        className="m-0 w-full font-questrial text-[clamp(38px,6.4vw,72px)] leading-[0.94] tracking-[-0.055em] font-[600] max-sm:text-[clamp(36px,11vw,58px)]"
+                    >
+                        <span className="block overflow-hidden pb-[0.10em]">
+                            <span className="inline-block">
+                                Different challenges.
+                            </span>
+                        </span>
+                        <span className="block overflow-hidden pb-[0.10em]">
+                            <span className="inline-block text-[#80ADFF] italic font-medium">
                                 A considered way forward.
                             </span>
-                        </h2>
-                    </div>
+                        </span>
+                    </h2>
 
-                    <div className="lg:col-span-4 lg:pb-2">
-                        <p className="max-w-[390px] text-[14px] leading-[1.9] text-[#A2AAB8]">
-                            Every technology project, training goal and career plan needs a different approach. Choose a service to see how we work.
+                    {/* RIGHT — description paragraph matching About */}
+                    <div className="max-w-[520px] pb-2 md:justify-self-end">
+                        <span className="font-questrial text-[10px] font-[650] uppercase tracking-[0.18em] text-[#A9C7FF]">
+                            One platform. Three paths.
+                        </span>
+                        <p className="mt-[17px] font-questrial text-white/90 text-[clamp(15px,1.25vw,18px)] leading-[1.85]">
+                            Every technology project, training goal and career
+                            plan needs a different approach. Choose a service
+                            to see how we work.
                         </p>
+                        <a
+                            className="group mt-5 inline-flex items-center gap-3 pb-1.5 font-questrial text-[#F5F7FB] no-underline border-b border-[#2F7BFF] text-[13px] font-[650] tracking-[0.04em] transition-all duration-300 hover:gap-4 hover:text-[#A9C7FF]"
+                            href="#contact"
+                        >
+                            Talk to our team
+                            <span className="text-[#80ADFF] text-base" aria-hidden="true">
+                                ↗
+                            </span>
+                        </a>
                     </div>
                 </div>
 
@@ -164,7 +190,7 @@ export default function MindSpaceApproach() {
                                     type="button"
                                     aria-pressed={selected}
                                     onClick={() => setActiveKey(tab.key)}
-                                    className={`group relative py-4 text-left text-[11px] font-semibold uppercase tracking-[0.13em] transition-colors duration-300 ${selected
+                                    className={`group relative py-4 text-left font-questrial text-[11px] font-semibold uppercase tracking-[0.13em] transition-colors duration-300 ${selected
                                         ? "text-white"
                                         : "text-white/40 hover:text-white/80"
                                         }`}
@@ -203,32 +229,32 @@ export default function MindSpaceApproach() {
 
                                 <span className="h-px w-8 bg-[#2F7BFF]/60" />
 
-                                <span className="text-[9px] uppercase tracking-[0.2em] text-white/40">
+                                <span className="font-questrial text-[11px] uppercase tracking-[0.2em] text-white/40">
                                     Selected division
                                 </span>
                             </div>
 
-                            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
+                            <p className="mb-5 font-questrial text-[12px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
                                 {active.label}
                             </p>
 
                             <h3
-                                className="max-w-[490px] text-[clamp(2rem,4vw,3.7rem)] font-medium leading-[1.04] tracking-[-0.06em]"
+                                className="max-w-[490px] font-questrial text-[clamp(2rem,4vw,3.7rem)] font-medium leading-[1.04] tracking-[-0.06em]"
                                 aria-live="polite"
                             >
                                 {active.heading}
                             </h3>
 
-                            <p className="mt-7 max-w-[440px] text-[14px] leading-[1.95] text-[#929EAF]">
+                            <p className="mt-7 max-w-[440px] font-questrial text-[18px] leading-[1.95] text-white/80">
                                 {active.description}
                             </p>
 
                             <div className="mt-12 border-t border-white/10 pt-6">
-                                <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/35">
+                                <span className="font-questrial text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
                                     Who this is for
                                 </span>
 
-                                <p className="mt-3 text-[13px] text-white/75">
+                                <p className="mt-3 font-questrial text-[15px] text-white/75">
                                     {active.footer}
                                 </p>
                             </div>
@@ -238,11 +264,11 @@ export default function MindSpaceApproach() {
                     {/* Right: tailored delivery stages */}
                     <div className="relative lg:col-span-7">
                         <div className="mb-8 flex items-center justify-between">
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75">
+                            <span className="font-questrial text-[12px] font-semibold uppercase tracking-[0.2em] text-white/75">
                                 How we approach it
                             </span>
 
-                            <span className="font-mono text-[10px] text-white/35">
+                            <span className="font-mono text-[12px] text-white/35">
                                 {active.number} — 03
                             </span>
                         </div>
@@ -268,11 +294,11 @@ export default function MindSpaceApproach() {
                                         </div>
 
                                         <div className="pt-1">
-                                            <h4 className="text-[clamp(1.25rem,2.2vw,1.8rem)] font-medium leading-tight tracking-[-0.04em] text-white">
+                                            <h4 className="font-questrial text-[clamp(1.25rem,2.2vw,1.8rem)] font-medium leading-tight tracking-[-0.04em] text-white">
                                                 {step.title}
                                             </h4>
 
-                                            <p className="mt-3 max-w-[500px] text-[13px] leading-[1.9] text-[#929EAF]">
+                                            <p className="mt-3 max-w-[500px] font-questrial text-[16px] leading-[1.9] text-[#929EAF]">
                                                 {step.description}
                                             </p>
                                         </div>
@@ -283,13 +309,13 @@ export default function MindSpaceApproach() {
 
                         {/* Practical outcome */}
                         <div className="mt-8 border-l-2 border-[#2F7BFF] bg-[#111B2B] px-5 py-5 sm:px-7">
-                            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
+                            <span className="font-questrial text-[9px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
                                 The intended outcome
                             </span>
 
                             <p
                                 key={activeKey}
-                                className="mt-3 max-w-[560px] text-[14px] leading-[1.8] text-white/85"
+                                className="mt-3 max-w-[560px] font-questrial text-[14px] leading-[1.8] text-white/85"
                                 aria-live="polite"
                             >
                                 {active.outcome}
@@ -300,14 +326,14 @@ export default function MindSpaceApproach() {
 
                 {/* Closing line */}
                 <div className="mt-20 flex flex-col justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
-                    <p className="max-w-[500px] text-[12px] leading-[1.8] text-white/45">
+                    <p className="max-w-[500px] font-questrial text-[14px] leading-[1.8] text-white/65">
                         Every service has its own requirements. Our approach
                         begins by understanding what each one needs.
                     </p>
 
                     <a
                         href="#contact"
-                        className="group inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A9C7FF] transition-colors hover:text-white"
+                        className="group inline-flex items-center gap-3 font-questrial text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A9C7FF] transition-colors hover:text-white"
                     >
                         Talk to MindSpace
 

@@ -1,6 +1,9 @@
+
+// app/components/consultant/services/ServiceReportExperience.tsx
 "use client";
 
 import Link from "next/link";
+import { Questrial } from "next/font/google";
 import {
     useMemo,
     useRef,
@@ -19,6 +22,12 @@ import ServiceSignalAnimation from "@/app/components/consultant/services/Service
 import ServiceUsageHighlights from "@/app/components/consultant/services/ServiceUsageHighlights";
 import ServiceMeaningSection from "@/app/components/consultant/services/ServiceMeaningSection";
 import ServiceImpactSection from "@/app/components/consultant/services/ServiceImpactSection";
+
+const questrial = Questrial({
+    weight: "400",
+    subsets: ["latin"],
+    display: "swap",
+});
 
 type ReportDetail = {
     tagline: string;
@@ -45,9 +54,6 @@ type ReportDetail = {
 };
 
 const REPORTS: Record<string, ReportDetail> = {
-    /* ==========================================================
-       WEBSITE DEVELOPMENT
-    ========================================================== */
     "website-development": {
         tagline: "Digital experiences that make the next step obvious.",
         intro:
@@ -134,9 +140,6 @@ const REPORTS: Record<string, ReportDetail> = {
         investment: "Quoted against the agreed scope",
     },
 
-    /* ==========================================================
-       MOBILE APP DEVELOPMENT
-    ========================================================== */
     "app-development": {
         tagline: "Mobile products built around the moments people use them.",
         intro:
@@ -223,9 +226,6 @@ const REPORTS: Record<string, ReportDetail> = {
         investment: "Quoted against the agreed scope",
     },
 
-    /* ==========================================================
-       WEB APPLICATION DEVELOPMENT
-    ========================================================== */
     "web-application": {
         tagline:
             "Cloud platforms that turn scattered workflows into one product.",
@@ -313,9 +313,6 @@ const REPORTS: Record<string, ReportDetail> = {
         investment: "Quoted against the agreed scope",
     },
 
-    /* ==========================================================
-       CUSTOM SOFTWARE DEVELOPMENT
-    ========================================================== */
     "software-development": {
         tagline:
             "Custom systems shaped around the way your organisation works.",
@@ -419,11 +416,6 @@ const NAV = [
     { id: "outcome", label: "Outcome" },
 ];
 
-/* ============================================================
-   HOW WE WORK — Technology 5-step process
-   (Replaces the previous per-service "approach" section)
-============================================================ */
-
 const HOW_WE_WORK_STEPS = [
     {
         step: "01",
@@ -458,7 +450,10 @@ const HOW_WE_WORK_STEPS = [
 
 function SectionLabel({ children }: { children: ReactNode }) {
     return (
-        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[.2em] text-[#82aaff]">
+        <p
+            className="mb-4 text-[16px] font-semibold uppercase tracking-[.18em]"
+            style={{ color: "var(--ms-secondary)" }}
+        >
             {children}
         </p>
     );
@@ -478,17 +473,29 @@ function PersonMark({
             aria-hidden="true"
         >
             <span
-                className={`absolute top-0 h-[13px] w-[13px] rounded-full border ${active
-                    ? "border-[#2F7BFF] bg-[#2F7BFF]"
-                    : "border-[#8b9ab1] bg-[#d8e0ea]"
-                    }`}
+                className="absolute top-0 h-[13px] w-[13px] rounded-full border"
+                style={{
+                    borderColor: active
+                        ? "var(--ms-accent)"
+                        : "var(--ms-muted)",
+                    background: active
+                        ? "var(--ms-accent)"
+                        : "var(--ms-muted)",
+                }}
             />
+
             <span
-                className={`mb-0 h-6 w-7 rounded-t-[13px] border ${active
-                    ? "border-[#2F7BFF] bg-[#2F7BFF]/20"
-                    : "border-[#8b9ab1] bg-[#d8e0ea]/70"
-                    }`}
+                className="mb-0 h-6 w-7 rounded-t-[13px] border"
+                style={{
+                    borderColor: active
+                        ? "var(--ms-accent)"
+                        : "var(--ms-muted)",
+                    background: active
+                        ? "color-mix(in srgb, var(--ms-accent) 20%, transparent)"
+                        : "color-mix(in srgb, var(--ms-muted) 70%, transparent)",
+                }}
             />
+
             <span className="sr-only">Audience marker {index + 1}</span>
         </span>
     );
@@ -655,98 +662,187 @@ export default function ServiceReportExperience({
     };
 
     return (
-        <main className="min-h-screen bg-[#080a0f] text-[#eef2f8] selection:bg-[#2F7BFF] selection:text-white">
+        <div
+            data-service-report
+            className={`${questrial.className} min-h-screen text-[var(--ms-text)] selection:bg-[var(--ms-accent)] selection:text-white`}
+        >
             <style jsx global>{`
-        html {
-          scroll-behavior: smooth;
-        }
+                [data-service-report],
+                [data-service-report] * {
+                    font-family: ${questrial.style.fontFamily}, sans-serif !important;
+                }
 
-        .report-shell {
-          width: min(1240px, calc(100% - 48px));
-          margin-inline: auto;
-        }
+                html {
+                    scroll-behavior: smooth;
+                }
 
-        .report-section {
-          scroll-margin-top: 74px;
-        }
+                [data-service-report] {
+                    --ms-accent: #2F7BFF;
+                    --ms-secondary: #69A6FF;
+                    --ms-muted: #B5CFFF;
+                }
 
-        .report-grid {
-          background-image:
-            linear-gradient(
-              to right,
-              rgba(255, 255, 255, 0.045) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              to bottom,
-              rgba(255, 255, 255, 0.045) 1px,
-              transparent 1px
-            );
-          background-size: 28px 28px;
-        }
+                .report-shell {
+                    width: min(1240px, calc(100% - 48px));
+                    margin-inline: auto;
+                }
 
-        .report-card {
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: #111722;
-        }
+                .report-section {
+                    scroll-margin-top: 74px;
+                }
 
-        .report-number {
-          font-variant-numeric: tabular-nums;
-          letter-spacing: -0.07em;
-        }
+                .report-grid {
+                    background-image:
+                        linear-gradient(
+                            to right,
+                            rgba(47,123,255,0.10) 1px,
+                            transparent 1px
+                        ),
+                        linear-gradient(
+                            to bottom,
+                            rgba(47,123,255,0.10) 1px,
+                            transparent 1px
+                        );
+                    background-size: 28px 28px;
+                }
 
-        .audience-rail {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          touch-action: pan-y;
-        }
+                .report-card {
+                    border: 1px solid rgba(47,123,255,0.24);
+                    background: #0B1D40;
+                }
 
-        .audience-rail::-webkit-scrollbar {
-          display: none;
-        }
+                .report-number {
+                    font-variant-numeric: tabular-nums;
+                    letter-spacing: -0.07em;
+                }
 
-        .person-drift {
-          animation: person-drift 5s ease-in-out infinite;
-        }
+                .audience-rail {
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    touch-action: pan-y;
+                }
 
-        @keyframes person-drift {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
+                .audience-rail::-webkit-scrollbar {
+                    display: none;
+                }
 
-          50% {
-            transform: translateY(-5px);
-          }
-        }
+                .person-drift {
+                    animation: person-drift 5s ease-in-out infinite;
+                }
 
-        @media (max-width: 640px) {
-          .report-shell {
-            width: min(100% - 32px, 1240px);
-          }
-        }
+                @keyframes person-drift {
+                    0%,
+                    100% {
+                        transform: translateY(0);
+                    }
 
-        @media (prefers-reduced-motion: reduce) {
-          .person-drift {
-            animation: none;
-          }
+                    50% {
+                        transform: translateY(-5px);
+                    }
+                }
 
-          html {
-            scroll-behavior: auto;
-          }
-        }
-      `}</style>
+                /*
+                 * Larger typography for small text.
+                 * Scoped to this service report only.
+                 */
+                [data-service-report] [class~="text-[12px]"] {
+                    font-size: 15px !important;
+                    line-height: 1.55;
+                }
 
-            {/* Hero */}
+                [data-service-report] [class~="text-[13px]"] {
+                    font-size: 16px !important;
+                    line-height: 1.55;
+                }
+
+                [data-service-report] [class~="text-[14px]"] {
+                    font-size: 17px !important;
+                    line-height: 1.55;
+                }
+
+                [data-service-report] [class~="text-[15px]"] {
+                    font-size: 18px !important;
+                    line-height: 1.5;
+                }
+
+                [data-service-report] [class~="text-[16px]"] {
+                    font-size: 19px !important;
+                    line-height: 1.55;
+                }
+
+                [data-service-report] [class~="text-[17px]"] {
+                    font-size: 20px !important;
+                    line-height: 1.6;
+                }
+
+                [data-service-report] [class~="text-[18px]"] {
+                    font-size: 21px !important;
+                    line-height: 1.6;
+                }
+
+                @media (max-width: 640px) {
+                    .report-shell {
+                        width: min(100% - 32px, 1240px);
+                    }
+
+                    [data-service-report] [class~="text-[18px]"] {
+                        font-size: 19px !important;
+                    }
+
+                    [data-service-report] [class~="text-[17px]"] {
+                        font-size: 18px !important;
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .person-drift {
+                        animation: none;
+                    }
+
+                    html {
+                        scroll-behavior: auto;
+                    }
+                }
+
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+            `}</style>
+
+            {/* Hero Header */}
             <header
                 id="highlights"
-                className="relative flex min-h-[88svh] w-full flex-col justify-center overflow-hidden bg-[#05070c] text-white"
+                className="relative flex min-h-[88svh] w-full flex-col justify-center overflow-hidden"
             >
                 <ServiceBackgroundVideo src="/service-bg.mp4" rate={0.85} />
 
                 <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(5,7,12,.35)_0%,rgba(5,7,12,.58)_58%,rgba(5,7,12,.92)_100%)]"
+                    className="pointer-events-none absolute inset-0 z-[1]"
+                    style={{
+                        background: `
+                            radial-gradient(
+                                ellipse at 22% 38%,
+                                color-mix(in srgb, var(--ms-accent) 23%, transparent),
+                                transparent 52%
+                            ),
+                            radial-gradient(
+                                ellipse at 80% 58%,
+                                color-mix(in srgb, var(--ms-secondary-deep) 32%, transparent),
+                                transparent 48%
+                            ),
+                            linear-gradient(
+                                180deg,
+                                color-mix(in srgb, var(--ms-background) 25%, transparent),
+                                var(--ms-background)
+                            )
+                        `,
+                    }}
                 />
 
                 <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 py-24 sm:px-8 sm:py-32">
@@ -759,17 +855,27 @@ export default function ServiceReportExperience({
             </header>
 
             {/* Report navigation */}
-            <div className="sticky top-0 z-40 border-b border-white/10 bg-[#0c1424]/95 text-white shadow-[0_4px_20px_rgba(0,0,0,.2)] backdrop-blur-xl">
+            <div
+                className="sticky top-0 z-40 border-b text-[var(--ms-text)] shadow-[0_4px_20px_rgba(0,0,0,.2)] backdrop-blur-xl"
+                style={{
+                    background:
+                        "color-mix(in srgb, var(--ms-background) 85%, transparent)",
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                }}
+            >
                 <div className="report-shell flex min-h-[48px] items-center justify-between gap-4">
                     <Link
                         href="/services"
-                        className="shrink-0 text-[10px] font-bold uppercase tracking-[.2em] text-white/90"
+                        className="shrink-0 text-[16px] font-bold uppercase tracking-[.16em] text-[var(--ms-text)]"
                     >
-                        MINDSPACE <span className="text-[#2F7BFF]">/</span> REPORT
+                        MINDSPACE{" "}
+                        <span style={{ color: "var(--ms-accent)" }}>/</span>{" "}
+                        REPORT
                     </Link>
 
                     <nav
-                        className="flex min-w-0 items-center overflow-x-auto"
+                        className="flex min-w-0 items-center overflow-x-auto scrollbar-hide"
                         aria-label="Report sections"
                     >
                         {NAV.map((item) => (
@@ -777,10 +883,22 @@ export default function ServiceReportExperience({
                                 key={item.id}
                                 type="button"
                                 onClick={() => goTo(item.id)}
-                                className={`whitespace-nowrap border-l border-white/10 px-3 py-[17px] text-[9px] font-medium uppercase tracking-[.13em] transition-colors sm:px-5 ${activeNav === item.id
-                                    ? "bg-[#2F7BFF]/15 text-[#8eb7ff]"
-                                    : "text-white/60 hover:bg-white/5 hover:text-white"
-                                    }`}
+                                className="whitespace-nowrap border-l py-[17px] text-[16px] font-medium uppercase tracking-[.13em] transition-colors sm:px-5"
+                                style={
+                                    activeNav === item.id
+                                        ? {
+                                            borderColor:
+                                                "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                                            background:
+                                                "color-mix(in srgb, var(--ms-accent) 15%, transparent)",
+                                            color: "#8BC1FF",
+                                        }
+                                        : {
+                                            borderColor:
+                                                "color-mix(in srgb, var(--ms-text) 10%, transparent)",
+                                            color: "#B5CFFF",
+                                        }
+                                }
                             >
                                 {item.label}
                             </button>
@@ -788,212 +906,6 @@ export default function ServiceReportExperience({
                     </nav>
                 </div>
             </div>
-
-            {/* Highlights */}
-            <section
-                id="highlights-content"
-                className="report-shell report-section py-12 sm:py-16"
-            >
-                <div className="mb-6 flex items-end justify-between gap-4">
-                    <div>
-                        <SectionLabel>01 / Executive highlights</SectionLabel>
-
-                        <h2 className="max-w-[720px] text-3xl font-medium tracking-[-.055em] text-white sm:text-5xl">
-                            What this service is here to move forward.
-                        </h2>
-
-                        <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-white/55">
-                            {intro}
-                        </p>
-                    </div>
-
-                    <span className="hidden text-[9px] uppercase tracking-[.15em] text-white/35 sm:block">
-                        01 — 03
-                    </span>
-                </div>
-
-                <div className="grid gap-3 md:grid-cols-3">
-                    {[
-                        {
-                            no: "01",
-                            title: "Clarity",
-                            text: "Understand the real requirement before choosing a solution.",
-                        },
-                        {
-                            no: "02",
-                            title: "A clear route",
-                            text: "Turn a broad goal into manageable stages and decisions.",
-                        },
-                        {
-                            no: "03",
-                            title: "Useful progress",
-                            text: "Finish with work, guidance and a next step your team can use.",
-                        },
-                    ].map((card) => (
-                        <article
-                            key={card.no}
-                            className="min-h-[190px] border border-white/10 bg-[#111722] p-5 transition-colors hover:border-[#2F7BFF]/50 sm:p-7"
-                        >
-                            <div className="flex items-start justify-between">
-                                <span className="text-[10px] font-semibold tracking-[.16em] text-white/45">
-                                    HIGHLIGHT {card.no}
-                                </span>
-                                <span className="text-xl text-[#2F7BFF]">↗</span>
-                            </div>
-
-                            <h3 className="mt-8 text-[27px] font-medium tracking-[-.06em] text-white">
-                                {card.title}
-                            </h3>
-
-                            <p className="mt-2 max-w-[300px] text-[12px] leading-5 text-white/55">
-                                {card.text}
-                            </p>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
-            {/* Meaning */}
-            <div id="meaning" className="report-section">
-                <ServiceMeaningSection
-                    serviceTitle={service.title}
-                    items={meaningItems}
-                />
-            </div>
-
-            {/* Audience */}
-            <section
-                id="audience"
-                className="report-section border-y border-white/10 bg-[#0d1119]"
-            >
-                <div className="report-shell grid gap-10 py-14 sm:py-20 lg:grid-cols-[.72fr_1.28fr] lg:gap-16">
-                    <div>
-                        <SectionLabel>02 / Who this is for</SectionLabel>
-
-                        <h2 className="text-3xl font-medium leading-[1.03] tracking-[-.06em] text-white sm:text-5xl">
-                            Different people. Different reasons to start.
-                        </h2>
-
-                        <p className="mt-5 text-[13px] leading-6 text-white/55">
-                            Drag the audience strip to explore the people this
-                            service can support. Select a profile to see the need
-                            behind the work and the outcome it is designed to
-                            create.
-                        </p>
-
-                        <div className="mt-7 flex items-center gap-3 text-[9px] font-semibold uppercase tracking-[.16em] text-white/45">
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#2F7BFF]/50 text-[#75a5ff]">
-                                ↔
-                            </span>
-                            Drag to explore
-                            <span className="h-px w-10 bg-white/20" />
-                        </div>
-                    </div>
-
-                    <div className="min-w-0">
-                        <div className="mb-3 flex items-center justify-between">
-                            <span className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/65">
-                                Audience field
-                            </span>
-
-                            <span className="text-[9px] uppercase tracking-[.13em] text-white/40">
-                                {String(activeAudience + 1).padStart(2, "0")} /{" "}
-                                {String(audience.length).padStart(2, "0")}
-                            </span>
-                        </div>
-
-                        <div
-                            ref={audienceRail}
-                            onPointerDown={onRailPointerDown}
-                            onPointerMove={onRailPointerMove}
-                            onPointerUp={endRailDrag}
-                            onPointerCancel={endRailDrag}
-                            onLostPointerCapture={endRailDrag}
-                            className={`audience-rail flex select-none gap-3 overflow-x-auto border border-white/10 bg-[#111a29] p-4 ${dragging ? "cursor-grabbing" : "cursor-grab"
-                                }`}
-                        >
-                            {audience.map((person, i) => (
-                                <button
-                                    key={person.title}
-                                    type="button"
-                                    onClick={() => {
-                                        if (!dragState.current.moved) {
-                                            setActiveAudience(i);
-                                        }
-
-                                        dragState.current.moved = false;
-                                    }}
-                                    className={`relative flex min-h-[164px] min-w-[150px] flex-col items-start justify-between border p-4 text-left transition-all sm:min-w-[172px] ${activeAudience === i
-                                        ? "border-[#2F7BFF] bg-[#17243a] shadow-[0_8px_24px_rgba(47,123,255,.12)]"
-                                        : "border-white/10 bg-[#0d131e] hover:border-white/25 hover:bg-[#151d2b]"
-                                        }`}
-                                >
-                                    <div className="flex w-full items-center justify-between">
-                                        <span className="text-[9px] font-bold tracking-[.15em] text-[#75a5ff]">
-                                            PROFILE 0{i + 1}
-                                        </span>
-
-                                        <span
-                                            className={`h-2 w-2 ${activeAudience === i
-                                                ? "bg-[#2F7BFF]"
-                                                : "bg-white/25"
-                                                }`}
-                                        />
-                                    </div>
-
-                                    <div className="person-drift flex w-full items-center justify-center gap-1">
-                                        {people
-                                            .slice(i * 4, i * 4 + 4)
-                                            .map((personIndex) => (
-                                                <PersonMark
-                                                    key={personIndex}
-                                                    index={personIndex}
-                                                    active={activeAudience === i}
-                                                />
-                                            ))}
-                                    </div>
-
-                                    <span className="text-[12px] font-semibold leading-5 text-white/90">
-                                        {person.title}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="mt-4 grid gap-0 border border-white/10 bg-[#111722] sm:grid-cols-3">
-                            <div className="p-5 sm:border-r sm:border-white/10">
-                                <span className="text-[9px] font-semibold uppercase tracking-[.15em] text-white/40">
-                                    The situation
-                                </span>
-
-                                <p className="mt-3 text-[12px] leading-6 text-white/65">
-                                    {selectedAudience.description}
-                                </p>
-                            </div>
-
-                            <div className="border-t border-white/10 p-5 sm:border-r sm:border-t-0">
-                                <span className="text-[9px] font-semibold uppercase tracking-[.15em] text-white/40">
-                                    The need
-                                </span>
-
-                                <p className="mt-3 text-[12px] font-semibold leading-6 text-white">
-                                    {selectedAudience.need}
-                                </p>
-                            </div>
-
-                            <div className="border-t border-white/10 p-5 sm:border-t-0">
-                                <span className="text-[9px] font-semibold uppercase tracking-[.15em] text-white/40">
-                                    Designed outcome
-                                </span>
-
-                                <p className="mt-3 text-[12px] leading-6 text-white/65">
-                                    {selectedAudience.outcome}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* Usage Highlights */}
             <ServiceUsageHighlights
@@ -1010,27 +922,39 @@ export default function ServiceReportExperience({
             </div>
 
             {/* Context and challenge */}
-            <section className="report-section border-y border-white/10 bg-[#0d1119]">
+            <section
+                className="report-section border-y"
+                style={{
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                }}
+            >
                 <div className="report-shell grid gap-10 py-14 sm:py-20 lg:grid-cols-[.78fr_1.22fr] lg:gap-20">
                     <div>
                         <SectionLabel>04 / The context</SectionLabel>
 
-                        <h2 className="text-3xl font-medium leading-[1.05] tracking-[-.06em] text-white sm:text-5xl">
+                        <h2 className="text-3xl font-medium leading-[1.05] tracking-[-.06em] text-[var(--ms-text)] sm:text-5xl">
                             Start with the problem, not the package.
                         </h2>
 
-                        <p className="mt-6 text-[14px] leading-7 text-white/60">
+                        <p className="mt-6 text-[20px] leading-8 text-[#B5CFFF]">
                             {challenge}
                         </p>
                     </div>
 
-                    <div className="report-grid border border-white/10 p-5 sm:p-8">
+                    <div
+                        className="report-grid border p-5 sm:p-8"
+                        style={{
+                            borderColor:
+                                "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                        }}
+                    >
                         <div className="mb-8 flex items-center justify-between gap-3">
-                            <span className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/70">
+                            <span className="text-[16px] font-semibold uppercase tracking-[.16em] text-[#8BC1FF]">
                                 What the engagement considers
                             </span>
 
-                            <span className="text-[9px] uppercase tracking-[.13em] text-white/35">
+                            <span className="text-[15px] uppercase tracking-[.13em] text-[#B5CFFF]">
                                 Scope / people / systems
                             </span>
                         </div>
@@ -1039,13 +963,24 @@ export default function ServiceReportExperience({
                             {[service.need, ...service.gets].map((item, i) => (
                                 <div
                                     key={item}
-                                    className="flex min-h-[82px] items-start gap-3 border border-white/10 bg-[#101722]/90 p-4"
+                                    className="flex min-h-[82px] items-start gap-3 border p-4"
+                                    style={{
+                                        background: "var(--ms-surface)",
+                                        borderColor:
+                                            "color-mix(in srgb, var(--ms-text) 15%, transparent)",
+                                    }}
                                 >
-                                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center bg-[#2F7BFF] text-[10px] font-semibold text-white">
+                                    <span
+                                        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center text-[16px] font-semibold"
+                                        style={{
+                                            background: "var(--ms-accent)",
+                                            color: "#FFFFFF",
+                                        }}
+                                    >
                                         {String(i + 1).padStart(2, "0")}
                                     </span>
 
-                                    <p className="text-[12px] leading-5 text-white/75">
+                                    <p className="text-[20px] leading-8 text-[var(--ms-text)]">
                                         {item}
                                     </p>
                                 </div>
@@ -1055,30 +990,50 @@ export default function ServiceReportExperience({
                 </div>
             </section>
 
-            {/* ================= HOW WE WORK ================= */}
+            {/* How we work */}
             <section
                 id="how-we-work"
-                className="report-section border-y border-white/10 bg-[#0a1020]"
+                className="report-section border-y"
+                style={{
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                }}
             >
                 <div className="report-shell py-14 sm:py-20">
                     <div className="mb-10 max-w-[720px]">
                         <SectionLabel>05 / How we work</SectionLabel>
 
-                        <h2 className="text-3xl font-medium leading-[1.03] tracking-[-.06em] text-white sm:text-5xl">
+                        <h2 className="text-3xl font-medium leading-[1.03] tracking-[-.06em] text-[var(--ms-text)] sm:text-5xl">
                             How We Work
                         </h2>
 
-                        <p className="mt-5 text-[13px] leading-6 text-white/55">
+                        <p className="mt-5 text-[20px] leading-8 text-[#B5CFFF]">
                             Select a service to see the steps involved.
                         </p>
                     </div>
 
                     <div className="mb-8 flex items-center gap-3">
-                        <span className="rounded-full border border-[#2F7BFF] bg-[#2F7BFF]/15 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[.16em] text-[#8eb7ff]">
+                        <span
+                            className="rounded-full border px-4 py-1.5 text-[15px] font-semibold uppercase tracking-[.16em]"
+                            style={{
+                                borderColor: "#69A6FF",
+                                background:
+                                    "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                                color: "#8BC1FF",
+                            }}
+                        >
                             Technology
                         </span>
-                        <span className="h-px flex-1 bg-white/10" />
-                        <span className="text-[9px] uppercase tracking-[.15em] text-white/35">
+
+                        <span
+                            className="h-px flex-1"
+                            style={{
+                                background:
+                                    "color-mix(in srgb, var(--ms-text) 15%, transparent)",
+                            }}
+                        />
+
+                        <span className="text-[15px] uppercase tracking-[.15em] text-[#B5CFFF]">
                             Steps 01 — 05
                         </span>
                     </div>
@@ -1087,25 +1042,42 @@ export default function ServiceReportExperience({
                         {HOW_WE_WORK_STEPS.map((step) => (
                             <div
                                 key={step.step}
-                                className="relative flex flex-col rounded-2xl border border-white/10 bg-[#111722] p-5 transition-colors hover:border-[#2F7BFF]/50 sm:p-6"
+                                className="relative flex flex-col rounded-2xl border p-5 transition-colors sm:p-6"
+                                style={{
+                                    background: "var(--ms-surface)",
+                                    borderColor:
+                                        "color-mix(in srgb, var(--ms-text) 15%, transparent)",
+                                }}
                             >
-                                <span className="font-mono text-[11px] tracking-[.15em] text-[#2F7BFF]">
+                                <span
+                                    className="font-mono text-[17px] tracking-[.15em]"
+                                    style={{ color: "#8BC1FF" }}
+                                >
                                     {step.step}
                                 </span>
 
-                                <h3 className="mt-4 text-[14px] font-semibold leading-snug text-white">
+                                <h3 className="mt-4 text-[20px] font-semibold leading-snug text-[var(--ms-text)]">
                                     {step.title}
                                 </h3>
 
-                                <p className="mt-2 text-[12px] leading-6 text-white/55">
+                                <p className="mt-2 text-[20px] leading-8 text-[#B5CFFF]">
                                     {step.body}
                                 </p>
                             </div>
                         ))}
                     </div>
 
-                    <p className="mt-8 rounded-2xl border border-white/10 bg-[#0a0f18] p-5 text-[12px] leading-6 text-white/55">
-                        <strong className="text-[#7CC4FF]">Note:</strong>{" "}
+                    <p
+                        className="mt-8 rounded-2xl border p-5 text-[20px] leading-8 text-[#B5CFFF]"
+                        style={{
+                            background: "var(--ms-surface-alt)",
+                            borderColor:
+                                "color-mix(in srgb, var(--ms-text) 15%, transparent)",
+                        }}
+                    >
+                        <strong style={{ color: "#8BC1FF" }}>
+                            Note:
+                        </strong>{" "}
                         Scope, pricing and timelines are agreed before work
                         begins. Changes to agreed scope are handled in writing.
                     </p>
@@ -1115,19 +1087,23 @@ export default function ServiceReportExperience({
             {/* Deliverables */}
             <section
                 id="delivery"
-                className="report-section border-y border-white/10 bg-[#0d1119]"
+                className="report-section border-y"
+                style={{
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                }}
             >
                 <div className="report-shell py-14 sm:py-20">
                     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
                         <div>
                             <SectionLabel>06 / What you receive</SectionLabel>
 
-                            <h2 className="text-3xl font-medium tracking-[-.06em] text-white sm:text-5xl">
+                            <h2 className="text-3xl font-medium tracking-[-.06em] text-[var(--ms-text)] sm:text-5xl">
                                 The output should be useful after handover.
                             </h2>
                         </div>
 
-                        <span className="text-[9px] uppercase tracking-[.15em] text-white/35">
+                        <span className="text-[15px] uppercase tracking-[.15em] text-[#B5CFFF]">
                             Deliverables / scope
                         </span>
                     </div>
@@ -1136,21 +1112,27 @@ export default function ServiceReportExperience({
                         {deliverables.map((item, i) => (
                             <article
                                 key={item.title}
-                                className="report-card min-h-[180px] p-5 transition-colors hover:border-[#2F7BFF]/50 sm:p-7"
+                                className="report-card min-h-[180px] p-5 transition-colors sm:p-7"
                             >
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-semibold tracking-[.15em] text-[#75a5ff]">
+                                    <span
+                                        className="text-[16px] font-semibold tracking-[.15em]"
+                                        style={{ color: "#8BC1FF" }}
+                                    >
                                         {String(i + 1).padStart(2, "0")}
                                     </span>
 
-                                    <span className="h-2 w-2 bg-[#2F7BFF]" />
+                                    <span
+                                        className="h-2 w-2"
+                                        style={{ background: "#69A6FF" }}
+                                    />
                                 </div>
 
-                                <h3 className="mt-7 text-xl font-medium tracking-[-.04em] text-white">
+                                <h3 className="mt-7 text-[28px] font-medium tracking-[-.04em] text-[var(--ms-text)]">
                                     {item.title}
                                 </h3>
 
-                                <p className="mt-3 text-[12px] leading-6 text-white/55">
+                                <p className="mt-3 text-[20px] leading-8 text-[#B5CFFF]">
                                     {item.text}
                                 </p>
                             </article>
@@ -1162,62 +1144,84 @@ export default function ServiceReportExperience({
             {/* Outcome */}
             <section
                 id="outcome"
-                className="report-section border-y border-white/10 bg-[#101a2c] text-white"
+                className="report-section border-y text-[var(--ms-text)]"
+                style={{
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                }}
             >
                 <div className="report-shell grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:items-end lg:gap-20">
                     <div>
                         <SectionLabel>07 / The intended outcome</SectionLabel>
 
-                        <h2 className="max-w-[760px] text-4xl font-medium leading-[.98] tracking-[-.065em] sm:text-6xl">
+                        <h2 className="max-w-[760px] text-4xl font-medium leading-[.98] tracking-[-.065em] text-[var(--ms-text)] sm:text-6xl">
                             Make the next step feel possible.
                         </h2>
 
-                        <p className="mt-7 max-w-[650px] text-[14px] leading-7 text-white/65">
+                        <p className="mt-7 max-w-[650px] text-[20px] leading-8 text-[#B5CFFF]">
                             {outcome}
                         </p>
                     </div>
 
-                    <div className="border border-white/15 bg-white/[.04] p-6 sm:p-8">
-                        <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-white/10 pb-5">
-                            <span className="text-[9px] uppercase tracking-[.15em] text-white/40">
+                    <div
+                        className="border p-6 sm:p-8"
+                        style={{
+                            borderColor:
+                                "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                            background: "var(--ms-surface-alt)",
+                        }}
+                    >
+                        <div
+                            className="grid grid-cols-[110px_1fr] gap-4 border-b pb-5"
+                            style={{
+                                borderColor:
+                                    "color-mix(in srgb, var(--ms-text) 15%, transparent)",
+                            }}
+                        >
+                            <span className="text-[15px] uppercase tracking-[.15em] text-[#8BC1FF]">
                                 Timeframe
                             </span>
 
-                            <p className="text-[12px] text-white/85">
+                            <p className="text-[19px] text-[var(--ms-text)]">
                                 {detail?.timeline ?? "Agreed during planning"}
                             </p>
                         </div>
 
                         <div className="grid grid-cols-[110px_1fr] gap-4 pt-5">
-                            <span className="text-[9px] uppercase tracking-[.15em] text-white/40">
+                            <span className="text-[15px] uppercase tracking-[.15em] text-[#8BC1FF]">
                                 Investment
                             </span>
 
-                            <p className="text-[12px] text-white/85">
+                            <p className="text-[19px] text-[var(--ms-text)]">
                                 {detail?.investment ??
                                     "Defined after understanding the scope"}
                             </p>
                         </div>
-
                     </div>
                 </div>
             </section>
 
             {/* Report footer */}
-            <footer className="border-t border-white/10 bg-[#080a0f] py-8">
+            <footer
+                className="border-t py-8"
+                style={{
+                    borderColor:
+                        "color-mix(in srgb, var(--ms-accent) 30%, transparent)",
+                }}
+            >
                 <div className="report-shell flex flex-wrap items-center justify-between gap-4">
                     <Link
                         href="/services"
-                        className="text-[10px] font-bold uppercase tracking-[.18em] text-white/75 transition hover:text-[#75a5ff]"
+                        className="text-[16px] font-bold uppercase tracking-[.18em] text-[#B5CFFF] transition hover:text-[#8BC1FF]"
                     >
                         ← All services
                     </Link>
 
-                    <span className="text-[9px] uppercase tracking-[.15em] text-white/35">
+                    <span className="text-[15px] uppercase tracking-[.15em] text-[#B5CFFF]">
                         MindSpace / {service.pillar} / {service.title}
                     </span>
                 </div>
             </footer>
-        </main>
+        </div>
     );
 }

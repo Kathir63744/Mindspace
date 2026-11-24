@@ -245,7 +245,7 @@ export const SERVICES: Service[] = [
     },
 
     // ==============================
-    // STUDY ABROAD (Matches your data.ts)
+    // STUDY ABROAD
     // ==============================
     {
         icon: "globe",
@@ -303,7 +303,7 @@ export const SERVICES: Service[] = [
     },
 
     // ==============================
-    // TRAINING (Matches your data.ts)
+    // TRAINING
     // ==============================
     {
         icon: "code",
@@ -361,7 +361,7 @@ export const SERVICES: Service[] = [
     },
 
     // ==============================
-    // CAREERS (Matches your data.ts)
+    // CAREERS
     // ==============================
     {
         icon: "trend",
@@ -513,9 +513,6 @@ export type ServiceDetail = {
 };
 
 export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
-    /* ==========================================================
-       WEBSITE DEVELOPMENT
-    ========================================================== */
     "website-development": {
         slug: "website-development",
         title: "Website Development",
@@ -563,9 +560,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
         },
     },
 
-    /* ==========================================================
-       MOBILE APP DEVELOPMENT
-    ========================================================== */
     "app-development": {
         slug: "app-development",
         title: "Mobile App Development",
@@ -613,9 +607,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
         },
     },
 
-    /* ==========================================================
-       WEB APPLICATION DEVELOPMENT
-    ========================================================== */
     "web-application": {
         slug: "web-application",
         title: "Web Application Development",
@@ -663,9 +654,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
         },
     },
 
-    /* ==========================================================
-       CUSTOM SOFTWARE DEVELOPMENT
-    ========================================================== */
     "software-development": {
         slug: "software-development",
         title: "Custom Software Development",

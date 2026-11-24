@@ -1,343 +1,284 @@
+// app/components/consultant/services/ServicesSignalAnimation.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
+import type { Service } from "@/app/components/consultant/services/ServicesData";
 
-/* ============================================================
-   Luminous ribbon background (WebGL), blue edition.
+type Props = {
+    service: Service;
+    tagline: string;
+    pillarNumber?: string;
+};
 
-   Differences from the first version:
-   - Palette is navy -> ocean -> sky -> ice, symmetric around the centre ribbon.
-   - Output is premultiplied (no double-darkening of the edges).
-   - Negative bases are never passed to pow() (that is undefined in GLSL and
-     shows up as black speckles on some GPUs), squares are written as x * x.
-   - Falls back to a soft CSS glow if WebGL is unavailable or the context is lost.
-   - Pauses when off-screen, and draws a single still frame for reduced motion.
-============================================================ */
+type Particle = {
+    x: number; y: number; tx: number; ty: number;
+    glyph: string; phase: number; size: number; opacity: number; delay: number;
+};
 
-const vertexShaderSource = `
-  attribute vec2 a_position;
-  varying vec2 v_uv;
-  void main() {
-    v_uv = a_position * 0.5 + 0.5;
-    gl_Position = vec4(a_position, 0.0, 1.0);
-  }
-`;
+const GLYPHS = "01·/+=<>";
 
-const fragmentShaderSource = `
-  #ifdef GL_FRAGMENT_PRECISION_HIGH
-  precision highp float;
-  #else
-  precision mediump float;
-  #endif
-
-  varying vec2 v_uv;
-  uniform vec2 u_resolution;
-  uniform float u_time;
-  uniform float u_origin;
-
-  #define PI 3.14159265359
-
-  float ribbon(float distance, float width) {
-    float d = abs(distance);
-    float body = 1.0 - smoothstep(width * 0.55, width, d);
-    float glow = exp(-d * d / (width * width * 2.8));
-    return max(body, glow * 0.42);
-  }
-
-  vec3 palette(float x) {
-    vec3 deep  = vec3(0.03, 0.14, 0.66);
-    vec3 ocean = vec3(0.09, 0.40, 1.00);
-    vec3 sky   = vec3(0.34, 0.70, 1.00);
-    vec3 ice   = vec3(0.62, 0.86, 1.00);
-
-    vec3 a = mix(deep,  ocean, smoothstep(0.0, 0.4, x));
-    vec3 b = mix(ocean, sky,   smoothstep(0.4, 0.75, x));
-    vec3 c = mix(sky,   ice,   smoothstep(0.75, 1.0, x));
-
-    return x < 0.4 ? a : (x < 0.75 ? b : c);
-  }
-
-  void main() {
-    vec2 uv = v_uv;
-    float aspect = u_resolution.x / max(u_resolution.y, 1.0);
-    float t = u_time;
-
-    vec2 p = vec2(uv.x * aspect, uv.y);
-    float center = aspect * 0.5;
-
-    // The ribbons start together near the top centre and fan out downward.
-    float originY = u_origin;
-    float endY = 0.03;
-
-    float progress = clamp((originY - uv.y) / (originY - endY), 0.0, 1.0);
-    float spread = smoothstep(0.0, 1.0, progress);
-
-    // Slow movement shared by the whole formation.
-    float drift =
-      sin(progress * 4.0 - t * 0.42) * 0.025 +
-      sin(progress * 7.0 + t * 0.25) * 0.009;
-    float floatWave = sin(t * 0.34 + progress * 3.2) * 0.018;
-
-    // Both motions vanish at the common start and end.
-    float curve = (drift + floatWave) * sin(PI * progress);
-
-    float total = 0.0;
-    vec3 colorSum = vec3(0.0);
-
-    for (int i = 0; i < 5; i++) {
-      float id = float(i);
-      float lane = (id - 2.0) / 2.0;
-
-      float endpoint = lane * aspect * 0.43;
-      float path = center + endpoint * spread + curve;
-
-      float individualFloat =
-        sin(t * 0.30 + id * 0.75 + progress * 3.0) * 0.006 * sin(PI * progress);
-      path += individualFloat;
-
-      float width = aspect * mix(0.010, 0.036, spread);
-
-      float d = p.x - path;
-      float light = ribbon(d, width);
-
-      float dn = d / max(width * 0.34, 0.001);
-      float core = exp(-dn * dn);
-
-      float travel = 0.82 + 0.18 * sin(progress * 7.0 - t * 0.65 + id * 0.6);
-      float intensity = light * travel;
-
-      // brightest in the middle, deeper blue towards the outer ribbons
-      vec3 c = palette(0.18 + 0.70 * (1.0 - abs(lane)));
-      c *= 0.72 + core * 0.48;
-
-      colorSum += c * intensity;
-      total += intensity;
-    }
-
-    float startFade = smoothstep(0.015, 0.19, progress);
-    float endFade = 1.0 - smoothstep(0.82, 1.0, progress);
-    float verticalFade = startFade * endFade;
-
-    float outerWidth = aspect * (0.035 + spread * 0.46);
-    float sideDistance = abs(p.x - center);
-    float sideFade = 1.0 - smoothstep(outerWidth * 0.82, outerWidth, sideDistance);
-
-    float coverage = 1.0 - exp(-total * 0.62);
-    float intensity = coverage * verticalFade * sideFade;
-
-    vec3 averageColor = colorSum / max(total, 0.001);
-
-    float ax = (p.x - center) / (aspect * 0.48);
-    float ay = (uv.y - 0.35) / 0.39;
-    float atmosphere = exp(-ax * ax) * exp(-ay * ay);
-
-    vec3 rgb = averageColor * intensity * 1.45 + palette(0.5) * atmosphere * 0.055;
-
-    // premultiplied alpha: never smaller than the brightest channel
-    float alpha = clamp(max(max(rgb.r, rgb.g), rgb.b), 0.0, 1.0);
-
-    gl_FragColor = vec4(rgb, alpha);
-  }
-`;
-
-function compileShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
-    const shader = gl.createShader(type);
-    if (!shader) throw new Error("Could not create shader.");
-
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        const message = gl.getShaderInfoLog(shader);
-        gl.deleteShader(shader);
-        throw new Error(message || "Shader compilation failed.");
-    }
-    return shader;
+function readVar(el: HTMLElement | null, name: string, fallback: string) {
+    if (!el) return fallback;
+    const v = getComputedStyle(el).getPropertyValue(name).trim();
+    return v || fallback;
 }
 
-function createProgram(gl: WebGLRenderingContext): WebGLProgram {
-    const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
-    const program = gl.createProgram();
-    if (!program) {
-        gl.deleteShader(vertex);
-        gl.deleteShader(fragment);
-        throw new Error("Could not create WebGL program.");
-    }
-
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        const message = gl.getProgramInfoLog(program);
-        gl.deleteProgram(program);
-        throw new Error(message || "Program linking failed.");
-    }
-    return program;
+function mixHex(a: string, b: string, t: number): string {
+    const pa = a.match(/^#([0-9a-f]{6})$/i);
+    const pb = b.match(/^#([0-9a-f]{6})$/i);
+    if (!pa || !pb) return a;
+    const na = parseInt(pa[1], 16);
+    const nb = parseInt(pb[1], 16);
+    const r = Math.round(((na >> 16) & 255) * (1 - t) + ((nb >> 16) & 255) * t);
+    const g = Math.round(((na >> 8) & 255) * (1 - t) + ((nb >> 8) & 255) * t);
+    const bl = Math.round((na & 255) * (1 - t) + (nb & 255) * t);
+    return `#${((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1)}`;
 }
 
-export default function ServiceBackgroundAnimation({
-    origin = 0.84,
-    className = "",
-}: {
-    /** Where the ribbons start, as a fraction of the height from the bottom (0.84 = near the top). */
-    origin?: number;
-    className?: string;
-}) {
+function hexToRgb(hex: string): string {
+    const m = hex.trim().match(/^#([0-9a-f]{6})$/i);
+    if (!m) return "47, 123, 255";
+    const n = parseInt(m[1], 16);
+    return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+}
+
+export default function ServiceSignalAnimation({ service, tagline }: Props) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [fallback, setFallback] = useState(false);
+    const wrapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        const ctx = canvas?.getContext("2d", { alpha: true });
+        if (!canvas || !ctx) return;
 
-        const gl = canvas.getContext("webgl", {
-            alpha: true,
-            antialias: true,
-            depth: false,
-            stencil: false,
-            premultipliedAlpha: true,
-            powerPreference: "low-power",
-        });
+        const accent = readVar(wrapRef.current, "--ms-accent", "#2F7BFF");
+        const secondary = readVar(wrapRef.current, "--ms-secondary", "#7CC4FF");
+        const CORE = mixHex(secondary, "#ffffff", 0.35);
+        const MID = accent;
+        const DEEP = mixHex(accent, "#000000", 0.35);
 
-        if (!gl) {
-            setFallback(true);
-            return;
-        }
+        let raf = 0, width = 0, height = 0, startTime = 0;
+        let particles: Particle[] = [];
+        let reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        let program: WebGLProgram;
-        try {
-            program = createProgram(gl);
-        } catch (error) {
-            console.error("Background shader error:", error);
-            setFallback(true);
-            return;
-        }
-
-        const positionLocation = gl.getAttribLocation(program, "a_position");
-        const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        const timeLocation = gl.getUniformLocation(program, "u_time");
-        const originLocation = gl.getUniformLocation(program, "u_origin");
-
-        const buffer = gl.createBuffer();
-        if (!buffer) {
-            gl.deleteProgram(program);
-            setFallback(true);
-            return;
-        }
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-
-        gl.useProgram(program);
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-        gl.uniform1f(originLocation, origin);
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.clearColor(0, 0, 0, 0);
-
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-        let frame = 0;
-        let startTime = 0;
-        let visible = true;
-        let disposed = false;
-
-        const draw = (time: number) => {
-            if (disposed || gl.isContextLost()) return;
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.useProgram(program);
-            gl.uniform1f(timeLocation, time);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        };
-
-        const resize = () => {
-            if (disposed) return;
+        const buildParticles = () => {
             const rect = canvas.getBoundingClientRect();
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-            const width = Math.max(1, Math.round(rect.width * dpr));
-            const height = Math.max(1, Math.round(rect.height * dpr));
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = Math.max(320, Math.floor(rect.width));
+            height = Math.max(170, Math.floor(rect.height));
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            if (canvas.width !== width || canvas.height !== height) {
-                canvas.width = width;
-                canvas.height = height;
+            const mask = document.createElement("canvas");
+            mask.width = width; mask.height = height;
+            const maskCtx = mask.getContext("2d", { willReadFrequently: true });
+            if (!maskCtx) return;
+
+            const compact = width < 640;
+            const title = service.title.toUpperCase();
+            const vw = window.innerWidth || width;
+            const clampFontPx = Math.min(Math.max(2.35 * 16, 0.082 * vw), 5 * 16);
+            const baseFontPx = (clampFontPx / Math.max(vw, 1)) * width * 1.0;
+            let fontSize = Math.max(compact ? 26 : 44, baseFontPx);
+            const trackingEm = -0.015;
+
+            const applyFont = (size: number) => {
+                maskCtx.font = `900 ${size}px Arial, Helvetica, sans-serif`;
+            };
+
+            const measure = (text: string) => {
+                let w = 0;
+                for (const ch of text) w += maskCtx.measureText(ch).width;
+                w += trackingEm * (text.length - 1) * fontSize;
+                return w;
+            };
+
+            applyFont(fontSize);
+            const maxWidth = width * 0.94;
+            let measured = measure(title);
+            if (measured > maxWidth) {
+                fontSize *= maxWidth / measured;
+                applyFont(fontSize);
+                measured = measure(title);
             }
-            gl.viewport(0, 0, width, height);
-            gl.useProgram(program);
-            gl.uniform2f(resolutionLocation, width, height);
-            draw(0);
+
+            maskCtx.textAlign = "left";
+            maskCtx.textBaseline = "middle";
+            maskCtx.fillStyle = "#fff";
+            const totalWidth = measure(title);
+            let cursorX = width / 2 - totalWidth / 2;
+            const cy = height / 2;
+            for (const ch of title) {
+                maskCtx.fillText(ch, cursorX, cy);
+                cursorX += maskCtx.measureText(ch).width + trackingEm * fontSize;
+            }
+
+            const pixels = maskCtx.getImageData(0, 0, width, height).data;
+            const stride = 4;
+            const targets: Array<{ x: number; y: number }> = [];
+            for (let y = 0; y < height; y += stride)
+                for (let x = 0; x < width; x += stride)
+                    if (pixels[(y * width + x) * 4 + 3] > 110) targets.push({ x, y });
+
+            const cap = compact ? 620 : 1150;
+            const step = Math.max(1, Math.ceil(targets.length / cap));
+            particles = targets.filter((_, i) => i % step === 0).map((point, i) => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                tx: point.x, ty: point.y,
+                glyph: GLYPHS[(i * 5 + Math.floor(Math.random() * GLYPHS.length)) % GLYPHS.length],
+                phase: Math.random() * Math.PI * 2,
+                size: compact ? 4.6 + Math.random() * 1.3 : 5 + Math.random() * 1.6,
+                opacity: 0.55 + Math.random() * 0.4,
+                delay: Math.random() * 0.45,
+            }));
+            startTime = performance.now();
         };
 
-        const render = (timestamp: number) => {
-            if (disposed || !visible) return;
-            if (!startTime) startTime = timestamp;
-            draw(reducedMotion.matches ? 0 : (timestamp - startTime) / 1000);
-            if (!reducedMotion.matches) frame = requestAnimationFrame(render);
+        const draw = (now: number) => {
+            const elapsed = (now - startTime) / 1000;
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.shadowColor = `rgba(${hexToRgb(accent)}, .95)`;
+            ctx.shadowBlur = 10;
+
+            for (const p of particles) {
+                const localElapsed = reducedMotion ? 1 : Math.min(1, Math.max(0, (elapsed - p.delay) / 1.9));
+                const localEase = 1 - Math.pow(1 - localElapsed, 3);
+                const pull = 0.05 + localEase * 0.16;
+                p.x += (p.tx - p.x) * pull;
+                p.y += (p.ty - p.y) * pull;
+                const settled = localElapsed > 0.98;
+                const movement = reducedMotion ? 0 : Math.sin(now * 0.0009 + p.phase) * (settled ? 0.5 : 2.0);
+                const pulse = reducedMotion ? 1 : 0.82 + (Math.sin(now * 0.0013 + p.phase) + 1) * 0.09;
+                ctx.globalAlpha = p.opacity * pulse * (0.4 + localEase * 0.6);
+                ctx.fillStyle = localElapsed < 0.5 ? DEEP : localElapsed < 0.85 ? MID : CORE;
+                ctx.font = `700 ${p.size}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+                ctx.fillText(p.glyph, p.x + movement, p.y);
+            }
+            ctx.restore();
+            if (!reducedMotion) raf = window.requestAnimationFrame(draw);
         };
 
-        const resizeObserver = new ResizeObserver(resize);
-        resizeObserver.observe(canvas);
+        buildParticles();
+        draw(performance.now());
 
-        const intersectionObserver = new IntersectionObserver(([entry]) => {
-            visible = entry.isIntersecting;
-            cancelAnimationFrame(frame);
-            if (visible) {
-                startTime = 0;
-                if (reducedMotion.matches) draw(0);
-                else frame = requestAnimationFrame(render);
-            }
+        const ro = new ResizeObserver(() => {
+            buildParticles();
+            if (reducedMotion) draw(performance.now());
         });
-        intersectionObserver.observe(canvas);
+        ro.observe(canvas);
 
-        const onMotionChange = () => {
-            cancelAnimationFrame(frame);
-            startTime = 0;
-            if (reducedMotion.matches) draw(0);
-            else if (visible) frame = requestAnimationFrame(render);
+        const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const onMotionChange = (event: MediaQueryListEvent) => {
+            reducedMotion = event.matches;
+            window.cancelAnimationFrame(raf);
+            startTime = performance.now();
+            if (reducedMotion) draw(performance.now());
+            else raf = window.requestAnimationFrame(draw);
         };
-        reducedMotion.addEventListener("change", onMotionChange);
-
-        const onLost = (e: Event) => {
-            e.preventDefault();
-            cancelAnimationFrame(frame);
-            setFallback(true);
-        };
-        canvas.addEventListener("webglcontextlost", onLost);
-
-        resize();
-        if (reducedMotion.matches) draw(0);
-        else frame = requestAnimationFrame(render);
+        motionQuery.addEventListener?.("change", onMotionChange);
 
         return () => {
-            disposed = true;
-            cancelAnimationFrame(frame);
-            resizeObserver.disconnect();
-            intersectionObserver.disconnect();
-            reducedMotion.removeEventListener("change", onMotionChange);
-            canvas.removeEventListener("webglcontextlost", onLost);
-            gl.deleteBuffer(buffer);
-            gl.deleteProgram(program);
+            window.cancelAnimationFrame(raf);
+            ro.disconnect();
+            motionQuery.removeEventListener?.("change", onMotionChange);
         };
-    }, [origin]);
+    }, [service.title]);
+
+    const titleStyle = {
+        "--title-delay": "180ms",
+        textShadow:
+            "0 0 1px rgba(255,255,255,.6), 0 0 18px color-mix(in srgb, var(--ms-accent) 55%, transparent), 0 0 42px color-mix(in srgb, var(--ms-secondary) 35%, transparent)",
+    } as CSSProperties;
 
     return (
-        <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${className}`}>
-            {fallback && (
-                <div
-                    className="absolute inset-0"
+        <div ref={wrapRef} className="relative mx-auto flex w-full max-w-[1500px] flex-col items-center px-4 text-center sm:px-8">
+            <div className="relative isolate flex min-h-[190px] w-full max-w-[1380px] items-center justify-center sm:min-h-[255px] lg:min-h-[310px]">
+                <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-90" />
+                <h1
+                    style={titleStyle}
+                    className="service-title-reveal relative z-10 mx-auto max-w-full px-1 py-5 text-center text-[clamp(2.35rem,8.2vw,5rem)] font-black uppercase leading-[.98] tracking-[-.015em] text-[var(--ms-text)]"
+                >
+                    {service.title}
+                </h1>
+            </div>
+
+            <p className="max-w-[780px] -mt-8 text-[14px] leading-2 text-[var(--ms-muted)] sm:text-[17px]">
+                {tagline}
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4">
+                <a
+                    href="/contact"
+                    className="group inline-flex min-h-12 items-center gap-4 rounded-full border px-6 text-[10px] font-bold uppercase tracking-[.15em] transition duration-300 hover:-translate-y-1"
                     style={{
-                        background:
-                            "radial-gradient(ellipse 55% 70% at 50% 8%, rgba(47,123,255,.34), rgba(30,107,255,.12) 45%, transparent 72%)",
+                        borderColor: "color-mix(in srgb, var(--ms-accent) 60%, transparent)",
+                        background: "var(--ms-accent)",
+                        color: "var(--ms-background)",
+                        boxShadow: "0 0 38px color-mix(in srgb, var(--ms-accent) 28%, transparent)",
                     }}
-                />
-            )}
-            <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+                >
+                    Discuss this service
+                    <span className="text-base transition-transform group-hover:translate-x-1">↗</span>
+                </a>
+                <span className="inline-flex items-center gap-2 px-3 text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--ms-muted)]">
+                    <span className="h-1 w-1 rounded-full" style={{ background: "var(--ms-accent)" }} />
+                    Built around your next move
+                </span>
+            </div>
+
+            <div
+                className="mt-10 grid w-full max-w-[850px] grid-cols-1 border-y sm:mt-14 sm:grid-cols-3"
+                style={{ borderColor: "color-mix(in srgb, var(--ms-text) 25%, transparent)" }}
+            >
+                <div className="px-4 py-4 sm:border-r" style={{ borderColor: "color-mix(in srgb, var(--ms-text) 15%, transparent)" }}>
+                    <p className="text-[14px] font-bold uppercase tracking-[.29em] text-[var(--ms-muted)]">Primary focus</p>
+                    <p className="mt-2 text-[12px] text-[var(--ms-text)]">{service.gets[0] ?? service.need}</p>
+                </div>
+                <div className="border-t px-4 py-4 sm:border-r sm:border-t-0" style={{ borderColor: "color-mix(in srgb, var(--ms-text) 15%, transparent)" }}>
+                    <p className="text-[14px] font-bold uppercase tracking-[.29em] text-[var(--ms-muted)]">Designed for</p>
+                    <p className="mt-2 text-[12px] text-[var(--ms-text)]">{service.need}</p>
+                </div>
+                <div className="border-t px-4 py-4 sm:border-t-0" style={{ borderColor: "color-mix(in srgb, var(--ms-text) 15%, transparent)" }}>
+                    <p className="text-[14px] font-bold uppercase tracking-[.29em] text-[var(--ms-muted)]">Delivery approach</p>
+                    <p className="mt-2 text-[12px] text-[var(--ms-text)]">People-first, practical</p>
+                </div>
+            </div>
+
+            <style jsx>{`
+                .service-title-reveal {
+                    opacity: 0;
+                    clip-path: inset(0 100% 0 0);
+                    transform: translateY(18px) scale(.985);
+                    animation: serviceTitleReveal 1.15s cubic-bezier(.16, 1, .3, 1) var(--title-delay) forwards,
+                               serviceTitleGlow 3.6s ease-in-out 1.4s infinite;
+                }
+                @keyframes serviceTitleReveal {
+                    0%   { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(18px) scale(.985); filter: blur(9px); }
+                    55%  { opacity: 1; clip-path: inset(0 15% 0 0); filter: blur(0); }
+                    100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0) scale(1); filter: blur(0); }
+                }
+                @keyframes serviceTitleGlow {
+                    0%, 100% {
+                        text-shadow: 0 0 1px rgba(255,255,255,.6),
+                                     0 0 18px color-mix(in srgb, var(--ms-accent) 55%, transparent),
+                                     0 0 42px color-mix(in srgb, var(--ms-secondary) 35%, transparent);
+                    }
+                    50% {
+                        text-shadow: 0 0 1px rgba(255,255,255,.8),
+                                     0 0 26px color-mix(in srgb, var(--ms-accent) 75%, transparent),
+                                     0 0 60px color-mix(in srgb, var(--ms-secondary) 50%, transparent);
+                    }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .service-title-reveal { animation: none; opacity: 1; clip-path: none; transform: none; filter: none; }
+                }
+            `}</style>
         </div>
     );
 }

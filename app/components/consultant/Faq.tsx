@@ -64,43 +64,43 @@ export default function Faq() {
     return (
         <section
             id="faq"
-            className="relative overflow-hidden bg-[#080B12] px-5 py-24 text-[#F5F7FB] sm:px-8 lg:px-12 lg:py-32"
+            className="relative overflow-hidden bg-[#080B12] px-5 py-24 text-[#F5F7FB] sm:px-8 lg:px-12 lg:py-32 font-questrial"
         >
             {/* Background detail */}
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-[#2F7BFF]/[0.07] blur-[140px]"
+                className="pointer-events-none absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-[#2F7BFF]/[0.09] blur-[140px]"
             />
 
             <div className="relative mx-auto max-w-[1400px]">
                 {/* Header */}
                 <div className="mb-16 flex flex-col justify-between gap-8 lg:mb-24 lg:flex-row lg:items-end">
                     <div className="max-w-3xl">
-                        <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
+                        <div className="mx-auto mb-4 flex max-w-7xl items-center gap-3 px-6">
                             <span className="h-px w-9 bg-[#2F7BFF]" />
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
-                                Frequently Asked Ques
+                            <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#C5D9FF]">
+                                Frequently Asked Questions
                             </span>
-                            <span className="h-px max-w-24 flex-1 bg-white/10" />
+                            <span className="h-px max-w-24 flex-1 bg-white/20" />
                         </div>
 
-                        <h2 className="mt-8 text-5xl font-medium leading-[1.04] tracking-[-0.065em] sm:text-6xl lg:text-[88px]">
+                        <h2 className="mt-8 text-[clamp(38px,6.4vw,72px)] font-[600] leading-[0.94] tracking-[-0.055em] max-sm:text-[clamp(36px,11vw,58px)]">
                             The details
                             <br />
-                            <span className="text-[#7F8BA0]">
+                            <span className="text-[#B3BDCD]">
                                 that matter<span className="text-[#2F7BFF]">.</span>
                             </span>
                         </h2>
                     </div>
 
                     <div className="max-w-xs pb-2">
-                        <p className="text-sm leading-7 text-[#929EAF] sm:text-base">
+                        <p className="text-[clamp(15px,1.15vw,16px)] leading-[1.9] text-[#C0CAD8]">
                             Every big decision comes with questions. Here are
                             some answers to help you move forward with clarity.
                         </p>
                         <div className="mt-6 flex items-center gap-3">
                             <span className="h-px w-10 bg-[#2F7BFF]" />
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#A9C7FF]">
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C5D9FF]">
                                 Find your clarity
                             </span>
                         </div>
@@ -111,12 +111,12 @@ export default function Faq() {
                 <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
                     {/* Question navigator */}
                     <div>
-                        <div className="mb-7 flex items-center justify-between border-b border-white/10 pb-4">
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#778397]">
+                        <div className="mb-7 flex items-center justify-between border-b border-white/15 pb-4">
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A7B4C7]">
                                 Browse questions
                             </span>
-                            <span className="text-xs tabular-nums text-[#778397]">
-                                0{allQuestions.length} topics
+                            <span className="text-[13px] tabular-nums text-[#A7B4C7]">
+                                {String(allQuestions.length).padStart(2, "0")} topics
                             </span>
                         </div>
 
@@ -128,10 +128,10 @@ export default function Faq() {
                             return (
                                 <div key={group.category} className="mb-10">
                                     <div className="mb-4 flex items-center gap-3">
-                                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#2F7BFF]">
+                                        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6CA2FF]">
                                             0{groupIndex + 1}
                                         </span>
-                                        <span className="text-xs font-medium uppercase tracking-[0.16em] text-[#778397]">
+                                        <span className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#A7B4C7]">
                                             {group.category}
                                         </span>
                                     </div>
@@ -149,22 +149,22 @@ export default function Faq() {
                                                     aria-pressed={isActive}
                                                     className={`group flex w-full items-center gap-4 rounded-xl px-4 py-4 text-left transition-all duration-300 sm:px-5 ${isActive
                                                         ? "bg-[#111B2D]"
-                                                        : "hover:bg-white/[0.035]"
+                                                        : "hover:bg-white/[0.045]"
                                                         }`}
                                                 >
                                                     <span
-                                                        className={`w-6 shrink-0 text-[10px] tabular-nums transition-colors ${isActive
-                                                            ? "text-[#2F7BFF]"
-                                                            : "text-[#596579]"
+                                                        className={`w-6 shrink-0 text-[11px] tabular-nums transition-colors ${isActive
+                                                            ? "text-[#6CA2FF]"
+                                                            : "text-[#9AA9BE]"
                                                             }`}
                                                     >
                                                         {String(index + 1).padStart(2, "0")}
                                                     </span>
 
                                                     <span
-                                                        className={`flex-1 text-sm leading-6 transition-colors sm:text-[15px] ${isActive
+                                                        className={`flex-1 text-[15px] leading-6 transition-colors sm:text-[16px] ${isActive
                                                             ? "font-medium text-white"
-                                                            : "text-[#929EAF] group-hover:text-white"
+                                                            : "text-[#C0CAD8] group-hover:text-white"
                                                             }`}
                                                     >
                                                         {item.q}
@@ -173,7 +173,7 @@ export default function Faq() {
                                                     <span
                                                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${isActive
                                                             ? "rotate-45 border-[#2F7BFF] bg-[#2F7BFF] text-white"
-                                                            : "border-white/10 text-[#778397] group-hover:border-white/30"
+                                                            : "border-white/20 text-[#A7B4C7] group-hover:border-white/40"
                                                             }`}
                                                     >
                                                         <svg
@@ -199,52 +199,52 @@ export default function Faq() {
                     </div>
 
                     {/* Answer display */}
-                    <div className="relative flex min-h-[440px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#0D121D] p-7 sm:p-10 lg:p-12">
+                    <div className="relative flex min-h-[440px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/[0.12] bg-[#0D121D] p-7 sm:p-10 lg:p-12">
                         <div
                             aria-hidden="true"
-                            className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full border border-[#2F7BFF]/10"
+                            className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full border border-[#2F7BFF]/15"
                         />
                         <div
                             aria-hidden="true"
-                            className="pointer-events-none absolute -right-4 -top-8 h-48 w-48 rounded-full border border-[#2F7BFF]/10"
+                            className="pointer-events-none absolute -right-4 -top-8 h-48 w-48 rounded-full border border-[#2F7BFF]/15"
                         />
 
                         <div className="relative">
                             <div className="mb-16 flex items-center justify-between">
-                                <span className="rounded-full border border-[#2F7BFF]/25 bg-[#2F7BFF]/[0.08] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A9C7FF]">
+                                <span className="rounded-full border border-[#2F7BFF]/30 bg-[#2F7BFF]/[0.10] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#C5D9FF]">
                                     {activeQuestion.category}
                                 </span>
 
-                                <span className="text-sm tabular-nums text-[#596579]">
+                                <span className="text-[14px] tabular-nums text-[#A7B4C7]">
                                     {String(activeIndex + 1).padStart(2, "0")}
-                                    <span className="mx-2 text-[#2F7BFF]">/</span>
+                                    <span className="mx-2 text-[#6CA2FF]">/</span>
                                     {String(allQuestions.length).padStart(2, "0")}
                                 </span>
                             </div>
 
                             <div key={activeIndex}>
-                                <span className="mb-5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#2F7BFF]">
+                                <span className="mb-5 block text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6CA2FF]">
                                     Your question
                                 </span>
 
-                                <h3 className="max-w-xl text-3xl font-medium leading-[1.15] tracking-[-0.045em] sm:text-4xl lg:text-[48px]">
+                                <h3 className="max-w-xl text-[clamp(30px,3.4vw,48px)] font-[600] leading-[1.06] tracking-[-0.045em]">
                                     {activeQuestion.q}
                                 </h3>
 
-                                <div className="my-9 h-px w-full bg-white/[0.08]" />
+                                <div className="my-9 h-px w-full bg-white/[0.12]" />
 
-                                <span className="mb-5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#778397]">
+                                <span className="mb-5 block text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A7B4C7]">
                                     The answer
                                 </span>
 
-                                <p className="max-w-xl text-base leading-8 text-[#A2AAB8] sm:text-lg sm:leading-9">
+                                <p className="max-w-xl text-[clamp(16px,1.2vw,17px)] leading-[1.9] text-[#D0D8E5]">
                                     {activeQuestion.a}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="relative mt-14 flex items-center justify-between border-t border-white/[0.08] pt-6">
-                            <span className="text-xs text-[#596579]">
+                        <div className="relative mt-14 flex items-center justify-between border-t border-white/[0.12] pt-6">
+                            <span className="text-[13px] text-[#A7B4C7]">
                                 Need more information?
                             </span>
 
@@ -258,7 +258,7 @@ export default function Faq() {
                                         )
                                     }
                                     aria-label="Previous question"
-                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]"
                                 >
                                     <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                                         <path
@@ -279,7 +279,7 @@ export default function Faq() {
                                         )
                                     }
                                     aria-label="Next question"
-                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-[#2F7BFF] hover:bg-[#2F7BFF]"
                                 >
                                     <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                                         <path
@@ -296,10 +296,8 @@ export default function Faq() {
                     </div>
                 </div>
 
-
-
                 {/* Bottom detail */}
-                <div className="mt-7 flex flex-col justify-between gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#596579] sm:flex-row">
+                <div className="mt-7 flex flex-col justify-between gap-3 text-[11px] font-medium uppercase tracking-[0.18em] text-[#A7B4C7] sm:flex-row">
                     <span>MindSpace / Questions & answers</span>
                     <span>Make your next move with clarity.</span>
                 </div>

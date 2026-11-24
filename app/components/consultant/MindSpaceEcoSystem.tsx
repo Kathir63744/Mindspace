@@ -1,3 +1,4 @@
+// app/components/consultant/MindSpaceEcosystem.tsx
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
@@ -11,6 +12,7 @@ type Service = {
     symbol: "technology" | "global" | "career";
     href: string;
     linkLabel: string;
+    themeColor: string;
 };
 
 const DEFAULT_SERVICES: Service[] = [
@@ -28,6 +30,7 @@ const DEFAULT_SERVICES: Service[] = [
         symbol: "technology",
         href: "/services",
         linkLabel: "Explore Technology Solutions",
+        themeColor: "rgba(47, 123, 255, 0.15)", // Blue
     },
     {
         number: "02",
@@ -43,6 +46,7 @@ const DEFAULT_SERVICES: Service[] = [
         symbol: "global",
         href: "/training",
         linkLabel: "Explore Professional Training",
+        themeColor: "rgba(20, 184, 122, 0.15)", // Green
     },
     {
         number: "03",
@@ -60,6 +64,7 @@ const DEFAULT_SERVICES: Service[] = [
         symbol: "career",
         href: "/careers",
         linkLabel: "Explore Career Support",
+        themeColor: "rgba(168, 85, 247, 0.15)", // Purple
     },
 ];
 
@@ -111,37 +116,56 @@ function ServiceCard({
 }) {
     return (
         <motion.article
-            className="group flex h-full min-w-0 flex-col bg-white/[0.012] p-[clamp(22px,2.7vw,38px)] transition-colors duration-300 hover:bg-[#111B2C] max-md:min-h-0"
+            className="group relative flex h-full min-w-0 flex-col p-[clamp(24px,3vw,42px)] transition-colors duration-300"
             initial={reducedMotion ? false : { opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.75, ease: EASE }}
         >
-            <div className="flex items-start justify-between gap-3.5">
-                <span className="text-[9px] font-[650] uppercase tracking-[0.16em] text-[#7E899E]">
+            {/* Glass overlay effect that fades in on hover */}
+            <div
+                className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                    background: `linear-gradient(180deg, ${service.themeColor} 0%, transparent 100%)`,
+                }}
+            />
+
+            <div className="relative z-10 flex items-start justify-between gap-3.5">
+                <span className="font-questrial text-[13px] font-semibold uppercase tracking-[0.16em] text-[#D0D8E5]">
                     {service.number} / 03
                 </span>
-                <span className="grid h-12 w-12 place-items-center rounded-full border border-[#2F7BFF]/35 bg-[#2F7BFF]/[0.08] text-[#A9C7FF]">
-                    <div className="h-[25px] w-[25px]">
+                <span
+                    className="grid h-14 w-14 place-items-center rounded-full border text-white transition-colors duration-300"
+                    style={{
+                        borderColor: service.themeColor.replace("0.15", "0.4"),
+                        backgroundColor: service.themeColor.replace("0.15", "0.1"),
+                    }}
+                >
+                    <div className="h-[28px] w-[28px]">
                         <ServiceSymbol type={service.symbol} />
                     </div>
                 </span>
             </div>
 
-            <div className="mt-[42px] max-md:mt-7">
-                <h3 className="m-0 max-w-[300px] text-[clamp(22px,2.2vw,29px)] font-[550] leading-[1.15] tracking-[-0.045em] text-[#F3F5FA]">
+            <div className="relative z-10 mt-[42px] max-md:mt-7">
+                <h3 className="m-0 max-w-[300px] font-questrial text-[clamp(24px,2.4vw,32px)] font-semibold leading-[1.15] tracking-[-0.045em] text-white">
                     {service.title}
                 </h3>
-                <p className="mt-[15px] text-[13px] leading-[1.8] text-[#A0A9BA]">
+                <p className="mt-[15px] font-questrial text-[15px] leading-[1.8] text-[#E0E8F4] sm:text-[16px]">
                     {service.summary}
                 </p>
             </div>
 
-            <ul className="my-7 grid gap-3 p-0 list-none max-md:grid-cols-2 max-md:max-sm:grid-cols-1">
+            <ul className="relative z-10 my-7 grid gap-3 p-0 list-none max-md:grid-cols-2 max-md:max-sm:grid-cols-1">
                 {service.items.map((item) => (
                     <li key={item.href}>
-                        <Link href={item.href} className="group/item flex items-start gap-2.5 text-base leading-normal text-[#D3D8E2] transition-colors hover:text-[#A9C7FF]">
-                            <span className="text-[13px] text-[#A9C7FF]" aria-hidden="true">↗</span>
+                        <Link
+                            href={item.href}
+                            className="group/item flex items-start gap-2.5 font-questrial text-[15px] leading-normal text-white transition-colors hover:text-[#A9C7FF]"
+                        >
+                            <span className="text-[14px] text-[#A9C7FF]" aria-hidden="true">
+                                ↗
+                            </span>
                             {item.label}
                         </Link>
                     </li>
@@ -149,11 +173,14 @@ function ServiceCard({
             </ul>
 
             <Link
-                className="mt-auto flex items-center justify-between gap-4 border-t border-white/[0.13] pt-[17px] text-[11px] font-[650] text-[#F3F5FA] no-underline transition-colors duration-250 hover:text-[#A9C7FF]"
+                className="relative z-10 mt-auto flex items-center justify-between gap-4 border-t border-white/[0.13] pt-[17px] font-questrial text-[13px] font-bold uppercase tracking-[0.1em] text-white no-underline transition-colors duration-250 hover:text-[#A9C7FF]"
                 href={service.href}
             >
                 {service.linkLabel}
-                <span className="text-[17px] text-[#A9C7FF] transition-transform duration-250 group-hover:translate-x-[3px] group-hover:-translate-y-[3px]" aria-hidden="true">
+                <span
+                    className="text-[18px] text-[#A9C7FF] transition-transform duration-250 group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
+                    aria-hidden="true"
+                >
                     ↗
                 </span>
             </Link>
@@ -182,74 +209,124 @@ export default function MindSpaceEcosystem({
 
     return (
         <section
-            className="relative isolate w-full overflow-hidden bg-[#07090F] px-[clamp(20px,6vw,92px)] pt-[clamp(76px,9vw,128px)] pb-12 text-[#F3F5FA] before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(ellipse_at_82%_8%,rgba(47,123,255,0.12),transparent_34%)] max-sm:px-[18px] max-sm:pt-[66px] max-sm:pb-[34px]"
+            className="relative isolate w-full overflow-hidden bg-[#07090F] px-[clamp(20px,6vw,92px)] pt-[clamp(76px,9vw,128px)] pb-12 font-questrial text-[#F3F5FA] before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(ellipse_at_82%_8%,rgba(47,123,255,0.12),transparent_34%)] max-sm:px-[18px] max-sm:pt-[66px] max-sm:pb-[34px]"
             id={id}
             aria-labelledby={`${id}-heading`}
         >
             <div className="relative z-10 mx-auto max-w-[1440px]">
-                <div className="mx-auto mb-4 flex max-w-7xl items-center gap-3 px-6">
-                    <span className="h-px w-9 bg-[#2F7BFF]" />
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
-                        MINDSPACE / WHAT WE DO
-                    </span>
-                    <span className="h-px max-w-24 flex-1 bg-white/10" />
-                </div>
-
-                <div className="grid grid-cols-1 items-end gap-[clamp(30px,7vw,100px)] py-[clamp(48px,7vw,94px)] md:grid-cols-[minmax(0,1.35fr)_minmax(260px,.65fr)] md:pb-[clamp(48px,6vw,76px)]">
-                    <motion.div
-                        initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.85, ease: EASE }}
+                {/* Top eyebrow */}
+                <motion.div
+                    className="flex justify-between items-center gap-4 mb-[clamp(24px,3.4vw,44px)] max-sm:items-start"
+                    initial={reducedMotion ? false : "hidden"}
+                    whileInView={reducedMotion ? undefined : "show"}
+                    viewport={{ once: true }}
+                >
+                    <div className="flex max-w-7xl items-center gap-3">
+                        <span className="h-px w-8 bg-[#2F7BFF]" />
+                        <span className="font-questrial text-[13px] font-semibold uppercase tracking-[0.24em] text-[#A9C7FF]">
+                            MINDSPACE / WHAT WE DO
+                        </span>
+                        <span className="h-px max-w-20 flex-1 bg-white/10" />
+                    </div>
+                    <motion.span
+                        className="font-questrial text-white/90 text-[13px] font-medium tracking-[0.08em] uppercase max-sm:max-w-[120px] max-sm:text-right max-sm:leading-relaxed"
+                        variants={{
+                            hidden: { opacity: 0, y: 24 },
+                            show: { opacity: 1, y: 0 },
+                        }}
                     >
-                        <h2 id={`${id}-heading`} className="m-0 max-w-[900px] text-[clamp(48px,7.4vw,98px)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F5FA] max-sm:text-[clamp(43px,12vw,66px)]">
-                            {titleLine1}
-                            <span className="text-[#A9C7FF]">{titleAccent}</span>
-                        </h2>
-                    </motion.div>
+                        {eyebrow}
+                    </motion.span>
+                </motion.div>
+
+                {/* HERO TEXT */}
+                <motion.div
+                    className="grid grid-cols-1 md:grid-cols-[minmax(0,1.25fr)_minmax(320px,.75fr)] items-start gap-[clamp(24px,4vw,72px)] mb-[clamp(24px,3.4vw,44px)]"
+                    variants={{
+                        hidden: {},
+                        show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
+                    }}
+                    initial={reducedMotion ? false : "hidden"}
+                    whileInView={reducedMotion ? undefined : "show"}
+                    viewport={{ once: true, amount: 0.25 }}
+                >
+                    <h2
+                        id={`${id}-heading`}
+                        className="m-0 w-full font-questrial text-[clamp(38px,6.4vw,72px)] leading-[0.94] tracking-[-0.055em] font-semibold max-sm:text-[clamp(36px,11vw,58px)]"
+                    >
+                        <span className="block overflow-hidden pb-[0.10em]">
+                            <motion.span
+                                className="inline-block text-white"
+                                variants={{
+                                    hidden: { opacity: 0, y: 24 },
+                                    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+                                }}
+                            >
+                                {titleLine1.trim()}
+                            </motion.span>
+                        </span>
+                        <span className="block overflow-hidden pb-[0.10em]">
+                            <motion.span
+                                className="inline-block text-[#80ADFF] italic font-medium"
+                                variants={{
+                                    hidden: { opacity: 0, y: 24 },
+                                    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+                                }}
+                            >
+                                {titleAccent.trim()}
+                            </motion.span>
+                        </span>
+                    </h2>
 
                     <motion.div
-                        className="max-w-[430px] pb-2 max-md:max-w-[620px]"
-                        initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.12, ease: EASE }}
+                        className="max-w-[720px] pb-2 md:justify-self-end"
+                        variants={{
+                            hidden: { opacity: 0, y: 24 },
+                            show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+                        }}
                     >
-                        <span className="text-[9px] font-[650] uppercase tracking-[0.16em] text-[#A9C7FF]">
+                        <span className="font-questrial text-[13px] font-semibold uppercase tracking-[0.18em] text-[#A9C7FF]">
                             A CONNECTED APPROACH
                         </span>
-                        <p className="mt-[17px] text-[15px] leading-[1.85] text-[#A0A9BA] max-sm:text-sm">
+                        <p className="mt-[17px] font-questrial text-white/90 text-[clamp(16px,1.3vw,19px)] leading-[1.85]">
                             {description}
                         </p>
-                        <a className="group mt-6 inline-flex items-center gap-5 border-b border-[#2F7BFF] pb-[9px] text-xs font-semibold text-[#F3F5FA] no-underline transition-all duration-250 hover:gap-[27px] hover:text-[#A9C7FF]" href={contactHref}>
+                        <a
+                            className="group mt-5 inline-flex items-center gap-3 pb-1.5 font-questrial text-[15px] font-semibold text-white no-underline border-b border-[#2F7BFF] tracking-[0.04em] transition-all duration-300 hover:gap-4 hover:text-[#A9C7FF]"
+                            href={contactHref}
+                        >
                             Talk to our team
-                            <span className="text-[17px] text-[#A9C7FF]" aria-hidden="true">
+                            <span className="text-[#80ADFF] text-base" aria-hidden="true">
                                 ↗
                             </span>
                         </a>
                     </motion.div>
-                </div>
+                </motion.div>
 
-                <div className="flex justify-between gap-[18px] border-t border-white/[0.13] py-[17px] text-[9px] font-[650] uppercase tracking-[0.16em] text-[#8993A6] max-sm:text-[8px] max-sm:tracking-[0.1em]">
+                <div className="flex justify-between gap-[18px] border-t border-white/[0.13] py-[17px] font-questrial text-[13px] font-semibold uppercase tracking-[0.16em] text-[#C2D0E2] max-sm:text-[12px] max-sm:tracking-[0.1em]">
                     <span className="text-[#A9C7FF]">OUR SERVICES</span>
                     <span>Three Services. One MindSpace.</span>
                 </div>
 
-                <div className="grid grid-cols-1 border border-white/[0.13] md:grid-cols-3">
+                {/* Glassmorphism Cards */}
+                <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-white/[0.13] bg-white/[0.02] backdrop-blur-md md:grid-cols-3">
                     {services.map((service, index) => (
-                        <div key={`${service.number}-${service.title}`} className={`flex flex-col ${index > 0 ? "border-t border-white/[0.13] md:border-t-0 md:border-l" : ""}`}>
+                        <div
+                            key={`${service.number}-${service.title}`}
+                            className={`flex flex-col ${index > 0 ? "border-t border-white/[0.13] md:border-t-0 md:border-l" : ""}`}
+                        >
                             <ServiceCard service={service} reducedMotion={Boolean(reducedMotion)} />
                         </div>
                     ))}
                 </div>
 
                 <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-white/[0.13] pt-6 sm:flex-row sm:items-center">
-                    <p className="text-[11px] text-[#8993A6]">
+                    <p className="font-questrial text-[14px] text-[#E0E8F4]">
                         Ready to start? Choose a track above or contact our team for guidance.
                     </p>
                     <Link
                         href="/contact"
-                        className="group inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-[#A9C7FF]"
+                        className="group inline-flex items-center gap-2 font-questrial text-[13px] font-bold uppercase tracking-[0.15em] text-white hover:text-[#A9C7FF]"
                     >
                         Talk to an expert
                         <span className="transition-transform group-hover:translate-x-1">↗</span>

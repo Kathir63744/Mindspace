@@ -149,33 +149,35 @@ export default function Stories() {
             if (panel) {
                 const isCrossing = i === crossingIdx;
 
-                if (isCrossing) {
-                    /* reveal in two phases:
-                       - 0 → 0.25 : logo pops in
-                       - 0.25 → 0.7 : content fades up
-                       - 0.7 → 1.0 : hold, then fade out as next card approaches */
-                    const logoIn = Math.min(1, crossingProgress / 0.25);
-                    const contentIn = Math.max(0, Math.min(1, (crossingProgress - 0.25) / 0.45));
-                    const fadeOut = crossingProgress > 0.85
-                        ? Math.max(0, 1 - (crossingProgress - 0.85) / 0.15)
-                        : 1;
-
-                    const panelAlpha = fadeOut;
-                    panel.style.opacity = String(panelAlpha);
+                // INCREASED SENSITIVITY: Reveal as soon as 5% crosses, fully visible at 15%
+                if (isCrossing && crossingProgress > 0.05) {
+                    panel.style.opacity = "1";
 
                     const logo = panel.firstElementChild as HTMLDivElement | null;
                     if (logo) {
-                        logo.style.opacity = String(logoIn * fadeOut);
-                        logo.style.transform = `scale(${0.85 + 0.15 * logoIn})`;
+                        logo.style.opacity = "1";
+                        logo.style.transform = "scale(1)";
                     }
 
                     const content = panel.lastElementChild as HTMLDivElement | null;
                     if (content) {
-                        content.style.opacity = String(contentIn * fadeOut);
-                        content.style.transform = `translateY(${(1 - contentIn) * 14}px)`;
+                        content.style.opacity = "1";
+                        content.style.transform = "translateY(0)";
                     }
                 } else {
                     panel.style.opacity = "0";
+
+                    const logo = panel.firstElementChild as HTMLDivElement | null;
+                    if (logo) {
+                        logo.style.opacity = "0";
+                        logo.style.transform = "scale(0.85)";
+                    }
+
+                    const content = panel.lastElementChild as HTMLDivElement | null;
+                    if (content) {
+                        content.style.opacity = "0";
+                        content.style.transform = "translateY(14px)";
+                    }
                 }
             }
         }
@@ -409,17 +411,17 @@ export default function Stories() {
             <div className="relative z-10 mx-auto max-w-[90rem] px-6 sm:px-8 lg:px-20">
                 <div className="mb-12 flex flex-col justify-between gap-6 md:mb-14 md:flex-row md:items-end">
                     <div>
-                        <span className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A9C7FF] before:h-px before:w-6 before:bg-[#2F7BFF] before:content-['']">
+                        <span className="flex items-center gap-2.5 font-questrial text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.18em] text-[#A9C7FF] before:h-px before:w-6 before:bg-[#2F7BFF] before:content-['']">
                             Client & Learner Experiences
                         </span>
-                        <h2 className="mt-6 max-w-2xl font-display text-white text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
+                        <h2 className="mt-6 max-w-2xl font-questrial text-white text-[clamp(38px,6.4vw,72px)] leading-[0.94] tracking-[-0.055em] font-[600] max-sm:text-[clamp(36px,11vw,58px)]">
                             {storiesContent.heading.split(" ").slice(0, 2).join(" ")}
                             <span className="block text-[#A9C7FF]">
                                 {storiesContent.heading.split(" ").slice(2).join(" ")}
                             </span>
                         </h2>
                     </div>
-                    <p className="max-w-sm text-sm leading-7 text-white/50">
+                    <p className="max-w-sm font-questrial text-[19px] sm:text-[19px] leading-[1.8] text-white/85">
                         {storiesContent.body}
                     </p>
                 </div>
@@ -446,24 +448,25 @@ export default function Stories() {
                             <div
                                 key={`panel-${story.id}`}
                                 ref={(el) => { if (el) panelRefs.current[i] = el; }}
-                                className="absolute top-1/2 flex -translate-y-1/2 flex-col justify-center will-change-[opacity,transform]"
+                                className="absolute top-1/2 flex -translate-y-1/2 flex-col justify-center will-change-[opacity]"
                                 style={{
-                                    right: "calc(50% + 20px)",        // anchored just left of the line
+                                    right: "calc(52% + 40px)",        // Pushed further left for alignment
                                     width: "var(--panel-w)",
-                                    maxWidth: "calc(50vw - 32px)",    // never cross the line
+                                    maxWidth: "calc(50vw - 48px)",    // Never cross the line
                                     opacity: 0,
+                                    transition: "opacity 0.3s ease",
                                 }}
                             >
                                 {/* circular logo */}
                                 <div
-                                    className="mb-5 h-[clamp(56px,7vw,88px)] w-[clamp(56px,7vw,88px)] shrink-0 overflow-hidden rounded-full border-2 border-[#2F7BFF]/40 shadow-[0_0_24px_rgba(47,123,255,0.35)] will-change-[opacity,transform]"
-                                    style={{ opacity: 0, transform: "scale(0.85)" }}
+                                    className="mb-5 h-[clamp(56px,7vw,80px)] w-[clamp(56px,7vw,80px)] shrink-0 overflow-hidden rounded-full border-2 border-[#2F7BFF]/40 shadow-[0_0_24px_rgba(47,123,255,0.35)]"
+                                    style={{ opacity: 0, transform: "scale(0.85)", transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1)" }}
                                 >
                                     <Image
                                         src={story.image}
                                         alt={`${story.name} logo`}
-                                        width={88}
-                                        height={88}
+                                        width={85}
+                                        height={85}
                                         className="h-full w-full object-cover"
                                         style={{ objectPosition: story.focus ?? "center 25%" }}
                                     />
@@ -471,28 +474,29 @@ export default function Stories() {
 
                                 {/* content container */}
                                 <div
-                                    className="rounded-[16px] border border-white/10 p-[clamp(16px,2.2vw,28px)] backdrop-blur-md will-change-[opacity,transform]"
+                                    className="rounded-[16px] border border-white/10 p-[clamp(16px,2.2vw,28px)] backdrop-blur-md"
                                     style={{
                                         background: `linear-gradient(180deg, ${PANEL}F2 0%, ${BG}FA 100%)`,
                                         opacity: 0,
                                         transform: "translateY(14px)",
+                                        transition: "opacity 0.4s ease 0.1s, transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s", // INCREASED SPEED
                                     }}
                                 >
-                                    <span className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A9C7FF] before:h-px before:w-6 before:bg-[#2F7BFF] before:content-['']">
+                                    <span className="flex items-center gap-2.5 font-questrial text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.18em] text-[#A9C7FF] before:h-px before:w-6 before:bg-[#2F7BFF] before:content-['']">
                                         A student&apos;s perspective
                                     </span>
 
-                                    <blockquote className="mt-3 text-[clamp(14px,1.35vw,18px)] font-medium leading-[1.55] tracking-[-0.01em] text-[#F3F5FA]">
+                                    <blockquote className="mt-3 font-questrial text-[clamp(16px,1.55vw,22px)] font-medium leading-[1.6] tracking-[-0.015em] text-[#F3F5FA]">
                                         &ldquo;{story.quote}&rdquo;
                                     </blockquote>
 
                                     <div className="mt-4 flex items-center gap-3.5 border-t border-white/10 pt-3.5">
                                         <span className="h-[34px] w-[3px] rounded-[10px] bg-gradient-to-b from-[#2F7BFF] to-[#A9C7FF]" />
                                         <div>
-                                            <h3 className="text-[14px] font-semibold text-white">
+                                            <h3 className="font-questrial text-[15px] sm:text-[16px] font-semibold text-white">
                                                 {story.name}
                                             </h3>
-                                            <p className="mt-0.5 text-[11px] leading-[1.6] text-[#A0A9BA]">
+                                            <p className="mt-0.5 font-questrial text-[12px] sm:text-[13px] leading-[1.65] text-[#A0A9BA]">
                                                 {story.role} · {story.location}
                                             </p>
                                         </div>
@@ -532,10 +536,10 @@ export default function Stories() {
                                 {/* soft name tag bottom-left so each card reads on its own */}
                                 <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
                                     <div>
-                                        <div className="text-[13px] font-semibold text-white/95">
+                                        <div className="font-questrial text-[14px] sm:text-[15px] font-semibold text-white/95">
                                             {story.name}
                                         </div>
-                                        <div className="mt-0.5 text-[11px] text-white/60">
+                                        <div className="mt-0.5 font-questrial text-[12px] sm:text-[13px] text-white/65">
                                             {story.role}
                                         </div>
                                     </div>
@@ -602,7 +606,7 @@ export default function Stories() {
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-[9px] whitespace-nowrap text-[11px] tracking-[0.1em] text-[#A0A9BA]">
+                    <div className="flex items-center gap-[9px] whitespace-nowrap font-questrial text-[12px] tracking-[0.1em] text-[#A0A9BA]">
                         <strong className="font-semibold text-[#A9C7FF]">
                             {String(activeIdx + 1).padStart(2, "0")}
                         </strong>

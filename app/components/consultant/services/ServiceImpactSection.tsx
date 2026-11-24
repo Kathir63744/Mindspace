@@ -1,4 +1,4 @@
-
+// app/components/consultant/services/ServiceImpactSection.tsx
 "use client";
 
 export type ServiceImpactItem = {
@@ -8,37 +8,50 @@ export type ServiceImpactItem = {
     tiles: number;
 };
 
-type Props = {
-    title: string;
-    items: ServiceImpactItem[];
-};
-
 export default function ServiceImpactSection({
     title,
     items,
-}: Props) {
+}: {
+    title: string;
+    items: ServiceImpactItem[];
+}) {
     return (
-        <section className="relative overflow-hidden border-y border-white/10 bg-[#080a0f] py-14 text-[#eef2f8] sm:py-20 lg:py-24">
+        <section
+            className="relative overflow-hidden border-y py-14 text-[var(--ms-text)] sm:py-20 lg:py-24"
+            style={{
+                background: "var(--ms-background)",
+                borderColor: "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+            }}
+        >
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-0 h-[360px] w-[700px] -translate-x-1/2 bg-[#2F7BFF]/[0.08] blur-[130px]"
+                className="pointer-events-none absolute left-1/2 top-0 h-[360px] w-[700px] -translate-x-1/2 blur-[130px]"
+                style={{
+                    background:
+                        "color-mix(in srgb, var(--ms-accent) 10%, transparent)",
+                }}
             />
 
             <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
                 <header className="mx-auto mb-9 max-w-[760px] sm:mb-12">
-                    <div className="mb-5 flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[.2em] text-[#8eb7ff]">
-                        <span className="h-px w-8 bg-[#2F7BFF]" />
+                    <div
+                        className="mb-5 flex items-center justify-center gap-3 text-[12px] font-bold uppercase tracking-[.2em]"
+                        style={{ color: "var(--ms-secondary)" }}
+                    >
+                        <span className="h-px w-8" style={{ background: "var(--ms-accent)" }} />
                         The impact of {title}
-                        <span className="h-px w-8 bg-[#2F7BFF]" />
+                        <span className="h-px w-8" style={{ background: "var(--ms-accent)" }} />
                     </div>
 
-                    <h2 className="text-balance text-center text-3xl font-medium leading-[1.08] tracking-[-.055em] text-[#f2f5fb] sm:text-4xl lg:text-5xl">
+                    <h2 className="text-balance text-center text-4xl font-medium leading-[1.08] tracking-[-.055em] text-[var(--ms-text)] sm:text-5xl lg:text-5xl">
                         Where can{" "}
-                        <span className="text-[#8eb7ff]">{title.toLowerCase()}</span>{" "}
+                        <span style={{ color: "var(--ms-secondary)" }}>
+                            {title.toLowerCase()}
+                        </span>{" "}
                         make a meaningful difference?
                     </h2>
 
-                    <p className="mx-auto mt-5 max-w-[600px] text-center text-[13px] leading-7 text-[#aeb9cb]">
+                    <p className="mx-auto mt-5 max-w-[600px] text-center text-[14px] leading-7 text-[var(--ms-muted)]">
                         Explore the areas where this service can create practical,
                         measurable value for people and organisations.
                     </p>
@@ -48,31 +61,51 @@ export default function ServiceImpactSection({
                     {items.slice(0, 6).map((item, index) => (
                         <article
                             key={`${item.label}-${index}`}
-                            className="impact-card group relative flex min-h-[320px] flex-col overflow-hidden border border-white/10 bg-[#111722] p-5 transition-all duration-500 hover:-translate-y-1 hover:border-[#2F7BFF]/60 hover:shadow-[0_18px_35px_rgba(0,0,0,.25)] sm:min-h-[340px]"
+                            className="impact-card group relative flex min-h-[320px] flex-col overflow-hidden border p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(0,0,0,.25)] sm:min-h-[340px]"
+                            style={{
+                                background: "var(--ms-surface-alt)",
+                                borderColor:
+                                    "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                            }}
                         >
                             <div
                                 aria-hidden="true"
-                                className="absolute inset-0 origin-bottom scale-y-0 bg-gradient-to-t from-[#2F7BFF]/25 via-[#2F7BFF]/[0.07] to-transparent transition-transform duration-700 group-hover:scale-y-100"
+                                className="absolute inset-0 origin-bottom scale-y-0 transition-transform duration-700 group-hover:scale-y-100"
+                                style={{
+                                    background:
+                                        "linear-gradient(to top, color-mix(in srgb, var(--ms-accent) 25%, transparent), color-mix(in srgb, var(--ms-accent) 7%, transparent), transparent)",
+                                }}
                             />
 
                             <div className="relative z-10 flex h-full flex-col">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[9px] font-bold uppercase tracking-[.15em] text-[#8eb7ff]">
+                                    <span
+                                        className="text-[12px] font-bold uppercase tracking-[.15em]"
+                                        style={{ color: "var(--ms-secondary)" }}
+                                    >
                                         IMPACT / {String(index + 1).padStart(2, "0")}
                                     </span>
-                                    <span className="text-[11px] text-[#8eb7ff]">↗</span>
+                                    <span
+                                        className="text-[11px]"
+                                        style={{ color: "var(--ms-secondary)" }}
+                                    >
+                                        ↗
+                                    </span>
                                 </div>
 
                                 <div className="mt-8">
-                                    <h3 className="impact-headline break-words text-[25px] font-medium leading-[1.04] tracking-[-.055em] text-[#f2f5fb] sm:text-[27px]">
+                                    <h3 className="break-words text-[27px] font-medium leading-[1.04] tracking-[-.055em] text-[var(--ms-text)] sm:text-[27px]">
                                         {item.headline}
                                     </h3>
 
-                                    <p className="mt-4 text-[10px] font-bold uppercase leading-[1.5] tracking-[.1em] text-[#8eb7ff]">
+                                    <p
+                                        className="mt-4 text-[11px] font-bold uppercase leading-[1.5] tracking-[.1em]"
+                                        style={{ color: "var(--ms-secondary)" }}
+                                    >
                                         {item.label}
                                     </p>
 
-                                    <p className="mt-3 text-[11px] leading-[1.8] text-[#aeb9cb] transition-colors duration-500 group-hover:text-[#d5deeb]">
+                                    <p className="mt-3 text-[13px] leading-[1.8] text-[var(--ms-muted)] transition-colors duration-500 group-hover:text-[var(--ms-text)]">
                                         {item.description}
                                     </p>
                                 </div>
@@ -85,16 +118,29 @@ export default function ServiceImpactSection({
                                         {Array.from({ length: 24 }).map((_, tileIndex) => (
                                             <span
                                                 key={tileIndex}
-                                                className={`h-[11px] w-[11px] transition-colors duration-500 ${tileIndex < Math.max(0, Math.min(24, item.tiles))
-                                                        ? "bg-[#2F7BFF]"
-                                                        : "bg-white/10 group-hover:bg-white/20"
-                                                    }`}
+                                                className="h-[11px] w-[11px] transition-colors duration-500"
+                                                style={{
+                                                    background:
+                                                        tileIndex <
+                                                            Math.max(0, Math.min(24, item.tiles))
+                                                            ? "var(--ms-accent)"
+                                                            : "color-mix(in srgb, var(--ms-text) 10%, transparent)",
+                                                }}
                                             />
                                         ))}
                                     </div>
 
-                                    <div className="mt-5 h-px w-full bg-white/10">
-                                        <div className="h-full w-0 bg-[#2F7BFF] transition-all duration-700 group-hover:w-full" />
+                                    <div
+                                        className="mt-5 h-px w-full"
+                                        style={{
+                                            background:
+                                                "color-mix(in srgb, var(--ms-text) 10%, transparent)",
+                                        }}
+                                    >
+                                        <div
+                                            className="h-full w-0 transition-all duration-700 group-hover:w-full"
+                                            style={{ background: "var(--ms-accent)" }}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -102,25 +148,30 @@ export default function ServiceImpactSection({
                     ))}
                 </div>
 
-                <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
-                    <span className="text-[9px] font-semibold uppercase tracking-[.16em] text-[#748197]">
+                <div
+                    className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t pt-5"
+                    style={{
+                        borderColor:
+                            "color-mix(in srgb, var(--ms-text) 10%, transparent)",
+                    }}
+                >
+                    <span className="text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--ms-muted)]">
                         MindSpace / Service impact
                     </span>
-
-                    <span className="text-[9px] uppercase tracking-[.14em] text-[#748197]">
+                    <span className="text-[9px] uppercase tracking-[.14em] text-[var(--ms-muted)]">
                         Practical value · Connected outcomes
                     </span>
                 </div>
             </div>
 
             <style jsx>{`
-        @media (prefers-reduced-motion: reduce) {
-          .impact-card,
-          .impact-card * {
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
+                @media (prefers-reduced-motion: reduce) {
+                    .impact-card,
+                    .impact-card * {
+                        transition-duration: 0.01ms !important;
+                    }
+                }
+            `}</style>
         </section>
     );
 }

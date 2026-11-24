@@ -1,119 +1,75 @@
+// app/about/page.tsx
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { DM_Sans, Manrope } from "next/font/google";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-import Navbar from "../components/consultant/Navbar";
-import Footer from "../components/consultant/Footer";
+import Navbar from "@/app/components/consultant/Navbar";
+import Footer from "@/app/components/consultant/Footer";
 
-const headingFont = Manrope({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700", "800"],
-    display: "swap",
-    variable: "--about-heading",
-});
+/* =========================================================
+   REVEAL ANIMATION
+========================================================= */
 
-const bodyFont = DM_Sans({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-    display: "swap",
-    variable: "--about-body",
-});
-
-/* ============================================================
-   PALETTE (BLACK THEME)
-   ============================================================ */
-
-const C = {
-    bg: "#050505",
-    bgAlt: "#0B0F17",
-    bgSoft: "#0F131C",
-    line: "rgba(255,255,255,0.08)",
-    lineSoft: "rgba(255,255,255,0.05)",
-    text: "#F3F5FA",
-    muted: "#8A96A8",
-    dim: "#6B7686",
-    blue: "#2F7BFF",
-    blueSoft: "#7EA9FF",
-} as const;
-
-/* ============================================================
-   REDUCED MOTION
-   ============================================================ */
-
-function useReducedMotion() {
-    const [reduced, setReduced] = useState(false);
-    useEffect(() => {
-        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const on = () => setReduced(mq.matches);
-        on();
-        mq.addEventListener("change", on);
-        return () => mq.removeEventListener("change", on);
-    }, []);
-    return reduced;
-}
-
-/* ============================================================
-   REVEAL (light IntersectionObserver)
-   ============================================================ */
+type RevealProps = {
+    children: ReactNode;
+    className?: string;
+    delay?: number;
+};
 
 function Reveal({
     children,
-    delay = 0,
     className = "",
-}: {
-    children: React.ReactNode;
-    delay?: number;
-    className?: string;
-}) {
+    delay = 0,
+}: RevealProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const reduced = useReducedMotion();
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        if (reduced) {
+        const element = ref.current;
+        if (!element) return;
+
+        const reducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        if (reducedMotion) {
             setVisible(true);
             return;
         }
-        const el = ref.current;
-        if (!el) return;
-        const io = new IntersectionObserver(
+
+        const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setVisible(true);
-                    io.disconnect();
+                    observer.unobserve(element);
                 }
             },
-            { rootMargin: "-60px 0px" }
+            { threshold: 0.12 }
         );
-        io.observe(el);
-        return () => io.disconnect();
-    }, [reduced]);
+
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <div
             ref={ref}
-            className={className}
-            style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? "none" : "translate3d(0, 22px, 0)",
-                transition: reduced
-                    ? "none"
-                    : `opacity 900ms ease ${delay}ms, transform 950ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
-                willChange: "opacity, transform",
-            }}
+            className={`${className} transition-[opacity,transform] duration-700 ease-out ${visible ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"
+                }`}
+            style={{ transitionDelay: `${delay}ms` }}
         >
             {children}
         </div>
     );
 }
 
-/* ============================================================
-   CHECKERBOARD
-   ============================================================ */
+/* =========================================================
+   CHECKER PATTERN
+========================================================= */
 
 function CheckerPattern({ className = "" }: { className?: string }) {
     return (
@@ -122,686 +78,627 @@ function CheckerPattern({ className = "" }: { className?: string }) {
             className={`pointer-events-none ${className}`}
             style={{
                 backgroundImage: `
-                    linear-gradient(45deg, rgba(47,123,255,.20) 25%, transparent 25%, transparent 75%, rgba(47,123,255,.20) 75%),
-                    linear-gradient(45deg, rgba(47,123,255,.20) 25%, transparent 25%, transparent 75%, rgba(47,123,255,.20) 75%)
-                `,
-                backgroundPosition: "0 0, 18px 18px",
-                backgroundSize: "36px 36px",
-                maskImage: "linear-gradient(135deg, black, transparent 85%)",
-                WebkitMaskImage: "linear-gradient(135deg, black, transparent 85%)",
+          linear-gradient(45deg, #2F7BFF 25%, transparent 25%),
+          linear-gradient(-45deg, #2F7BFF 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #2F7BFF 75%),
+          linear-gradient(-45deg, transparent 75%, #2F7BFF 75%)
+        `,
+                backgroundSize: "18px 18px",
+                backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
             }}
         />
     );
 }
 
-function BlueCheckerBand() {
-    return (
-        <div className="relative h-[26px] overflow-hidden bg-[#2F7BFF] sm:h-[36px]">
-            <div
-                aria-hidden="true"
-                className="absolute inset-y-0 right-0 w-[48%] opacity-40"
-                style={{
-                    backgroundImage:
-                        "linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.25) 75%), linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.25) 75%)",
-                    backgroundPosition: "0 0, 18px 18px",
-                    backgroundSize: "36px 36px",
-                }}
-            />
-            <div className="absolute inset-y-0 left-0 w-[20%] bg-white/[0.06]" />
-        </div>
-    );
-}
+/* =========================================================
+   SECTION LABEL
+========================================================= */
 
-/* ============================================================
-   EDITORIAL IMAGE (with skeleton + aspect lock)
-   ============================================================ */
-
-function EditorialImage({
-    src,
-    alt,
-    className = "",
-    grayscale = false,
-    priority = false,
-    sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-    objectPosition = "center",
+function SectionLabel({
+    number,
+    children,
 }: {
-    src: string;
-    alt: string;
-    className?: string;
-    grayscale?: boolean;
-    priority?: boolean;
-    sizes?: string;
-    objectPosition?: string;
+    number: string;
+    children: ReactNode;
 }) {
-    const [failed, setFailed] = useState(false);
-    const [loaded, setLoaded] = useState(false);
-
     return (
-        <div
-            className={`relative overflow-hidden bg-[#0F131C] ${className}`}
-        >
-            {/* Skeleton shimmer */}
-            {!failed && !loaded && (
-                <div
-                    aria-hidden="true"
-                    className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#111721] via-[#0B0F17] to-[#0A0D14]"
-                />
-            )}
+        <div className="mb-9 flex items-center gap-4 sm:mb-12 lg:mb-14">
+            <span className="text-[14px] font-medium tracking-[0.14em] text-[#2F7BFF]">
+                {number}
+            </span>
 
-            {!failed ? (
-                <img
-                    src={src}
-                    alt={alt}
-                    loading={priority ? "eager" : "lazy"}
-                    decoding="async"
-                    fetchPriority={priority ? "high" : "auto"}
-                    sizes={sizes}
-                    draggable={false}
-                    onLoad={() => setLoaded(true)}
-                    onError={() => setFailed(true)}
-                    className={`h-full w-full object-cover transition-all duration-700 ease-out ${grayscale
-                        ? "grayscale-[35%] md:group-hover:scale-[1.035] md:group-hover:grayscale-0"
-                        : "md:group-hover:scale-[1.035]"
-                        }`}
-                    style={{
-                        objectPosition,
-                        opacity: loaded ? 1 : 0,
-                        transition: "opacity 600ms ease, filter 700ms ease, transform 700ms ease",
-                    }}
-                />
-            ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-[#16233F] via-[#0B0F17] to-[#080B12]" />
-            )}
+            <span className="h-px w-9 bg-[#2F7BFF]/70" />
 
-            {/* Theme-consistent inner border */}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.06]"
-            />
+            <span className="text-[14px] font-medium tracking-[0.13em] text-white">
+                {children}
+            </span>
         </div>
     );
 }
 
-/* ============================================================
-   BUSINESS DIVISIONS
-   ============================================================ */
+/* =========================================================
+   ARROW
+========================================================= */
+
+function ArrowIcon() {
+    return (
+        <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+            ↗
+        </span>
+    );
+}
+
+/* =========================================================
+   DATA
+========================================================= */
 
 const divisions = [
     {
-        title: "Technology",
-        subtitle: "We create digital products.",
+        number: "01",
+        name: "Technology",
+        title: "Digital ideas, built to work.",
         description:
-            "Website development, mobile applications, web applications, custom software and digital solutions for businesses.",
-        words: "Websites · Applications · Software",
-        link: "#portfolio",
+            "We design and develop websites, applications and software experiences that help businesses move forward with clarity and confidence.",
+        href: "/services/technology",
     },
     {
-        title: "Training",
-        subtitle: "We develop practical ability.",
+        number: "02",
+        name: "Training",
+        title: "Skills that move beyond theory.",
         description:
-            "Technical programmes, programming, hands-on projects and professional learning designed around useful skills.",
-        words: "Technical skills · Projects · Certificates",
-        link: "#portfolio",
+            "Practical learning experiences designed around real tools, real projects and the skills people need to grow.",
+        href: "/services/training",
     },
     {
-        title: "Careers",
-        subtitle: "We help people prepare for work.",
+        number: "03",
+        name: "Careers",
+        title: "Turning potential into progress.",
         description:
-            "Career preparation, resume and interview support, internship opportunities and placement assistance.",
-        words: "Career guidance · Internships · Placements",
-        link: "#portfolio",
+            "We help people navigate opportunities, build confidence and take meaningful steps towards their professional goals.",
+        href: "/services/careers",
     },
 ];
 
-/* ============================================================
-   WORK MOSAIC
-   ============================================================ */
-
-const workItems = [
+const portfolio = [
     {
-        title: "Web experiences",
-        category: "Website development",
+        number: "01",
+        category: "Digital experiences",
+        title: "Websites with a purpose.",
         description:
-            "Business websites, landing pages and digital platforms built around an organisation's needs.",
+            "Thoughtful digital platforms designed around people, businesses and their goals.",
         image: "/website-development-poster.jpg",
-        alt: "Website development visual",
-        size: "md:col-span-7 md:row-span-2",
-        aspect: "aspect-[16/11] md:aspect-auto",
-        grayscale: false,
-        pos: "center",
+        size: "md:col-span-7",
+        imageClass: "aspect-[16/9] md:aspect-[1.6/1]",
     },
     {
-        title: "Applications",
-        category: "Mobile & web",
+        number: "02",
+        category: "Application development",
+        title: "Useful things, made digital.",
         description:
-            "Applications designed around people and the way they use digital services.",
+            "Mobile and web applications that simplify everyday interactions.",
         image: "/app-development-poster.jpg",
-        alt: "Application development visual",
         size: "md:col-span-5",
-        aspect: "aspect-[16/11]",
-        grayscale: false,
-        pos: "center",
+        imageClass: "aspect-[16/9] md:aspect-[1.6/1]",
     },
     {
-        title: "Custom systems",
-        category: "Software development",
-        description: "Purpose-built software and business systems.",
+        number: "03",
+        category: "Custom software",
+        title: "Systems that fit the work.",
+        description:
+            "Purpose-built tools and connected systems for specific business needs.",
         image: "/software-development-poster.jpg",
-        alt: "Software development visual",
-        size: "md:col-span-5",
-        aspect: "aspect-[16/11]",
-        grayscale: false,
-        pos: "center",
+        size: "md:col-span-4",
+        imageClass: "aspect-[5/4]",
     },
     {
-        title: "Practical learning",
-        category: "Training & certification",
+        number: "04",
+        category: "Learning & development",
+        title: "Learning by doing.",
         description:
-            "Training experiences that connect knowledge with practical work.",
+            "Hands-on training, collaborative projects and technology-led learning.",
         image:
-            "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1100&q=85",
-        alt: "Students learning together",
+            "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85",
         size: "md:col-span-4",
-        aspect: "aspect-[4/3]",
-        grayscale: true,
-        pos: "center",
+        imageClass: "aspect-[5/4]",
     },
     {
-        title: "Global education",
-        category: "Study abroad",
+        number: "05",
+        category: "Career growth",
+        title: "Your next step, in focus.",
         description:
-            "Education pathways, university guidance and student support.",
+            "Career guidance and opportunity support to make the next move more meaningful.",
         image:
-            "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1100&q=85",
-        alt: "University graduation",
+            "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=85",
         size: "md:col-span-4",
-        aspect: "aspect-[4/3]",
-        grayscale: true,
-        pos: "center",
+        imageClass: "aspect-[5/4]",
     },
-    {
-        title: "Career development",
-        category: "Careers & placements",
-        description:
-            "Preparation, guidance and connections to relevant opportunities.",
-        image:
-            "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1100&q=85",
-        alt: "Professionals working together",
-        size: "md:col-span-4",
-        aspect: "aspect-[4/3]",
-        grayscale: true,
-        pos: "center",
-    },
-] as const;
-
-/* ============================================================
-   PRINCIPLES
-   ============================================================ */
+];
 
 const principles = [
     {
-        title: "Understand the actual requirement.",
-        description:
-            "A business needs a solution that fits its operations. A learner needs a suitable training path. A student needs informed education guidance. The starting point is always the real requirement.",
+        number: "01",
+        title: "Understand before building.",
+        text: "Every solution starts with listening, context and the right questions.",
     },
     {
-        title: "Make complex choices easier to navigate.",
-        description:
-            "Digital projects, learning programmes and international applications involve different decisions. We aim to make the information, requirements and next steps clear.",
+        number: "02",
+        title: "Make complexity clearer.",
+        text: "We turn confusing processes into focused, practical and accessible experiences.",
     },
     {
-        title: "Keep the outcome in focus.",
-        description:
-            "Our work is measured by its usefulness: a functioning digital product, practical skills, a properly prepared application or stronger career readiness.",
+        number: "03",
+        title: "Keep progress tangible.",
+        text: "We focus on outcomes people can use, experience and build upon.",
     },
 ];
 
-/* ============================================================
-   PAGE
-   ============================================================ */
+/* =========================================================
+   ABOUT PAGE
+========================================================= */
 
 export default function AboutPage() {
+    const pageGutter = "px-6 sm:px-10 lg:px-20 2xl:px-28";
+
     return (
-        <main
-            className={`${headingFont.variable} ${bodyFont.variable} overflow-hidden bg-[#050505] text-[#F3F5FA] [font-family:var(--about-body)] selection:bg-[#2F7BFF] selection:text-white`}
-        >
+        <main className="font-questrial overflow-hidden bg-[#050505] text-[#F5F7FC]">
             <Navbar />
 
-            {/* =================================================
-                01 — MANIFESTO
-            ================================================= */}
-
-            <section className="relative isolate overflow-hidden bg-[#050505] text-white">
-                <CheckerPattern className="absolute -right-10 top-0 h-[420px] w-[420px] opacity-50 sm:right-0 sm:h-[470px] sm:w-[470px]" />
-
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -left-40 bottom-0 h-[360px] w-[440px] rounded-full bg-[#2F7BFF]/[0.14] blur-[140px]"
-                />
-
-                <div className="relative mx-auto max-w-[1600px] px-5 pb-16 pt-32 sm:px-8 sm:pb-24 sm:pt-40 lg:px-14 xl:px-20">
+            {/* =====================================================
+          01 — HERO / MANIFESTO
+      ===================================================== */}
+            <section
+                className={`${pageGutter} pb-20 pt-32 sm:pb-24 sm:pt-40 lg:pb-28 lg:pt-48`}
+            >
+                <div className="mx-auto max-w-[1600px]">
                     <Reveal>
-                        <div className="mb-8 flex items-center gap-3 sm:mb-10">
-                            <span className="h-[7px] w-[7px] rounded-full bg-[#2F7BFF]" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.23em] text-[#A9C7FF]">
-                                The company / MindSpace
+                        <div className="mb-10 flex items-center gap-4 sm:mb-14">
+                            <span className="h-2 w-2 rounded-full bg-[#2F7BFF]" />
+
+                            <span className="text-[14px] font-medium tracking-[0.18em] text-white">
+                                ABOUT MINDSPACE
+                            </span>
+                        </div>
+                    </Reveal>
+
+                    <div className="grid grid-cols-12 items-end gap-12 lg:gap-20 xl:gap-24">
+                        <Reveal className="col-span-12 lg:col-span-8">
+                            <h1 className="text-[clamp(40px,7.2vw,92px)] font-normal leading-[0.98] tracking-[-0.055em] text-white">
+                                Technology, learning
+                                <br />
+                                &amp; careers.
+                                <span className="text-[#2F7BFF]">
+                                    {" "}
+                                    One MindSpace.
+                                </span>
+                            </h1>
+                        </Reveal>
+
+                        <Reveal delay={120} className="col-span-12 lg:col-span-4 lg:pb-3">
+                            <p className="max-w-[500px] text-[17px] leading-[1.85] text-[#E2E8F0] sm:text-[18px]">
+                                We bring technology, learning and career development
+                                together to make ideas useful, skills meaningful and
+                                opportunities easier to move towards.
+                            </p>
+                        </Reveal>
+                    </div>
+
+                    {/* HERO IMAGE GRID */}
+                    <Reveal delay={100} className="mt-14 sm:mt-20 lg:mt-24">
+                        <div className="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+                            {/* Main hero image */}
+                            <div className="group relative col-span-12 overflow-hidden rounded-[3px] md:col-span-7">
+                                <div className="relative aspect-[16/9] max-h-[450px] overflow-hidden">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1800&q=90"
+                                        alt="Team collaborating on a creative project"
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
+                                    />
+
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/10" />
+
+                                    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-9 lg:p-11">
+                                        <span className="mb-4 block text-[13px] font-medium tracking-[0.16em] text-white sm:text-[14px]">
+                                            ONE TEAM. DIFFERENT POSSIBILITIES.
+                                        </span>
+
+                                        <h2 className="max-w-[500px] text-[clamp(24px,4vw,46px)] leading-[1.06] tracking-[-0.035em] text-white">
+                                            Different needs.
+                                            <br />
+                                            One connected approach.
+                                        </h2>
+                                    </div>
+
+                                    <div className="absolute left-0 top-0 h-[2px] w-0 bg-[#2F7BFF] transition-all duration-700 group-hover:w-full" />
+                                </div>
+                            </div>
+
+                            {/* Smaller image collection */}
+                            <div className="col-span-12 grid grid-cols-3 gap-4 md:col-span-5 md:grid-cols-2 md:grid-rows-2 sm:gap-5 lg:gap-6">
+                                <div className="group relative overflow-hidden rounded-[3px]">
+                                    <div className="relative aspect-[4/3] h-full min-h-[120px] overflow-hidden">
+                                        <img
+                                            src="/website-development-poster.jpg"
+                                            alt="Website design and development"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+
+                                        <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/5" />
+
+                                        <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+                                            <span className="text-[12px] font-medium tracking-[0.12em] text-white sm:text-[13px]">
+                                                TECHNOLOGY
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="group relative overflow-hidden rounded-[3px]">
+                                    <div className="relative aspect-[4/3] h-full min-h-[120px] overflow-hidden">
+                                        <img
+                                            src="/app-development-poster.jpg"
+                                            alt="Digital application development"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+
+                                        <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/5" />
+
+                                        <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+                                            <span className="text-[12px] font-medium tracking-[0.12em] text-white sm:text-[13px]">
+                                                DIGITAL
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="group relative col-span-2 hidden overflow-hidden rounded-[3px] md:block">
+                                    <div className="relative h-full min-h-[160px] overflow-hidden">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=85"
+                                            alt="Collaborative learning and professional development"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+
+                                        <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/10" />
+
+                                        <div className="absolute bottom-4 left-4">
+                                            <span className="text-[13px] font-medium tracking-[0.12em] text-white">
+                                                LEARNING &amp; GROWTH
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Reveal>
+
+                    <Reveal delay={180}>
+                        <div className="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-white/10 pt-6 sm:mt-16 lg:mt-20">
+                            <p className="text-[14px] font-medium tracking-[0.12em] text-[#E2E8F0]">
+                                TECHNOLOGY / TRAINING / CAREERS
+                            </p>
+
+                            <a
+                                href="#who-we-are"
+                                className="group inline-flex items-center gap-4 text-[15px] font-medium text-white transition-colors hover:text-[#2F7BFF]"
+                            >
+                                Discover MindSpace
+                                <span className="transition-transform group-hover:translate-y-1">
+                                    ↓
+                                </span>
+                            </a>
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
+
+            {/* BLUE CHECKER BAND */}
+            <div className="relative h-[12px] w-full overflow-hidden bg-[#2F7BFF]">
+                <CheckerPattern className="absolute inset-0 opacity-25" />
+            </div>
+
+            {/* =====================================================
+          02 — WHO WE ARE
+      ===================================================== */}
+            <section
+                id="who-we-are"
+                className={`${pageGutter} scroll-mt-24 py-24 sm:py-28 lg:py-32`}
+            >
+                <div className="mx-auto max-w-[1600px]">
+                    <div className="grid grid-cols-12 gap-12 lg:gap-20 xl:gap-24">
+                        <Reveal className="col-span-12 lg:col-span-4">
+                            <SectionLabel number="02">WHO WE ARE</SectionLabel>
+
+                            <h2 className="text-[clamp(34px,5vw,66px)] leading-[1.02] tracking-[-0.045em] text-white">
+                                One company.
+                                <br />
+                                <span className="text-[#2F7BFF]">Three areas</span>
+                                <br />
+                                of focus.
+                            </h2>
+                        </Reveal>
+
+                        <Reveal delay={100} className="col-span-12 lg:col-span-8">
+                            <div className="flex h-full flex-col justify-between">
+                                <p className="max-w-[800px] text-[17px] leading-[1.85] text-[#E2E8F0] sm:text-[18px]">
+                                    MindSpace works across interconnected areas that
+                                    shape how people and businesses grow. From digital
+                                    solutions to skill-building and career direction, each
+                                    area has its own purpose — connected by a shared
+                                    focus on practical progress.
+                                </p>
+
+                                <div className="mt-12 border-t border-white/15 lg:mt-16">
+                                    {divisions.map((item) => (
+                                        <Link
+                                            href={item.href}
+                                            key={item.number}
+                                            className="group grid grid-cols-12 gap-5 border-b border-white/15 py-7 transition-colors hover:bg-white/[0.025] sm:gap-7 sm:py-9 lg:py-10"
+                                        >
+                                            <span className="col-span-1 pt-1 text-[14px] font-medium text-[#2F7BFF]">
+                                                {item.number}
+                                            </span>
+
+                                            <div className="col-span-10 sm:col-span-4">
+                                                <h3 className="text-[26px] leading-tight tracking-[-0.025em] text-white transition-colors group-hover:text-[#2F7BFF] sm:text-[30px]">
+                                                    {item.name}
+                                                </h3>
+
+                                                <p className="mt-3 text-[16px] text-[#E2E8F0]">
+                                                    {item.title}
+                                                </p>
+                                            </div>
+
+                                            <p className="col-span-12 text-[16px] leading-[1.8] text-[#E2E8F0] sm:col-span-6 sm:col-start-6 sm:pr-8">
+                                                {item.description}
+                                            </p>
+
+                                            <span className="col-span-1 hidden items-center justify-end text-[#2F7BFF] sm:flex">
+                                                <ArrowIcon />
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </Reveal>
+                    </div>
+                </div>
+            </section>
+
+            {/* =====================================================
+          03 — PORTFOLIO
+      ===================================================== */}
+            <section
+                id="portfolio"
+                className={`${pageGutter} scroll-mt-24 bg-[#0A0D12] py-24 sm:py-28 lg:py-32`}
+            >
+                <div className="mx-auto max-w-[1600px]">
+                    <Reveal>
+                        <SectionLabel number="03">WHAT WE DO</SectionLabel>
+                    </Reveal>
+
+                    <Reveal delay={70}>
+                        <div className="mb-12 grid grid-cols-12 items-end gap-12 sm:mb-16 lg:mb-20 lg:gap-20 xl:gap-24">
+                            <div className="col-span-12 lg:col-span-8">
+                                <h2 className="max-w-[920px] text-[clamp(34px,5.6vw,72px)] leading-[1] tracking-[-0.05em] text-white">
+                                    Ideas are only the beginning.
+                                    <span className="text-[#2F7BFF]">
+                                        {" "}
+                                        Here&apos;s where they go.
+                                    </span>
+                                </h2>
+                            </div>
+
+                            <p className="col-span-12 max-w-[480px] text-[16px] leading-[1.85] text-[#E2E8F0] lg:col-span-4 lg:ml-auto">
+                                A range of capabilities, connected by a focus on
+                                creating useful experiences and real-world outcomes.
                             </p>
                         </div>
                     </Reveal>
 
-                    <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-8">
-                        <Reveal delay={80} className="lg:col-span-9">
-                            <h1 className="max-w-[1150px] text-[clamp(2.4rem,7.2vw,7.6rem)] font-semibold leading-[0.96] tracking-[-0.075em] [font-family:var(--about-heading)] sm:leading-[0.94] sm:tracking-[-0.085em]">
-                                Technology, Training & Careers
-                                <br />
-                                <span className="text-[#86ACFF]">
-                                    One MindSpace
-                                </span>
+                    {/* PORTFOLIO GRID */}
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-12 md:gap-7">
+                        {portfolio.map((item, index) => (
+                            <Reveal key={item.number} delay={index * 80} className={item.size}>
+                                <article className="group h-full">
+                                    <div className="relative overflow-hidden rounded-[3px] border border-white/[0.07] bg-[#111720]">
+                                        <div className={`relative ${item.imageClass} overflow-hidden`}>
+                                            <img
+                                                src={item.image}
+                                                alt={item.title}
+                                                loading="lazy"
+                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
+                                            />
 
-                            </h1>
-                        </Reveal>
+                                            <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/10" />
 
-                        <Reveal delay={180} className="max-w-[360px] pb-1 lg:col-span-3 lg:justify-self-end">
-                            <p className="text-[14px] leading-[1.9] text-[#B9C5D6] sm:text-[15px] sm:leading-[1.95]">
-                                MindSpace provides technology solutions, professional training, and job placement and career support. We work with businesses, learners and job seekers to understand their needs and provide practical support.
-                            </p>
+                                            <div className="absolute left-0 top-0 h-[2px] w-0 bg-[#2F7BFF] transition-all duration-700 group-hover:w-full" />
 
-                            <Link
-                                href="#who-we-are"
-                                className="group mt-6 inline-flex min-h-[44px] items-center gap-3 border-b border-[#2F7BFF]/70 pb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:text-[#A9C7FF] sm:mt-7"
-                            >
-                                Get to know us
-                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#2F7BFF] transition-transform duration-300 group-hover:translate-x-1">
-                                    →
-                                </span>
-                            </Link>
-                        </Reveal>
+                                            <div className="absolute left-4 top-4 sm:left-5 sm:top-5">
+                                                <span className="inline-flex border border-white/25 bg-black/40 px-3 py-1.5 text-[11px] font-medium tracking-[0.12em] text-white backdrop-blur-sm sm:text-[12px]">
+                                                    {item.category.toUpperCase()}
+                                                </span>
+                                            </div>
+
+                                            <span className="absolute right-4 top-4 text-[13px] font-medium text-white/90 sm:right-5 sm:top-5">
+                                                {item.number}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start justify-between gap-5 border-b border-white/10 py-5 sm:py-7">
+                                        <div>
+                                            <h3 className="text-[24px] leading-tight tracking-[-0.025em] text-white sm:text-[28px]">
+                                                {item.title}
+                                            </h3>
+
+                                            <p className="mt-3 max-w-[440px] text-[16px] leading-[1.8] text-[#E2E8F0] sm:text-[17px]">
+                                                {item.description}
+                                            </p>
+                                        </div>
+
+                                        <span className="mt-1 text-[#2F7BFF] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                                            ↗
+                                        </span>
+                                    </div>
+                                </article>
+                            </Reveal>
+                        ))}
                     </div>
 
-                    {/* Wide visual composition */}
-                    <div className="relative mt-14 grid gap-3 sm:mt-20 sm:grid-cols-12 sm:gap-4">
-                        <Reveal className="group relative aspect-[4/3] overflow-hidden sm:col-span-7 sm:aspect-auto sm:min-h-[330px] lg:min-h-[410px]">
-                            <EditorialImage
-                                src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1500&q=90"
-                                alt="People collaborating in a professional environment"
-                                className="absolute inset-0 h-full w-full"
-                                grayscale
-                                priority
-                                sizes="(max-width: 768px) 100vw, 60vw"
-                                objectPosition="center"
-                            />
+                    <Reveal delay={200}>
+                        <div className="mt-12 flex items-center justify-between gap-6 sm:mt-16 lg:mt-20">
+                            <span className="text-[13px] font-medium tracking-[0.12em] text-[#E2E8F0]">
+                                OUR CAPABILITIES
+                            </span>
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-[#050505]/10 to-transparent" />
+                            <Link
+                                href="/services"
+                                className="group inline-flex items-center gap-4 text-[15px] font-medium text-white transition-colors hover:text-[#2F7BFF]"
+                            >
+                                Explore our services
+                                <ArrowIcon />
+                            </Link>
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
 
-                            <div className="absolute bottom-5 left-5 max-w-[440px] sm:bottom-9 sm:left-9">
-                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#A9C7FF]">
-                                    Our perspective
-                                </p>
-                                <h2 className="mt-3 text-[clamp(1.6rem,3.6vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.06em] text-white [font-family:var(--about-heading)]">
-                                    Different needs deserve different solutions.
+            {/* =====================================================
+          04 — WHAT CONNECTS US
+      ===================================================== */}
+            <section className={`${pageGutter} py-24 sm:py-28 lg:py-32`}>
+                <div className="mx-auto max-w-[1600px]">
+                    <div className="grid grid-cols-12 gap-12 lg:gap-20 xl:gap-24">
+                        <Reveal className="col-span-12 lg:col-span-5">
+                            <SectionLabel number="04">WHAT CONNECTS US</SectionLabel>
+
+                            <h2 className="text-[clamp(34px,5vw,66px)] leading-[1.02] tracking-[-0.045em] text-white">
+                                Different services.
+                                <br />
+                                <span className="text-[#2F7BFF]">One way of thinking.</span>
+                            </h2>
+                        </Reveal>
+
+                        <Reveal delay={100} className="col-span-12 lg:col-span-7">
+                            <p className="max-w-[800px] text-[17px] leading-[1.85] text-[#E2E8F0] sm:text-[18px]">
+                                Technology, training and careers may look like
+                                different paths, but they share the same foundation.
+                                We believe the best work starts with understanding
+                                what people need and making the next step easier to
+                                see, achieve and sustain.
+                            </p>
+
+                            <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:mt-16 lg:gap-7">
+                                {principles.map((principle) => (
+                                    <div
+                                        key={principle.number}
+                                        className="group relative min-h-[190px] border border-white/10 bg-[#0C1017] p-5 transition-colors duration-300 hover:border-[#2F7BFF]/60 sm:p-6 lg:min-h-[210px]"
+                                    >
+                                        <span className="text-[13px] font-medium tracking-[0.12em] text-[#2F7BFF]">
+                                            {principle.number}
+                                        </span>
+
+                                        <h3 className="mt-7 text-[20px] leading-tight text-white sm:text-[22px]">
+                                            {principle.title}
+                                        </h3>
+
+                                        <p className="mt-3 text-[15px] leading-[1.8] text-[#E2E8F0]">
+                                            {principle.text}
+                                        </p>
+
+                                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#2F7BFF] transition-all duration-500 group-hover:w-full" />
+                                    </div>
+                                ))}
+                            </div>
+                        </Reveal>
+                    </div>
+                </div>
+            </section>
+
+            {/* =====================================================
+          05 — MISSION / VISION
+      ===================================================== */}
+            <section className={`${pageGutter} bg-[#2F7BFF] py-20 sm:py-24 lg:py-28`}>
+                <div className="mx-auto max-w-[1600px]">
+                    <Reveal>
+                        <SectionLabel number="05">
+                            <span className="text-white">OUR MISSION &amp; VISION</span>
+                        </SectionLabel>
+                    </Reveal>
+
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-7">
+                        <Reveal delay={70}>
+                            <div className="flex min-h-[270px] flex-col justify-between bg-[#0A0D12] p-7 sm:min-h-[330px] sm:p-10 lg:p-14">
+                                <div className="text-[13px] font-medium tracking-[0.14em] text-[#7EA9FF]">
+                                    OUR MISSION
+                                </div>
+
+                                <h2 className="mt-12 max-w-[600px] text-[clamp(28px,4vw,48px)] leading-[1.08] tracking-[-0.04em] text-white">
+                                    To make technology, knowledge and opportunities
+                                    more accessible, useful and impactful.
                                 </h2>
                             </div>
                         </Reveal>
 
-                        <div className="grid grid-cols-2 gap-3 sm:col-span-5 sm:gap-4">
-                            {[
-                                {
-                                    src: "/website-development-poster.jpg",
-                                    alt: "Website development capability",
-                                    gray: false,
-                                },
-                                {
-                                    src: "/app-development-poster.jpg",
-                                    alt: "Application development capability",
-                                    gray: false,
-                                },
-                                {
-                                    src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=85",
-                                    alt: "People learning together",
-                                    gray: true,
-                                },
-                                {
-                                    src: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=85",
-                                    alt: "University campus and graduation",
-                                    gray: true,
-                                },
-                            ].map((img, i) => (
-                                <Reveal
-                                    key={i}
-                                    delay={120 + i * 60}
-                                    className="group relative aspect-square overflow-hidden sm:aspect-auto sm:min-h-0"
-                                >
-                                    <EditorialImage
-                                        src={img.src}
-                                        alt={img.alt}
-                                        className="absolute inset-0 h-full w-full"
-                                        grayscale={img.gray}
-                                        sizes="(max-width: 768px) 50vw, 25vw"
-                                    />
-                                    <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-transparent" />
-                                </Reveal>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
+                        <Reveal delay={140}>
+                            <div className="relative flex min-h-[270px] flex-col justify-between overflow-hidden border border-white/35 bg-[#2365D9] p-7 sm:min-h-[330px] sm:p-10 lg:p-14">
+                                <CheckerPattern className="absolute right-0 top-0 h-28 w-28 opacity-15 sm:h-36 sm:w-36" />
 
-            <BlueCheckerBand />
-
-            {/* =================================================
-                02 — WHO WE ARE
-            ================================================= */}
-
-            <section
-                id="who-we-are"
-                className="relative scroll-mt-24 overflow-hidden bg-[#050505] py-20 sm:py-28 lg:py-32"
-            >
-                <CheckerPattern className="absolute -left-20 top-12 h-[300px] w-[300px] opacity-25 sm:h-[320px] sm:w-[320px]" />
-
-                <div className="relative mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-14 xl:px-20">
-                    <div className="grid gap-8 lg:grid-cols-12 lg:gap-16">
-                        <Reveal className="lg:col-span-7">
-                            <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.21em] text-[#2F7BFF] sm:mb-6">
-                                Who we are
-                            </p>
-
-                            <h2 className="max-w-[800px] text-[clamp(2.2rem,6vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.07em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.01] sm:tracking-[-0.08em]">
-                                One Company.
-                                <br />
-                                <span className="text-[#2F7BFF]">
-                                    Three Areas of Focus.
-                                </span>
-                            </h2>
-                        </Reveal>
-
-                        <Reveal delay={120} className="flex flex-col justify-end lg:col-span-4 lg:col-start-9">
-                            <p className="text-[14px] leading-[1.9] text-[#9AA6B7] sm:leading-[1.95]">
-                                Our work connects business technology with
-                                individual growth. Each division has a specific
-                                purpose, while sharing the same commitment to
-                                useful solutions, clear guidance and practical
-                                progress.
-                            </p>
-                        </Reveal>
-                    </div>
-
-                    <div className="mt-12 border-y border-white/10 sm:mt-16">
-                        {divisions.map((division, i) => (
-                            <Reveal key={division.title} delay={i * 60}>
-                                <Link
-                                    href={division.link}
-                                    className="group grid gap-3 border-b border-white/[0.08] py-6 transition-colors duration-300 last:border-b-0 hover:bg-white/[0.03] sm:gap-4 sm:py-9 md:py-10 lg:grid-cols-[0.8fr_1.35fr_1.5fr_40px] lg:items-center lg:gap-8 lg:px-4"
-                                >
-                                    <h3 className="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold tracking-[-0.055em] text-[#F3F5FA] transition-colors group-hover:text-[#2F7BFF] [font-family:var(--about-heading)]">
-                                        {division.title}
-                                    </h3>
-
-                                    <p className="text-[13px] font-semibold leading-6 text-[#D3D9E2] sm:text-[14px]">
-                                        {division.subtitle}
-                                    </p>
-
-                                    <div>
-                                        <p className="max-w-[450px] text-[12px] leading-[1.85] text-[#8A96A8]">
-                                            {division.description}
-                                        </p>
-                                        <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.14em] text-[#2F7BFF] sm:mt-3">
-                                            {division.words}
-                                        </p>
-                                    </div>
-
-                                    <span
-                                        aria-hidden="true"
-                                        className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/15 text-[#2F7BFF] transition-all duration-300 group-hover:border-[#2F7BFF] group-hover:bg-[#2F7BFF] group-hover:text-white lg:flex"
-                                    >
-                                        →
-                                    </span>
-                                </Link>
-                            </Reveal>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* =================================================
-                03 — PORTFOLIO
-            ================================================= */}
-
-            <section
-                id="portfolio"
-                className="relative isolate scroll-mt-24 overflow-hidden bg-[#0B0F17] py-20 sm:py-28 lg:py-32"
-            >
-                <CheckerPattern className="absolute -right-20 top-0 h-[420px] w-[420px] opacity-40 sm:h-[500px] sm:w-[500px]" />
-
-                <div className="relative mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-14 xl:px-20">
-                    <div className="mb-10 grid gap-6 sm:mb-14 sm:gap-8 lg:grid-cols-12 lg:items-end">
-                        <Reveal className="lg:col-span-8">
-                            <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#2F7BFF] sm:mb-6">
-                                What our work covers
-                            </p>
-
-                            <h2 className="max-w-[900px] text-[clamp(2.2rem,6vw,5.5rem)] font-semibold leading-[1.03] tracking-[-0.07em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.02] sm:tracking-[-0.075em]">
-                                Ideas are only the beginning.
-                                <br />
-                                <span className="text-[#2F7BFF]">
-                                    Here&rsquo;s where they go.
-                                </span>
-                            </h2>
-                        </Reveal>
-
-                        <Reveal delay={120} className="lg:col-span-4 lg:justify-self-end">
-                            <p className="max-w-[350px] text-[13px] leading-[1.85] text-[#8A96A8] sm:leading-[1.9]">
-                                From digital products to learning and
-                                professional opportunities, these are the
-                                areas in which MindSpace works.
-                            </p>
-                        </Reveal>
-                    </div>
-
-                    {/* Mosaic — aspect-locked so no ragged overflow on mobile */}
-                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-12 md:auto-rows-[minmax(180px,auto)] md:gap-4">
-                        {workItems.map((item, i) => (
-                            <Reveal
-                                key={item.title}
-                                delay={i * 60}
-                                className={`group relative overflow-hidden rounded-[6px] bg-[#0F131C] ${item.size} ${item.aspect}`}
-                            >
-                                <EditorialImage
-                                    src={item.image}
-                                    alt={item.alt}
-                                    className="absolute inset-0 h-full w-full"
-                                    grayscale={item.grayscale}
-                                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                    objectPosition={item.pos}
-                                />
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-[#050505]/15 to-transparent transition-opacity duration-500 group-hover:from-[#050505]/98" />
-
-                                <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-2 sm:left-5 sm:right-5 sm:top-5">
-                                    <span className="bg-white/95 px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-[#050505] sm:px-3 sm:py-1.5">
-                                        {item.category}
-                                    </span>
-                                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/40 bg-black/20 text-white backdrop-blur-sm transition-all duration-300 group-hover:border-[#2F7BFF] group-hover:bg-[#2F7BFF] sm:h-9 sm:w-9">
-                                        ↗
-                                    </span>
+                                <div className="relative text-[13px] font-medium tracking-[0.14em] text-white">
+                                    OUR VISION
                                 </div>
 
-                                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                                    <h3 className="text-[clamp(1.25rem,3vw,2.1rem)] font-semibold tracking-[-0.05em] text-white [font-family:var(--about-heading)]">
-                                        {item.title}
-                                    </h3>
-                                    <p className="mt-1.5 max-w-[440px] text-[11px] leading-[1.7] text-white/70 sm:mt-2 sm:leading-[1.8]">
-                                        {item.description}
-                                    </p>
-                                </div>
-                            </Reveal>
-                        ))}
-                    </div>
-
-                    <div className="mt-6 flex flex-col justify-between gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center">
-                        <p className="text-[9px] uppercase tracking-[0.16em] text-[#6B7686]">
-                            Technology · Learning · Education · Careers
-                        </p>
-                        <p className="max-w-[480px] text-[10px] leading-5 text-[#6B7686] sm:text-right">
-                            These are illustrative capability previews.
-                            Replace them with verified MindSpace project
-                            images and case studies when available.
-                        </p>
+                                <h2 className="relative mt-12 max-w-[600px] text-[clamp(28px,4vw,48px)] leading-[1.08] tracking-[-0.04em] text-white">
+                                    A future where people and businesses have the
+                                    clarity and capability to move forward.
+                                </h2>
+                            </div>
+                        </Reveal>
                     </div>
                 </div>
             </section>
 
-            <BlueCheckerBand />
+            {/* =====================================================
+          06 — CLOSING
+      ===================================================== */}
+            <section
+                className={`${pageGutter} relative overflow-hidden py-24 sm:py-28 lg:py-36`}
+            >
+                <CheckerPattern className="absolute right-0 top-0 h-36 w-36 opacity-[0.09] sm:h-48 sm:w-48 lg:h-56 lg:w-56" />
 
-            {/* =================================================
-                04 — WHAT CONNECTS
-            ================================================= */}
+                <div className="relative mx-auto max-w-[1600px]">
+                    <Reveal>
+                        <SectionLabel number="06">LET&apos;S MOVE FORWARD</SectionLabel>
 
-            <section className="relative overflow-hidden bg-[#050505] py-20 text-white sm:py-28 lg:py-32">
-                <CheckerPattern className="absolute -left-24 bottom-0 h-[380px] w-[380px] opacity-30 sm:h-[450px] sm:w-[450px]" />
-
-                <div className="relative mx-auto grid max-w-[1600px] gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 xl:px-20">
-                    <Reveal className="lg:col-span-5">
-                        <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#A9C7FF] sm:mb-6">
-                            What connects our work
-                        </p>
-
-                        <h2 className="max-w-[600px] text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.04] tracking-[-0.07em] [font-family:var(--about-heading)] sm:leading-[1.03] sm:tracking-[-0.075em]">
-                            Different services.
+                        <h2 className="max-w-[1100px] text-[clamp(40px,7vw,88px)] leading-[0.98] tracking-[-0.055em] text-white">
+                            Build something useful.
                             <br />
-                            <span className="text-[#7EA9FF]">
-                                One way of thinking.
+                            <span className="text-[#2F7BFF]">
+                                Make progress possible.
                             </span>
                         </h2>
-
-                        <p className="mt-6 max-w-[440px] text-[14px] leading-[1.9] text-[#9AA6B7] sm:mt-7 sm:leading-[1.95]">
-                            A technology project, a training programme and
-                            an international education application are not
-                            the same. What they should share is a thoughtful
-                            approach to the needs behind them.
-                        </p>
                     </Reveal>
 
-                    <div className="lg:col-span-6 lg:col-start-7">
-                        {principles.map((principle, i) => (
-                            <Reveal key={principle.title} delay={i * 80}>
-                                <article className="border-t border-white/12 py-7 sm:py-10">
-                                    <h3 className="max-w-[640px] text-[clamp(1.4rem,3.5vw,2.6rem)] font-semibold leading-[1.16] tracking-[-0.05em] text-white [font-family:var(--about-heading)]">
-                                        {principle.title}
-                                    </h3>
-                                    <p className="mt-3 max-w-[560px] text-[13px] leading-[1.85] text-[#8A96A8] sm:mt-4 sm:leading-[1.9]">
-                                        {principle.description}
-                                    </p>
-                                </article>
-                            </Reveal>
-                        ))}
-                        <div className="border-t border-white/12" />
-                    </div>
-                </div>
-            </section>
-
-            {/* =================================================
-                05 — MISSION / VISION
-            ================================================= */}
-
-            <section className="relative overflow-hidden bg-[#0B0F17] py-20 sm:py-28 lg:py-32">
-                <CheckerPattern className="absolute -right-20 top-0 h-[340px] w-[340px] opacity-25 sm:h-[390px] sm:w-[390px]" />
-
-                <div className="relative mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-14 xl:px-20">
-                    <Reveal className="mb-10 sm:mb-14">
-                        <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#2F7BFF] sm:mb-6">
-                            Purpose and direction
-                        </p>
-                        <h2 className="max-w-[800px] text-[clamp(2.2rem,5.8vw,5.3rem)] font-semibold leading-[1.03] tracking-[-0.07em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.02] sm:tracking-[-0.075em]">
-                            Why MindSpace exists.
-                        </h2>
-                    </Reveal>
-
-                    <div className="grid gap-4 lg:grid-cols-12">
-                        {/* Mission */}
-                        <Reveal className="lg:col-span-7">
-                            <article className="relative flex min-h-[300px] flex-col overflow-hidden bg-[#2F7BFF] p-6 text-white sm:min-h-[340px] sm:p-9 lg:min-h-[400px] lg:p-12">
-                                <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full border border-white/15 sm:h-64 sm:w-64" />
-                                <div className="pointer-events-none absolute -right-5 -top-5 h-40 w-40 rounded-full border border-white/15 sm:h-48 sm:w-48" />
-
-                                <p className="relative text-[9px] font-bold uppercase tracking-[0.2em] text-white/75">
-                                    Our mission
-                                </p>
-
-                                <h3 className="relative mt-auto max-w-[560px] pt-10 text-[clamp(1.7rem,4vw,3.7rem)] font-semibold leading-[1.1] tracking-[-0.055em] [font-family:var(--about-heading)] sm:leading-[1.08] sm:tracking-[-0.065em]">
-                                    Help businesses grow through technology and help individuals progress through practical training and career support.
-                                </h3>
-
-                                <div className="pointer-events-none absolute bottom-0 right-0 h-24 w-24 opacity-70 sm:h-28 sm:w-28">
-                                    <CheckerPattern className="h-full w-full" />
-                                </div>
-                            </article>
-                        </Reveal>
-
-                        {/* Vision */}
-                        <Reveal delay={120} className="lg:col-span-5">
-                            <article className="relative flex min-h-[300px] flex-col overflow-hidden border border-white/10 bg-[#0F131C] p-6 sm:min-h-[340px] sm:p-9 lg:min-h-[400px] lg:p-10">
-                                <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#2F7BFF]/[0.12] blur-[70px] sm:h-80 sm:w-80" />
-
-                                <p className="relative text-[9px] font-bold uppercase tracking-[0.2em] text-[#2F7BFF]">
-                                    Our vision
-                                </p>
-
-                                <h3 className="relative mt-auto max-w-[450px] pt-10 text-[clamp(1.6rem,3.6vw,3rem)] font-semibold leading-[1.12] tracking-[-0.05em] text-[#F3F5FA] [font-family:var(--about-heading)] sm:leading-[1.1] sm:tracking-[-0.06em]">
-                                    To be a trusted partner for digital solutions, practical learning and career development.
-                                </h3>
-
-                                <p className="relative mt-5 max-w-[400px] text-[13px] leading-[1.85] text-[#9AA6B7] sm:mt-6 sm:leading-[1.9]">
-                                    A future where people can discover services,
-                                    access information and navigate the support
-                                    they need in one place.
-                                </p>
-                            </article>
-                        </Reveal>
-                    </div>
-                </div>
-            </section>
-
-            {/* =================================================
-                06 — CLOSING
-            ================================================= */}
-
-            <section className="relative overflow-hidden bg-[#050505] pb-20 pt-20 text-white sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
-                <CheckerPattern className="absolute right-0 top-0 h-[360px] w-[360px] opacity-35 sm:h-[420px] sm:w-[420px]" />
-
-                <div className="relative mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-14 xl:px-20">
-                    <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-                        <Reveal className="lg:col-span-9">
-                            <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#A9C7FF] sm:mb-6">
-                                The MindSpace perspective
-                            </p>
-
-                            <h2 className="max-w-[1100px] text-[clamp(2.4rem,7vw,6.4rem)] font-semibold leading-[1] tracking-[-0.07em] [font-family:var(--about-heading)] sm:leading-[0.98] sm:tracking-[-0.08em]">
-                                Build something useful.
-                                <br />
-                                <span className="text-[#82ACFF]">
-                                    Make progress possible.
-                                </span>
-                            </h2>
-                        </Reveal>
-
-                        <Reveal delay={120} className="lg:col-span-3 lg:justify-self-end">
-                            <p className="text-[13px] leading-[1.9] text-[#9AA6B7]">
-                                Have a project, a learning goal, an education
-                                plan or a career question? Start by telling us
-                                what you need.
+                    <Reveal delay={120}>
+                        <div className="mt-12 flex flex-col justify-between gap-8 border-t border-white/15 pt-8 sm:mt-16 sm:gap-12 lg:mt-20 lg:flex-row lg:items-end">
+                            <p className="max-w-[540px] text-[17px] leading-[1.85] text-[#E2E8F0] sm:text-[18px]">
+                                Whether you&apos;re building a digital solution,
+                                developing new skills or looking for your next
+                                opportunity, let&apos;s find a way forward.
                             </p>
 
                             <Link
                                 href="/contact"
-                                className="group mt-6 inline-flex min-h-[52px] items-center gap-4 bg-[#2F7BFF] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2168E8] sm:mt-7"
+                                className="group inline-flex min-h-[54px] items-center justify-between gap-12 border border-[#2F7BFF] bg-[#2F7BFF] px-6 text-[15px] font-medium text-white transition-colors hover:bg-transparent sm:min-w-[230px]"
                             >
-                                Connect with MindSpace
-                                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                                    →
+                                Let&apos;s talk
+
+                                <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                                    ↗
                                 </span>
                             </Link>
-                        </Reveal>
-                    </div>
+                        </div>
+                    </Reveal>
                 </div>
             </section>
 

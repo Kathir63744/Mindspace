@@ -1,4 +1,4 @@
-//consultant/app/components/consultant/services/ServicesUi.tsx
+// app/components/consultant/services/ServicesUi.tsx
 "use client";
 
 import Image from "next/image";
@@ -12,14 +12,10 @@ import {
 } from "react";
 import type { IconName } from "./ServicesData";
 
-/* ============================================================
-   Palette (blue only): navy #334da1ff · dark blue #0A1A4A · ocean #1E6BFF / #2F7BFF · sky #7CC4FF
-   ============================================================ */
-
 export const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 export const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4aa3ff]";
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ms-accent)]";
 
 const CSS = `
 @keyframes ms-sway-a{0%{transform:rotate(-2.2deg)}100%{transform:rotate(2.2deg)}}
@@ -37,10 +33,6 @@ const CSS = `
 
 export const StyleTag = () => <style>{CSS}</style>;
 
-/* ============================================================
-   Hooks + reveal
-============================================================ */
-
 export function useReducedMotion() {
   const [r, setR] = useState(false);
   useEffect(
@@ -50,10 +42,6 @@ export function useReducedMotion() {
   return r;
 }
 
-/**
- * Called as `useInView<T>(threshold)`.
- * Returns `{ ref, inView }`.
- */
 export function useInView<T extends HTMLElement = HTMLDivElement>(
   threshold = 0.2
 ): { ref: RefObject<T | null>; inView: boolean } {
@@ -117,7 +105,7 @@ export function Reveal({
 
 /* ============================================================
    Icons
-============================================================ */
+   ============================================================ */
 
 const PATHS: Record<IconName, ReactNode> = {
   monitor: (
@@ -242,8 +230,8 @@ export function Icon({
 }
 
 /* ============================================================
-   Small building blocks
-============================================================ */
+   Building blocks — all themed via CSS vars
+   ============================================================ */
 
 export function Eyebrow({
   children,
@@ -254,16 +242,24 @@ export function Eyebrow({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] uppercase tracking-[0.26em] ${
+      className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] uppercase tracking-[0.26em]"
+      style={
         light
-          ? "border-[#BBD8FF] bg-white text-[#1E6BFF]"
-          : "border-[#2F7BFF]/40 bg-[#2F7BFF]/10 text-[#9CCBFF]"
-      }`}
+          ? {
+            borderColor: "color-mix(in srgb, var(--ms-accent) 35%, transparent)",
+            background: "var(--ms-text)",
+            color: "var(--ms-accent)",
+          }
+          : {
+            borderColor: "color-mix(in srgb, var(--ms-accent) 40%, transparent)",
+            background: "color-mix(in srgb, var(--ms-accent) 10%, transparent)",
+            color: "var(--ms-accent)",
+          }
+      }
     >
       <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          light ? "bg-[#1E6BFF]" : "bg-[#7CC4FF]"
-        }`}
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ background: "var(--ms-accent)" }}
       />
       {children}
     </span>
@@ -279,11 +275,12 @@ export function GradientText({
 }) {
   return (
     <span
-      className={`bg-clip-text text-transparent ${
-        light
-          ? "bg-gradient-to-r from-[#0B3FA8] via-[#1E6BFF] to-[#38A9FF]"
-          : "bg-gradient-to-r from-[#9CD3FF] via-[#4F9BFF] to-[#1E6BFF]"
-      }`}
+      className="bg-clip-text text-transparent"
+      style={{
+        backgroundImage: light
+          ? "linear-gradient(to right, color-mix(in srgb, var(--ms-accent) 70%, black), var(--ms-accent), color-mix(in srgb, var(--ms-accent) 70%, white))"
+          : "linear-gradient(to right, color-mix(in srgb, var(--ms-accent) 60%, white), var(--ms-accent), color-mix(in srgb, var(--ms-accent) 80%, black))",
+      }}
     >
       {children}
     </span>
@@ -291,7 +288,7 @@ export function GradientText({
 }
 
 export function CornerTicks({
-  className = "text-[#7CC4FF]/70",
+  className = "",
   size = 16,
   offset = -1,
 }: {
@@ -306,23 +303,15 @@ export function CornerTicks({
     ...p,
   });
   return (
-    <span aria-hidden="true" className={className}>
-      <span
-        className={`${base} border-l border-t`}
-        style={st({ left: offset, top: offset })}
-      />
-      <span
-        className={`${base} border-r border-t`}
-        style={st({ right: offset, top: offset })}
-      />
-      <span
-        className={`${base} border-b border-l`}
-        style={st({ left: offset, bottom: offset })}
-      />
-      <span
-        className={`${base} border-b border-r`}
-        style={st({ right: offset, bottom: offset })}
-      />
+    <span
+      aria-hidden="true"
+      className={className}
+      style={{ color: "var(--ms-accent)" }}
+    >
+      <span className={`${base} border-l border-t`} style={st({ left: offset, top: offset })} />
+      <span className={`${base} border-r border-t`} style={st({ right: offset, top: offset })} />
+      <span className={`${base} border-b border-l`} style={st({ left: offset, bottom: offset })} />
+      <span className={`${base} border-b border-r`} style={st({ right: offset, bottom: offset })} />
     </span>
   );
 }
@@ -346,7 +335,7 @@ export function RayBurst({
         className="absolute inset-x-0 bottom-0 h-[70%]"
         style={{
           background:
-            "radial-gradient(ellipse 55% 60% at 50% 100%, rgba(124,196,255,.55), rgba(30,107,255,.28) 38%, rgba(10,26,74,0) 70%)",
+            "radial-gradient(ellipse 55% 60% at 50% 100%, color-mix(in srgb, var(--ms-accent) 65%, white), color-mix(in srgb, var(--ms-accent) 30%, transparent) 38%, transparent 70%)",
           animation: "ms-pulse-glow 6s ease-in-out infinite",
         }}
       />
@@ -356,7 +345,7 @@ export function RayBurst({
           transformOrigin: "50% 100%",
           animation: "ms-sway-a 14s ease-in-out infinite alternate",
           background:
-            "repeating-conic-gradient(from 270deg at 50% 100%, rgba(5,11,30,0) 0deg, rgba(30,107,255,.55) 1.5deg, rgba(5,11,30,0) 3.4deg, rgba(10,40,120,.4) 4.6deg, rgba(5,11,30,0) 6.4deg)",
+            "repeating-conic-gradient(from 270deg at 50% 100%, transparent 0deg, color-mix(in srgb, var(--ms-accent) 55%, transparent) 1.5deg, transparent 3.4deg, color-mix(in srgb, var(--ms-accent) 30%, transparent) 4.6deg, transparent 6.4deg)",
           WebkitMaskImage: mask,
           maskImage: mask,
         }}
@@ -367,7 +356,7 @@ export function RayBurst({
           transformOrigin: "50% 100%",
           animation: "ms-sway-b 11s ease-in-out infinite alternate",
           background:
-            "repeating-conic-gradient(from 268deg at 50% 100%, rgba(5,11,30,0) 0deg, rgba(156,211,255,.34) .7deg, rgba(5,11,30,0) 1.8deg, rgba(5,11,30,0) 4.2deg)",
+            "repeating-conic-gradient(from 268deg at 50% 100%, transparent 0deg, color-mix(in srgb, var(--ms-accent) 35%, transparent) .7deg, transparent 1.8deg, transparent 4.2deg)",
           WebkitMaskImage: mask,
           maskImage: mask,
         }}
@@ -376,7 +365,7 @@ export function RayBurst({
         className="absolute inset-x-[18%] bottom-[-6%] h-[18%] rounded-[100%]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 50%, rgba(190,226,255,.95), rgba(79,155,255,.4) 45%, transparent 72%)",
+            "radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--ms-accent) 85%, white), color-mix(in srgb, var(--ms-accent) 40%, transparent) 45%, transparent 72%)",
           filter: "blur(18px)",
         }}
       />
@@ -401,18 +390,28 @@ export function FramedImage({
     <div className="relative">
       <div
         aria-hidden="true"
-        className={`absolute inset-0 rounded-[30px] border border-[#2F7BFF]/45 ${
-          mirror ? "-translate-x-4 translate-y-4" : "translate-x-4 translate-y-4"
-        }`}
+        className={`absolute inset-0 rounded-[30px] border ${mirror ? "-translate-x-4 translate-y-4" : "translate-x-4 translate-y-4"
+          }`}
+        style={{
+          borderColor: "color-mix(in srgb, var(--ms-accent) 45%, transparent)",
+        }}
       />
       <div
         aria-hidden="true"
-        className={`absolute inset-0 rounded-[30px] border border-[#7CC4FF]/20 ${
-          mirror ? "-translate-x-8 translate-y-8" : "translate-x-8 translate-y-8"
-        }`}
+        className={`absolute inset-0 rounded-[30px] border ${mirror ? "-translate-x-8 translate-y-8" : "translate-x-8 translate-y-8"
+          }`}
+        style={{
+          borderColor: "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+        }}
       />
 
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/20 bg-gradient-to-br from-[#0B2A6F] via-[#0A1A4A] to-[#050B1E] sm:aspect-[5/5]">
+      <div
+        className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/20 sm:aspect-[5/5]"
+        style={{
+          background:
+            "linear-gradient(to bottom right, color-mix(in srgb, var(--ms-accent) 30%, var(--ms-background)), var(--ms-background))",
+        }}
+      >
         <Image
           src={src}
           alt={alt}
@@ -420,13 +419,19 @@ export function FramedImage({
           sizes="(min-width: 1024px) 560px, 100vw"
           className="object-cover opacity-90 saturate-[.85]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050B1E]/90 via-[#0A1A4A]/20 to-[#1E6BFF]/15" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, color-mix(in srgb, var(--ms-background) 90%, transparent), color-mix(in srgb, var(--ms-background) 20%, transparent), color-mix(in srgb, var(--ms-accent) 15%, transparent))",
+          }}
+        />
         <div
           aria-hidden="true"
           className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "linear-gradient(to right, rgba(124,196,255,.35) 1px, transparent 1px), linear-gradient(to bottom, rgba(124,196,255,.35) 1px, transparent 1px)",
+              "linear-gradient(to right, color-mix(in srgb, var(--ms-accent) 35%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--ms-accent) 35%, transparent) 1px, transparent 1px)",
             backgroundSize: "56px 56px",
             maskImage:
               "linear-gradient(to bottom, transparent, #000 40%, transparent)",
@@ -434,17 +439,29 @@ export function FramedImage({
               "linear-gradient(to bottom, transparent, #000 40%, transparent)",
           }}
         />
-        <CornerTicks className="text-[#9CD3FF]" size={22} offset={14} />
+        <CornerTicks size={22} offset={14} />
 
         <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4">
-          <div className="rounded-2xl border border-white/20 bg-[#050B1E]/70 px-4 py-3 backdrop-blur-md">
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[#7CC4FF]">
+          <div
+            className="rounded-2xl border border-white/20 px-4 py-3 backdrop-blur-md"
+            style={{
+              background:
+                "color-mix(in srgb, var(--ms-background) 70%, transparent)",
+            }}
+          >
+            <p
+              className="text-[10px] uppercase tracking-[0.28em]"
+              style={{ color: "var(--ms-accent)" }}
+            >
               {label}
             </p>
           </div>
           <span
             className="font-display text-5xl leading-none text-transparent"
-            style={{ WebkitTextStroke: "1px rgba(156,211,255,.7)" }}
+            style={{
+              WebkitTextStroke:
+                "1px color-mix(in srgb, var(--ms-accent) 70%, white)",
+            }}
           >
             {index}
           </span>

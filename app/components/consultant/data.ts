@@ -151,7 +151,7 @@ export const stories = [
         focus: "center 30%",
         location: "Washington, DC - Baltimore",
         image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
-        quote: "Mind Space played into the whole gamification aspect because of how user-friendly it is. Completing a module felt like an achievement, and it helped me have a pathway to dive into cybersecurity, coming from a completely different world."
+        quote: "Mind Space played into the whole gamification aspect because of how user-friendly it is, and it helped me have a pathway to dive into cybersecurity, coming from a completely different world."
     },
 ];
 

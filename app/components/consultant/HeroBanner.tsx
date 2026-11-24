@@ -5,39 +5,94 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import LogoIntro from "./LogoIntro";
 
 /* ============================================================
-   CONFIG
+   CONFIG — 13 slides across technology / training / careers
 ============================================================ */
 
-type Clip =
-    | { type: "video"; src: string; poster: string }
-    | { type: "photo"; src: string };
+type SlideKind = "video" | "photo";
+
+type Clip = {
+    kind: SlideKind;
+    src: string;
+    poster?: string;
+    href?: string;
+    caption?: string;
+};
 
 const CLIPS: Clip[] = [
-    { type: "video", src: "/website-development-video.mp4", poster: "/website-development-poster.jpg" },
-    { type: "photo", src: "/website-development-poster.jpg" },
-    { type: "video", src: "/app-development-video.mp4", poster: "/app-development-poster.jpg" },
-    { type: "photo", src: "/app-development-poster.jpg" },
-    { type: "video", src: "/software-development-video.mp4", poster: "/software-development-poster.jpg" },
-    { type: "photo", src: "/software-development-poster.jpg" },
+    // Technology (4)
+    { kind: "video", src: "/website-development-video.mp4", poster: "/website-development-poster.jpg", href: "/services/website-development", caption: "Websites" },
+    { kind: "photo", src: "/website-development-poster.jpg", href: "/services/website-development", caption: "Websites" },
+    { kind: "video", src: "/app-development-video.mp4", poster: "/app-development-poster.jpg", href: "/services/app-development", caption: "Mobile apps" },
+    { kind: "photo", src: "/app-development-poster.jpg", href: "/services/app-development", caption: "Mobile apps" },
+    { kind: "video", src: "/software-development-video.mp4", poster: "/software-development-poster.jpg", href: "/services/software-development", caption: "Custom software" },
+    { kind: "photo", src: "/software-development-poster.jpg", href: "/services/software-development", caption: "Custom software" },
+
+    // Training (4)
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&q=80&auto=format&fit=crop",
+        href: "/training/programming-foundations",
+        caption: "Programming",
+    },
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80&auto=format&fit=crop",
+        href: "/training/web-development",
+        caption: "Web dev",
+    },
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80&auto=format&fit=crop",
+        href: "/training/app-development",
+        caption: "Mobile dev",
+    },
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=1200&q=80&auto=format&fit=crop",
+        href: "/training/cloud-devops",
+        caption: "Cloud & DevOps",
+    },
+
+    // Careers (3)
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80&auto=format&fit=crop",
+        href: "/careers/resume-linkedin",
+        caption: "Resume",
+    },
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1200&q=80&auto=format&fit=crop",
+        href: "/careers/interview-coaching",
+        caption: "Interview",
+    },
+    {
+        kind: "photo",
+        src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80&auto=format&fit=crop",
+        href: "/careers/placement-support",
+        caption: "Placement",
+    },
 ];
 
 const CLIP_DURATION_MS = 5000;
 
-const AUDIENCES = [
+/* ============================================================
+   FLIP TILE CONTENT
+============================================================ */
+
+const FLIP_TILES = [
     {
         pos: { left: 0, top: 0, width: 15, height: 47.6 },
-        faces: [
-            { value: "Business", label: "Websites, apps and custom software" },
-            { value: "Students", label: "Study abroad, admissions and visas" },
-        ],
+        front: { word: "Business", label: "Websites, apps and custom software" },
+        back: { word: "Startups", label: "Launch-ready products and platforms" },
+        interval: 5200,
         offset: 2600,
     },
     {
         pos: { left: 68, top: 52.4, width: 15, height: 47.6 },
-        faces: [
-            { value: "Learners", label: "Training, practice and certificates" },
-            { value: "Careers", label: "Placement, internships and jobs" },
-        ],
+        front: { word: "Careers", label: "Placement, internships and jobs" },
+        back: { word: "Learners", label: "Training, practice and certificates" },
+        interval: 5200,
         offset: 4200,
     },
 ];
@@ -47,7 +102,7 @@ const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 const MOVE_MS = 1100;
 
 /* ============================================================
-   TYPOGRAPHY & ANIMATION
+   HERO PHRASES
 ============================================================ */
 
 const BLUE = "#8E9BFF";
@@ -55,7 +110,8 @@ const BLUE = "#8E9BFF";
 const PHRASES = [
     { lead: "Build your ", blue: "business." },
     { lead: "Develop your ", blue: "skills." },
-    { lead: "Advance your ", blue: "career." }
+    { lead: "Advance your ", blue: "career." },
+    { lead: "Ship with ", blue: "confidence." },
 ];
 
 function TypewriterHeading({ start, reduced }: { start: boolean; reduced: boolean }) {
@@ -67,7 +123,6 @@ function TypewriterHeading({ start, reduced }: { start: boolean; reduced: boolea
     const currentPhrase = PHRASES[index];
     const fullText = currentPhrase.lead + currentPhrase.blue;
 
-    // Blinking cursor
     useEffect(() => {
         const timer = setInterval(() => setBlink((b) => !b), 500);
         return () => clearInterval(timer);
@@ -119,101 +174,6 @@ function TypewriterHeading({ start, reduced }: { start: boolean; reduced: boolea
                 style={{ opacity: blink ? 1 : 0 }}
             />
         </span>
-    );
-}
-
-/* ============================================================
-   DOT MATRIX BACKGROUND
-============================================================ */
-
-function DotMatrixBackground() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        let animationFrameId: number;
-        let width = 0;
-        let height = 0;
-        let reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        const resize = () => {
-            const parent = canvas.parentElement;
-            if (!parent) return;
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            width = parent.clientWidth;
-            height = parent.clientHeight;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            canvas.style.width = width + "px";
-            canvas.style.height = height + "px";
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        };
-
-        window.addEventListener("resize", resize);
-        resize();
-
-        const DOT_SPACING = 16;
-        const DOT_RADIUS = 1.5;
-
-        const render = (time: number) => {
-            ctx.clearRect(0, 0, width, height);
-
-            const speed = 0.08;
-            const rawProgress = (time * speed) % (width * 2);
-            const sweepX = rawProgress <= width ? rawProgress : width * 2 - rawProgress;
-
-            for (let x = 0; x < width; x += DOT_SPACING) {
-                for (let y = 0; y < height; y += DOT_SPACING) {
-                    const dx = Math.abs(x - sweepX);
-                    const wave = Math.max(0, 1 - dx / 300);
-                    const vWave = Math.sin(y * 0.02 + time * 0.002) * 0.5 + 0.5;
-
-                    if (wave > 0.05) {
-                        const radius = DOT_RADIUS + wave * 1.5 * vWave;
-                        const alpha = wave * 0.3 * vWave;
-
-                        ctx.beginPath();
-                        ctx.fillStyle = `rgba(20, 60, 150, ${alpha})`;
-                        ctx.arc(x, y, radius, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        if (dx < 50 && vWave > 0.6) {
-                            ctx.fillStyle = `rgba(142, 155, 255, ${alpha * 1.5})`;
-                            ctx.arc(x, y, radius * 1.2, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-            }
-            if (!reduced) animationFrameId = requestAnimationFrame(render);
-        };
-
-        animationFrameId = requestAnimationFrame(render);
-
-        const onMotionChange = () => {
-            reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-            if (reduced) cancelAnimationFrame(animationFrameId);
-            else animationFrameId = requestAnimationFrame(render);
-        };
-        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-        mq.addEventListener("change", onMotionChange);
-
-        return () => {
-            window.removeEventListener("resize", resize);
-            mq.removeEventListener("change", onMotionChange);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, []);
-
-    return (
-        <canvas
-            ref={canvasRef}
-            className="pointer-events-none absolute inset-0 h-full w-full z-0 opacity-80"
-        />
     );
 }
 
@@ -273,9 +233,9 @@ function CarouselCard({
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const isCenter = off === 0;
-    const isPhoto = clip.type === "photo";
-    const isVideo = clip.type === "video";
-    const imgSrc = isPhoto ? clip.src : clip.poster;
+    const isPhoto = clip.kind === "photo";
+    const isVideo = clip.kind === "video";
+    const imgSrc = isPhoto ? clip.src : clip.poster || clip.src;
 
     const advancedRef = useRef(false);
 
@@ -339,7 +299,7 @@ function CarouselCard({
             ) : (
                 <img
                     src={imgSrc}
-                    alt=""
+                    alt={clip.caption || ""}
                     draggable={false}
                     onError={() => setImgFailed(true)}
                     className="absolute inset-0 h-full w-full object-cover will-change-transform"
@@ -372,81 +332,161 @@ function CarouselCard({
                     }}
                 />
             )}
+
+            {clip.caption && (
+                <span className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                    {clip.caption}
+                </span>
+            )}
         </div>
     );
 }
 
-function AudienceTile({
+/* ============================================================
+   FLIP TILE — centred text, glass highlight
+============================================================ */
+
+function FlipTile({
     pos,
-    faces,
+    front,
+    back,
+    interval,
     offset,
     revealed,
     reduced,
 }: {
     pos: { left: number; top: number; width: number; height: number };
-    faces: { value: string; label: string }[];
+    front: { word: string; label: string };
+    back: { word: string; label: string };
+    interval: number;
     offset: number;
     revealed: boolean;
     reduced: boolean;
 }) {
-    const [rot, setRot] = useState(0);
+    const [flipped, setFlipped] = useState(false);
 
     useEffect(() => {
         if (!revealed || reduced) return;
         let id: ReturnType<typeof setInterval> | undefined;
         const start = setTimeout(() => {
-            id = setInterval(() => setRot((r) => r + 180), 5200);
+            id = setInterval(() => setFlipped((f) => !f), interval);
         }, offset);
         return () => {
             clearTimeout(start);
             if (id) clearInterval(id);
         };
-    }, [revealed, reduced, offset]);
+    }, [revealed, reduced, offset, interval]);
 
-    const face = (item: { value: string; label: string }, base: number) => (
+    // Shared visual style for both faces — glassmorphism
+    const faceStyle: CSSProperties = {
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "1rem",
+        borderRadius: 20,
+        overflow: "hidden",
+        // Glass effect: translucent gradient over blurred backdrop
+        background:
+            "linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 40%, rgba(13,18,29,0.55) 100%)",
+        backdropFilter: "blur(14px) saturate(140%)",
+        WebkitBackdropFilter: "blur(14px) saturate(140%)",
+        border: "1px solid rgba(255,255,255,0.16)",
+        boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.04), 0 18px 55px rgba(0,0,0,0.45), 0 0 0 1px rgba(47,123,255,0.10)",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+    };
+
+    const renderFace = (
+        content: { word: string; label: string },
+        isBack: boolean,
+    ) => (
         <div
-            className="absolute inset-0 flex flex-col justify-end bg-[#0D121D] p-4 border border-white/5 lg:p-6"
             style={{
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-                transform: `rotateY(${rot + base}deg)`,
-                transition: reduced ? "none" : "transform 900ms cubic-bezier(0.65, 0, 0.35, 1)",
+                ...faceStyle,
+                transform: isBack ? "rotateY(180deg)" : "rotateY(0deg)",
+                // Belt-and-braces: hide the non-visible face so no overlap is possible
+                opacity: isBack ? (flipped ? 1 : 0) : flipped ? 0 : 1,
+                transition: reduced ? "none" : "opacity 380ms ease",
+                pointerEvents: flipped === isBack ? "auto" : "none",
             }}
         >
+            {/* Top glass sheen */}
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#2F7BFF]/20 blur-3xl"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/2"
+                style={{
+                    background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 100%)",
+                }}
             />
-            <span className="relative font-display text-[1.25rem] font-medium leading-none tracking-[-0.04em] text-[#F3F5FA] lg:text-[2.1rem]">
-                {item.value}
+
+            {/* Corner accent glow */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-[#2F7BFF]/30 blur-3xl"
+            />
+
+            {/* Bottom accent line */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-6 bottom-3 h-[1px]"
+                style={{
+                    background:
+                        "linear-gradient(90deg, transparent, rgba(142,155,255,0.6), transparent)",
+                }}
+            />
+
+            <span className="relative font-questrial text-[clamp(1.5rem,2.4vw,2.2rem)] font-medium leading-[1.05] tracking-[-0.02em] text-[#F3F5FA]">
+                {content.word}
             </span>
-            <span className="relative mt-2 max-w-[150px] text-[10px] leading-[1.5] tracking-[0.01em] text-[#A0A9BA] lg:mt-3 lg:text-xs">
-                {item.label}
+
+            <span className="relative mt-2 max-w-[210px] text-[11.5px] leading-[1.5] tracking-[0.01em] text-[#C6D0E1] lg:text-[12.5px]">
+                {content.label}
             </span>
         </div>
     );
 
     return (
         <div
-            className="absolute hidden overflow-hidden rounded-[20px] border border-white/10 bg-[#0D121D] shadow-[0_18px_55px_rgba(0,0,0,0.4)] md:block lg:rounded-[24px]"
+            className="absolute hidden md:block"
             style={{
                 left: `${pos.left}%`,
                 top: `${pos.top}%`,
                 width: `${pos.width}%`,
                 height: `${pos.height}%`,
-                perspective: 900,
+                perspective: "1200px",
                 opacity: revealed ? 1 : 0,
-                transform: revealed ? "none" : "translateX(60px)",
+                transform: revealed ? "none" : "translateY(24px)",
                 transition: reduced
                     ? "none"
                     : `opacity 800ms ease 500ms, transform 1000ms ${EASE_OUT} 500ms`,
             }}
         >
-            {face(faces[0], 0)}
-            {face(faces[1], 180)}
+            <div
+                className="relative h-full w-full"
+                style={{
+                    transformStyle: "preserve-3d",
+                    transform: `rotateY(${flipped ? 180 : 0}deg)`,
+                    transition: reduced
+                        ? "none"
+                        : "transform 900ms cubic-bezier(0.65, 0, 0.35, 1)",
+                }}
+            >
+                {renderFace(front, false)}
+                {renderFace(back, true)}
+            </div>
         </div>
     );
 }
+
+/* ============================================================
+   CAROUSEL
+============================================================ */
 
 function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }) {
     const n = CLIPS.length;
@@ -457,6 +497,7 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
     const [cycle, setCycle] = useState(0);
 
     const advancingRef = useRef(false);
+    const scrollLockRef = useRef(0);
 
     useEffect(() => {
         const mq = window.matchMedia("(max-width: 767px)");
@@ -482,6 +523,23 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
             advancingRef.current = false;
         });
     };
+
+    useEffect(() => {
+        if (!revealed) return;
+        const onScroll = () => {
+            const now = Date.now();
+            if (now - scrollLockRef.current < 700) return;
+            scrollLockRef.current = now;
+            advance();
+        };
+        window.addEventListener("wheel", onScroll, { passive: true });
+        window.addEventListener("touchmove", onScroll, { passive: true });
+        return () => {
+            window.removeEventListener("wheel", onScroll);
+            window.removeEventListener("touchmove", onScroll);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [revealed, cur]);
 
     const offOf = (i: number, c: number) => ((((i - c + 2) % n) + n) % n) - 2;
 
@@ -516,12 +574,14 @@ function Carousel({ revealed, reduced }: { revealed: boolean; reduced: boolean }
                 );
             })}
 
-            {AUDIENCES.map((a, i) => (
-                <AudienceTile
+            {FLIP_TILES.map((tile, i) => (
+                <FlipTile
                     key={i}
-                    pos={a.pos}
-                    faces={a.faces}
-                    offset={a.offset}
+                    pos={tile.pos}
+                    front={tile.front}
+                    back={tile.back}
+                    interval={tile.interval}
+                    offset={tile.offset}
                     revealed={revealed}
                     reduced={reduced}
                 />
@@ -553,22 +613,12 @@ export default function HeroBanner() {
     return (
         <>
             <style>{`
-                /* Desktop Defaults */
-                .hero-heading-wrapper {
-                    padding-top: 30px;
-                }
-                .hero-carousel-wrapper {
-                    margin-top: 15px;
-                }
+                .hero-heading-wrapper { padding-top: 30px; }
+                .hero-carousel-wrapper { margin-top: 15px; }
 
-                /* Mobile Overrides */
                 @media (max-width: 767px) {
-                    .hero-heading-wrapper {
-                        padding-top: 72px;
-                    }
-                    .hero-carousel-wrapper {
-                        margin-top: 20px; 
-                    }
+                    .hero-heading-wrapper { padding-top: 72px; }
+                    .hero-carousel-wrapper { margin-top: 20px; }
                 }
             `}</style>
 
@@ -576,9 +626,6 @@ export default function HeroBanner() {
                 className="relative -mt-20 flex min-h-[100svh] w-full flex-col overflow-hidden bg-[#050505] text-[#F3F5FA] selection:bg-[#2F7BFF] selection:text-white"
                 style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 132px)" }}
             >
-                <DotMatrixBackground />
-
-                {/* Headline Wrapper */}
                 <div className="hero-heading-wrapper relative z-10 mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between px-4 sm:px-8 md:flex-row md:px-12 lg:px-20">
                     <div className="flex w-full flex-col md:w-[65%]">
                         <div
@@ -586,14 +633,13 @@ export default function HeroBanner() {
                             style={rise(200)}
                         >
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                            <h1 className="relative z-10 max-w-[900px] font-sans text-[clamp(1.8rem,7.5vw,2.8rem)] font-medium leading-[1.02] tracking-[-0.045em] text-[#F3F5FA] sm:text-[clamp(2.4rem,7vw,3.4rem)] md:text-[clamp(2.7rem,6.2vw,4.6rem)] md:leading-[0.98] md:tracking-[-0.065em]">
+                            <h1 className="relative z-10 max-w-[900px] font-questrial text-[clamp(1.8rem,7.5vw,2.8rem)] font-medium leading-[1.02] tracking-[-0.045em] text-[#F3F5FA] sm:text-[clamp(2.4rem,7vw,3.4rem)] md:text-[clamp(2.7rem,6.2vw,4.6rem)] md:leading-[0.98] md:tracking-[-0.065em]">
                                 <TypewriterHeading start={shown} reduced={reduced} />
                             </h1>
                         </div>
                     </div>
                 </div>
 
-                {/* Carousel Wrapper */}
                 <div className="hero-carousel-wrapper relative z-10 mx-auto flex w-full max-w-[1490px] flex-1 flex-col items-center justify-start px-4 pb-6 sm:px-8 md:px-12 lg:px-[clamp(32px,6vw,92px)]">
                     <Carousel revealed={shown} reduced={reduced} />
                 </div>

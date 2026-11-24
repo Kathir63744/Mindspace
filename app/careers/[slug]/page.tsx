@@ -1,27 +1,44 @@
-// app/careers/[slug]/page.tsx
+//consultant/app/careers/[slug]/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Questrial } from "next/font/google";
+
 import Navbar from "@/app/components/consultant/Navbar";
 import Footer from "@/app/components/consultant/Footer";
+
+import {
+    resolveTheme,
+    getThemeVariables,
+} from "@/app/components/consultant/themes/MindSpaceTheme";
+
 import { SERVICES, VISUALS, type CareerVisual } from "./data";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+    params: Promise<{ slug: string }>;
+};
 
 export function generateStaticParams() {
-    return SERVICES.map((s) => ({ slug: s.slug }));
+    return SERVICES.map((service) => ({ slug: service.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const service = SERVICES.find((s) => s.slug === slug);
-    if (!service) return { title: "Not found" };
-    return { title: `${service.title} — Careers`, description: service.need };
+    const service = SERVICES.find((service) => service.slug === slug);
+
+    if (!service) return { title: "Career Service Not Found" };
+
+    return {
+        title: `${service.title} — Careers | MindSpace`,
+        description: service.need,
+    };
 }
 
-/* ============================================================
-   HOW WE WORK — Careers & Placements 5-step process
-============================================================ */
+const questrial = Questrial({
+    weight: "400",
+    subsets: ["latin"],
+    display: "swap",
+});
 
 const HOW_WE_WORK_STEPS = [
     {
@@ -51,236 +68,332 @@ const HOW_WE_WORK_STEPS = [
     },
 ];
 
+const placementSlugs = [
+    "placement-support",
+    "on-the-job-readiness",
+];
+
 export default async function CareersDetail({ params }: Props) {
     const { slug } = await params;
-    const service = SERVICES.find((s) => s.slug === slug);
+
+    const service = SERVICES.find((service) => service.slug === slug);
     const visual = VISUALS[slug] as CareerVisual | undefined;
+
     if (!service || !visual) notFound();
 
-    const isPlacementPage =
-        slug === "placement-support" || slug === "on-the-job-readiness";
+    const isPlacementPage = placementSlugs.includes(slug);
+
+    const theme = resolveTheme(service.pillar || "careers", slug);
+    const themeVars = getThemeVariables(theme);
 
     return (
-        <main className="bg-[#050505] text-white selection:bg-[#2F7BFF]">
+        <main
+            className={`${questrial.className} careers-questrial relative min-h-screen`}
+            style={themeVars}
+        >
+            {/* CAREERS-ONLY FONT OVERRIDE */}
+            <style>{`
+                .careers-questrial,
+                .careers-questrial * {
+                    font-family: ${questrial.style.fontFamily} !important;
+                }
+            `}</style>
+
             <Navbar />
 
-            {/* ================= HERO (tightened) ================= */}
-            <section className="relative flex min-h-[52svh] flex-col items-center justify-center overflow-hidden pt-28 pb-14 text-center">
+            {/* HERO */}
+            <section className="relative flex min-h-[58svh] flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-32 text-center">
                 <div
-                    className="absolute inset-0 opacity-20"
+                    className="absolute inset-0 opacity-[0.12]"
                     style={{
                         backgroundImage: `
-                            linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
+                            linear-gradient(to right, var(--ms-border) 1px, transparent 1px),
+                            linear-gradient(to bottom, var(--ms-border) 1px, transparent 1px)
                         `,
                         backgroundSize: "80px 80px",
-                        backgroundPosition: "center center",
                     }}
                 />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(47,123,255,0.1),transparent_50%)]" />
 
-                <div className="relative z-10 mx-auto max-w-3xl px-6">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#2F7BFF]">
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background:
+                            "radial-gradient(ellipse at top, var(--ms-glow), transparent 60%)",
+                    }}
+                />
+
+                <div className="relative z-10 mx-auto max-w-4xl">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--ms-accent)]">
                         {visual.eyebrow}
                     </p>
-                    <h1 className="mt-4 font-display text-[clamp(2.2rem,5.2vw,3.8rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-white">
+
+                    <h1 className="mt-5 font-display text-[clamp(2.2rem,6vw,5rem)] font-bold uppercase leading-[1.04] tracking-[-0.04em]">
                         {service.title}
                     </h1>
-                    <p className="mx-auto mt-4 max-w-xl text-[15px] leading-[1.7] text-[#8A96A8]">
+
+                    <p className="mx-auto mt-5 max-w-2xl text-[28px] leading-[1.8] text-[var(--ms-muted)] md:text-base">
                         {visual.sub}
                     </p>
-                    <p className="mx-auto mt-3 max-w-xl text-[13px] italic leading-[1.7] text-[#7CC4FF]/80">
+
+                    <p className="mx-auto mt-4 max-w-2xl text-lg  leading-[1.8] text-[var(--ms-secondary)]">
                         {visual.mind}
                     </p>
+
+                    <div className="mt-8 flex flex-wrap justify-center gap-3">
+                        <Link
+                            href="/contact"
+                            className="rounded-full bg-[var(--ms-accent)] px-7 py-3 text-xs font-bold uppercase tracking-wider text-white transition-transform hover:scale-[1.03]"
+                        >
+                            Start Your Career Journey
+                        </Link>
+
+                        <Link
+                            href="/careers"
+                            className="rounded-full border border-[var(--ms-border)] px-7 py-3 text-xs font-bold uppercase tracking-wider text-[var(--ms-text)] transition-colors hover:bg-[var(--ms-surface)]"
+                        >
+                            All Career Services
+                        </Link>
+                    </div>
                 </div>
             </section>
 
-            {/* ================= FLOATING STATS (tightened) ================= */}
-            <div className="relative z-20 mx-auto -mt-8 max-w-[760px] px-6">
-                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10 rounded-2xl border border-white/10 bg-[#0A0D14] p-4 shadow-2xl">
-                    {visual.stats.map((s) => (
-                        <div key={s.label} className="text-center px-3 py-3">
-                            <p className="text-[9px] uppercase tracking-wider text-[#8A96A8]">
-                                {s.label}
+            {/* STATS */}
+            <section className="relative z-20 mx-auto -mt-7 max-w-[900px] px-5">
+                <div className="grid grid-cols-1 divide-y divide-[var(--ms-border)] overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                    {visual.stats.map((stat) => (
+                        <div key={stat.label} className="px-5 py-6 text-center">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ms-muted)]">
+                                {stat.label}
                             </p>
-                            <p className="mt-1.5 font-display text-lg text-white">
-                                {s.value}
+                            <p className="mt-2 font-display text-xl font-semibold">
+                                {stat.value}
                             </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* ================= MOSAIC (tightened) ================= */}
-            <section className="mx-auto max-w-[1000px] px-6 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {visual.mosaic?.map((img, i) => (
-                        <div
-                            key={i}
-                            className="relative aspect-[16/9] rounded-xl overflow-hidden border border-white/10"
-                        >
-                            <img
-                                src={img.src}
-                                alt={img.alt}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                            <span className="absolute bottom-3 left-3 text-[11px] font-bold uppercase tracking-wider text-white">
-                                {img.caption}
-                            </span>
                         </div>
                     ))}
                 </div>
             </section>
 
-            {/* ================= HIGHLIGHTS (tightened) ================= */}
-            <section className="mx-auto max-w-[1000px] px-6 pb-16">
-                <h2 className="font-display text-2xl mb-6 text-center">
-                    What you will get
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2">
-                    {visual.highlights.map((h, i) => (
-                        <div
-                            key={i}
-                            className="rounded-xl border border-white/10 bg-[#0B0F17] p-6"
-                        >
-                            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#2F7BFF]/10 text-[#2F7BFF] font-bold text-lg">
-                                ✓
+            {/* IMAGE MOSAIC */}
+            {visual.mosaic?.length ? (
+                <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-6">
+                    <div className="mb-8 flex items-end justify-between gap-4">
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                                Career in focus
+                            </p>
+                            <h2 className="mt-3 font-display text-2xl sm:text-3xl">
+                                Visualizing your next step
+                            </h2>
+                        </div>
+
+                        <span className="hidden text-xs text-[var(--ms-muted)] sm:block">
+                            {String(visual.mosaic.length).padStart(2, "0")} moments
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {visual.mosaic.map((img, index) => (
+                            <div
+                                key={`${img.src}-${index}`}
+                                className="group relative aspect-[16/9] overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)]"
+                            >
+                                <img
+                                    src={img.src}
+                                    alt={img.alt}
+                                    loading="lazy"
+                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                                />
+
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+                                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+                                    <span className="text-xs font-semibold tracking-wide text-white">
+                                        {img.caption}
+                                    </span>
+                                    <span className="font-mono text-[10px] text-white/65">
+                                        0{index + 1}
+                                    </span>
+                                </div>
                             </div>
-                            <h3 className="font-display text-lg text-white">{h.title}</h3>
-                            <p className="text-[14px] leading-relaxed text-[#8A96A8] mt-2">
-                                {h.body}
+                        ))}
+                    </div>
+                </section>
+            ) : null}
+
+            {/* HIGHLIGHTS */}
+            <section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-6">
+                <div className="mb-10 max-w-2xl">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                        What this service brings
+                    </p>
+                    <h2 className="mt-3 font-display text-[clamp(1.8rem,3.5vw,2.8rem)] leading-tight">
+                        What you will get
+                    </h2>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                    {visual.highlights.map((highlight, index) => (
+                        <article
+                            key={highlight.title}
+                            className="group relative overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-6 transition-colors hover:bg-[var(--ms-surface-alt)] sm:p-7"
+                        >
+                            <div className="flex items-start justify-between">
+                                <span className="font-mono text-sm text-[var(--ms-accent)]">
+                                    0{index + 1}
+                                </span>
+
+                                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--ms-border)] text-[var(--ms-accent)] transition-colors group-hover:bg-[var(--ms-accent-soft)]">
+                                    ↗
+                                </span>
+                            </div>
+
+                            <h3 className="mt-6 font-display text-2xl font-semibold">
+                                {highlight.title}
+                            </h3>
+
+                            <p className="mt-3 max-w-md text-lg leading-7 text-[var(--ms-muted)]">
+                                {highlight.body}
                             </p>
-                        </div>
+                        </article>
                     ))}
                 </div>
             </section>
 
-            {/* ================= PLACEMENT EXPLANATION (placement pages only, tightened) ================= */}
+            {/* PLACEMENT DISCLAIMER */}
             {isPlacementPage && (
-                <section className="mx-auto max-w-[1200px] px-6 pb-16">
-                    <div className="rounded-2xl border border-[#2F7BFF]/25 bg-[#0B0F17] p-6 sm:p-8">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#2F7BFF]">
-                            How placement works
+                <section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-6">
+                    <div className="overflow-hidden rounded-3xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-6 sm:p-9">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                            Placement transparency
                         </p>
-                        <h2 className="mt-3 font-display text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.15] tracking-[-0.03em] text-white">
+
+                        <h2 className="mt-4 max-w-3xl font-display text-[clamp(1.5rem,3vw,2.3rem)] leading-tight">
                             We prepare you and connect you. Employers make the hiring decision.
                         </h2>
-                        <p className="mt-3 text-[14px] leading-[1.8] text-[#A9BCD9]">
+
+                        <p className="mt-4 max-w-3xl text-sm leading-7 text-[var(--ms-muted)]">
                             We help candidates prepare for and connect with relevant job
-                            opportunities. Hiring decisions are made by employers, and
-                            employment is not guaranteed.
+                            opportunities. Hiring decisions are made by employers, and employment
+                            is not guaranteed.
                         </p>
 
-                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-xl border border-white/10 bg-[#050505] p-4">
-                                <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7CC4FF]">
+                        <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                            <div className="rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-background)] p-5">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ms-secondary)]">
                                     What we do
                                 </h3>
-                                <ul className="mt-2 space-y-1.5 text-[13px] leading-snug text-[#D3D8E2]">
+                                <ul className="mt-4 space-y-2 text-sm leading-6 text-[var(--ms-muted)]">
                                     <li>Prepare your resume, interview and search strategy</li>
-                                    <li>Make warm introductions to hiring teams we work with</li>
+                                    <li>Make introductions to hiring teams we work with</li>
                                     <li>Coach you through follow-ups and offer negotiation</li>
                                 </ul>
                             </div>
-                            <div className="rounded-xl border border-white/10 bg-[#050505] p-4">
-                                <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7CC4FF]">
-                                    What we can&apos;t promise
+
+                            <div className="rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-background)] p-5">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ms-secondary)]">
+                                    What we cannot promise
                                 </h3>
-                                <ul className="mt-2 space-y-1.5 text-[13px] leading-snug text-[#D3D8E2]">
-                                    <li>That an employer will make an offer</li>
-                                    <li>That a role will be open when you apply</li>
-                                    <li>That any specific outcome is guaranteed</li>
+                                <ul className="mt-4 space-y-2 text-sm leading-6 text-[var(--ms-muted)]">
+                                    <li>An employer will make an offer</li>
+                                    <li>A role will still be available when you apply</li>
+                                    <li>A specific employment outcome is guaranteed</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <p className="mt-4 text-[12px] leading-relaxed text-[#8A96A8]">
-                            We do not charge a fee for employment. All hiring decisions,
-                            terms and conditions rest with the employer.
+                        <p className="mt-5 text-xs leading-6 text-[var(--ms-muted)]">
+                            We do not charge a fee for employment. All hiring decisions, terms
+                            and conditions rest with the employer.
                         </p>
                     </div>
                 </section>
             )}
 
-            {/* ================= HOW WE WORK (new, tightened) ================= */}
-            <section className="bg-[#0A0D14] py-16 border-y border-white/5">
-                <div className="mx-auto max-w-[1000px] px-1">
-                    <div className="mb-8 max-w-[720px]">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F7BFF]">
-                            Careers &amp; Placements process
+            {/* HOW WE WORK */}
+            <section className="border-y border-[var(--ms-border)] bg-[var(--ms-background-alt)] py-20">
+                <div className="mx-auto max-w-[1200px] px-5 sm:px-6">
+                    <div className="mb-10 max-w-2xl">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                            Careers &amp; placements process
                         </p>
-                        <h2 className="mt-3 font-display text-[clamp(1.8rem,3.4vw,2.4rem)] font-medium leading-[1.05] tracking-[-0.04em] text-white">
-                            How We Work
+
+                        <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,3rem)] leading-tight">
+                            How we work
                         </h2>
-                        <p className="mt-3 text-[14px] leading-[1.7] text-[#8A96A8]">
-                            Select a service to see the steps involved.
+
+                        <p className="mt-4 text-md leading-7 text-[var(--ms-muted)]">
+                            A structured process that turns your current position into a clearer
+                            next step.
                         </p>
                     </div>
 
-                    {/* Careers & Placements tab indicator */}
-                    <div className="mb-6 flex items-center gap-3">
-                        <span className="rounded-full border border-[#2F7BFF] bg-[#2F7BFF]/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9CCBFF]">
-                            Careers &amp; Placements
+                    <div className="mb-7 flex items-center gap-3">
+                        <span className="rounded-full border border-[var(--ms-border)] bg-[var(--ms-accent-soft)] px-3 py-1.5 text-[12px] font-bold uppercase tracking-wider text-[var(--ms-secondary)]">
+                            Careers &amp; placements
                         </span>
-                        <span className="h-px flex-1 bg-white/10" />
-                        <span className="text-[9px] uppercase tracking-[0.15em] text-[#8A96A8]">
-                            Steps 01 — 05
+                        <span className="h-px flex-1 bg-[var(--ms-border)]" />
+                        <span className="font-mono text-[14px] text-[var(--ms-muted)]">
+                            01 — 05
                         </span>
                     </div>
 
-                    {/* Steps */}
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
                         {HOW_WE_WORK_STEPS.map((step) => (
-                            <div
+                            <article
                                 key={step.step}
-                                className="relative flex flex-col rounded-xl border border-white/10 bg-[#050505] p-4 transition-colors hover:border-[#2F7BFF]/50"
+                                className="rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-5 transition-colors hover:bg-[var(--ms-surface-alt)]"
                             >
-                                <span className="font-mono text-[10px] tracking-[0.15em] text-[#2F7BFF]">
+                                <span className="font-mono text-sm  text-[var(--ms-accent)]">
                                     {step.step}
                                 </span>
 
-                                <h3 className="mt-3 text-[13px] font-semibold leading-snug text-white">
+                                <h3 className="mt-5 text-lg font-semibold leading-snug">
                                     {step.title}
                                 </h3>
 
-                                <p className="mt-1.5 text-[11.5px] leading-5 text-[#8A96A8]">
+                                <p className="mt-2 text-sm leading-6 text-[var(--ms-muted)]">
                                     {step.body}
                                 </p>
-                            </div>
+                            </article>
                         ))}
                     </div>
 
-                    {/* Note */}
-                    <p className="mt-6 rounded-xl border border-white/10 bg-[#050505] p-4 text-[11.5px] leading-5 text-[#8A96A8]">
-                        <strong className="text-[#7CC4FF]">Note:</strong>{" "}
+                    <p className="mt-6 rounded-xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-4 text-sm leading-6 text-[var(--ms-muted)]">
+                        <strong className="text-[var(--ms-secondary)]">Important:</strong>{" "}
                         We help candidates prepare for and connect with relevant job
-                        opportunities. Hiring decisions are made by employers, and
-                        employment is not guaranteed.
+                        opportunities. Hiring decisions are made by employers, and employment
+                        is not guaranteed.
                     </p>
                 </div>
             </section>
 
-            {/* ================= FAQ (tightened) ================= */}
-            <section className="py-16">
-                <div className="mx-auto max-w-[800px] px-6">
-                    <h2 className="font-display text-2xl mb-6 text-center">
-                        Common questions
-                    </h2>
+            {/* FAQ */}
+            <section className="py-20">
+                <div className="mx-auto max-w-[850px] px-5 sm:px-6">
+                    <div className="mb-10">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                            Answers &amp; guidance
+                        </p>
+                        <h2 className="mt-3 font-display text-3xl sm:text-4xl">
+                            Common questions
+                        </h2>
+                    </div>
+
                     <div className="space-y-3">
-                        {visual.faq.map((f, i) => (
+                        {visual.faq.map((faq, index) => (
                             <details
-                                key={i}
-                                className="group rounded-xl border border-white/10 bg-[#0B0F17] p-5 [&_summary::-webkit-details-marker]:hidden cursor-pointer"
+                                key={`${faq.q}-${index}`}
+                                className="group rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-5"
                             >
-                                <summary className="flex items-center justify-between text-white font-medium text-[15px]">
-                                    <span>{f.q}</span>
-                                    <span className="text-[#2F7BFF] text-xl transition-transform duration-300 group-open:rotate-45">
+                                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium [&::-webkit-details-marker]:hidden">
+                                    <span>{faq.q}</span>
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--ms-border)] text-[var(--ms-accent)] transition-transform group-open:rotate-45">
                                         +
                                     </span>
                                 </summary>
-                                <p className="mt-3 text-[13.5px] leading-relaxed text-[#8A96A8] border-t border-white/5 pt-3">
-                                    {f.a}
+
+                                <p className="mt-4 border-t border-[var(--ms-border)] pt-4 text-md leading-7 text-[var(--ms-muted)]">
+                                    {faq.a}
                                 </p>
                             </details>
                         ))}
@@ -288,6 +401,32 @@ export default async function CareersDetail({ params }: Props) {
                 </div>
             </section>
 
+            {/* CTA */}
+            <section className="px-5 pb-20 sm:px-6">
+                <div className="mx-auto max-w-[1200px] overflow-hidden rounded-3xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-8 sm:p-12">
+                    <div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
+                        <div className="max-w-2xl">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--ms-accent)]">
+                                Take the next step
+                            </p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight sm:text-4xl">
+                                Your next chapter starts with a clear direction.
+                            </h2>
+                            <p className="mt-4 text-md leading-7 text-[var(--ms-muted)]">
+                                Explore your options and find the career support that fits where you
+                                are today.
+                            </p>
+                        </div>
+
+                        <Link
+                            href="/contact"
+                            className="inline-flex shrink-0 items-center justify-center rounded-full bg-[var(--ms-accent)] px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-transform hover:scale-[1.03]"
+                        >
+                            Talk to MindSpace ↗
+                        </Link>
+                    </div>
+                </div>
+            </section>
 
             <Footer />
         </main>

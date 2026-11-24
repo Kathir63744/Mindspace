@@ -1,322 +1,287 @@
-// app/careers/page.tsx
+
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Questrial } from "next/font/google";
+
 import Navbar from "@/app/components/consultant/Navbar";
 import Footer from "@/app/components/consultant/Footer";
-import { VISUALS, type CareerVisual } from "./[slug]/data";
 
 export const metadata: Metadata = {
-    title: "Careers — MindSpace",
+    title: "Career Development & Placement Support | MindSpace",
     description:
-        "Career direction, resume support, interviews, job search, internships and placement. We help candidates prepare for and connect with relevant job opportunities. Hiring decisions are made by employers, and employment is not guaranteed.",
+        "Explore career guidance, resume development, interview coaching, internship assistance and placement support with MindSpace.",
 };
 
-const SERVICES = [
-    { title: "Career direction", href: "/careers/career-direction", desc: "Role fit, industry mapping, 90-day plan." },
-    { title: "Resume & LinkedIn", href: "/careers/resume-linkedin", desc: "ATS rewrite + LinkedIn polish." },
-    { title: "Interview coaching", href: "/careers/interview-coaching", desc: "Recorded mocks with written feedback." },
-    { title: "Job search support", href: "/careers/job-search-support", desc: "Target list, templates, weekly rhythm." },
-    { title: "Internship assistance", href: "/careers/internships", desc: "Matched, project-based internships." },
-    { title: "Placement support", href: "/careers/placement-support", desc: "We help you prepare for and connect with relevant opportunities — hiring decisions are made by employers, employment is not guaranteed." },
-    { title: "On-the-job readiness", href: "/careers/on-the-job-readiness", desc: "Tools, communication and first-weeks plan." },
+const questrial = Questrial({
+    weight: "400",
+    subsets: ["latin"],
+    display: "swap",
+});
+
+const CAREER_SERVICES = [
+    {
+        number: "01",
+        category: "Career planning",
+        title: "Career Direction",
+        description:
+            "Understand your strengths, explore suitable career paths and create a clearer direction for your professional journey.",
+        href: "/careers/career-direction",
+        keyword: "Discover your direction",
+    },
+    {
+        number: "02",
+        category: "Professional profile",
+        title: "Resume & LinkedIn",
+        description:
+            "Build a stronger professional presence with structured resumes, improved LinkedIn profiles and clear career positioning.",
+        href: "/careers/resume-linkedin",
+        keyword: "Present your potential",
+    },
+    {
+        number: "03",
+        category: "Interview preparation",
+        title: "Interview Coaching",
+        description:
+            "Develop your communication, confidence and interview approach through focused preparation and practical guidance.",
+        href: "/careers/interview-coaching",
+        keyword: "Prepare with confidence",
+    },
+    {
+        number: "04",
+        category: "Job opportunities",
+        title: "Job Search Support",
+        description:
+            "Navigate your job search with guidance on finding relevant opportunities, applications and professional follow-ups.",
+        href: "/careers/job-search-support",
+        keyword: "Find relevant opportunities",
+    },
+    {
+        number: "05",
+        category: "Early career",
+        title: "Internship Assistance",
+        description:
+            "Explore internship opportunities and prepare to turn academic knowledge into practical workplace experience.",
+        href: "/careers/internships",
+        keyword: "Start gaining experience",
+    },
+    {
+        number: "06",
+        category: "Career opportunities",
+        title: "Placement Support",
+        description:
+            "Receive structured preparation and assistance connecting with relevant employment opportunities.",
+        href: "/careers/placement-support",
+        keyword: "Move towards employment",
+    },
+    {
+        number: "07",
+        category: "Workplace preparation",
+        title: "On-the-Job Readiness",
+        description:
+            "Build workplace awareness, professional communication and the practical skills needed to enter a working environment.",
+        href: "/careers/on-the-job-readiness",
+        keyword: "Get workplace ready",
+    },
 ];
 
-const METRICS = [
-    { value: "12k+", label: "Candidates Placed" },
-    { value: "150+", label: "Hiring Partners" },
-    { value: "94%", label: "Success Rate" },
-    { value: "6-12", label: "Weeks to Ready" },
-];
+import type { CSSProperties } from "react";
 
-const TESTIMONIALS = [
-    {
-        quote:
-            "The structured path took me from completely lost to having three solid offers in six weeks. The mock interviews were brutally honest and exactly what I needed.",
-        author: "Sarah Jenkins",
-        role: "Product Designer at TechFlow",
-    },
-    {
-        quote:
-            "I had the skills but couldn't get past the ATS. The resume restructuring and warm intros from the placement team changed everything for my career trajectory.",
-        author: "David Chen",
-        role: "Software Engineer at Vercel",
-    },
-    {
-        quote:
-            "MindSpace doesn't just give you generic advice. They map out exactly what you need to do, week by week, and hold you accountable.",
-        author: "Elena Rodriguez",
-        role: "Data Analyst at Stripe",
-    },
-];
+const themeVars = {
+    "--ms-background": "#130B09",
+    "--ms-background-alt": "#1B100C",
+    "--ms-surface": "#1B100C",
+    "--ms-surface-alt": "#281710",
+    "--ms-border": "rgba(255, 135, 88, 0.16)",
+    "--ms-text": "#FFF6F1",
+    "--ms-secondary": "#EBD9D0",
+    "--ms-muted": "#DCC9BF",
+    "--ms-accent": "#FF8758",
+    "--ms-accent-soft": "rgba(255, 135, 88, 0.12)",
+    "--ms-glow": "rgba(255, 135, 88, 0.16)",
+} as CSSProperties;
 
 export default function CareersPage() {
     return (
-        <main className="bg-[#050505] text-white selection:bg-[#2F7BFF]">
+        <main
+            className={`${questrial.className} relative min-h-screen overflow-hidden bg-[var(--ms-background)] text-[var(--ms-text)]`}
+            style={themeVars}
+        >
             <Navbar />
 
-            {/* ================= HERO ================= */}
-            <section className="relative flex min-h-[85svh] w-full flex-col items-center justify-center overflow-hidden pt-32 pb-20">
-                <div className="absolute inset-0 z-0 flex items-center justify-center">
+            <style>{`
+                .careers-page,
+                .careers-page * {
+                    font-family: ${questrial.style.fontFamily}, sans-serif;
+                }
+
+                .career-card {
+                    transition:
+                        border-color 300ms ease,
+                        background-color 300ms ease,
+                        transform 300ms ease;
+                }
+
+                .career-card:hover {
+                    transform: translateY(-4px);
+                }
+
+                .career-card .career-arrow {
+                    transition:
+                        transform 300ms ease,
+                        background-color 300ms ease,
+                        border-color 300ms ease;
+                }
+
+                .career-card:hover .career-arrow {
+                    transform: translate(3px, -3px);
+                }
+            `}</style>
+
+            <div className="careers-page">
+                {/* HERO */}
+                <section className="relative flex min-h-[440px] items-center justify-center overflow-hidden px-5 pb-20 pt-36 text-center sm:min-h-[490px] sm:pt-40">
                     <div
-                        className="absolute inset-0 opacity-20"
+                        className="pointer-events-none absolute inset-0"
                         style={{
-                            backgroundImage: `
-                                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
-                            `,
-                            backgroundSize: "120px 120px",
-                            backgroundPosition: "center center",
+                            background:
+                                "radial-gradient(ellipse at 50% 0%, rgba(47,123,255,0.15), transparent 62%)",
                         }}
                     />
-                    <div className="relative flex h-full w-full max-w-[1400px] flex-wrap items-center justify-center pointer-events-none">
-                        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-                            <div
-                                key={i}
-                                className="absolute h-[120px] w-[120px] border border-[#2F7BFF]/20 bg-[#2F7BFF]/5 shadow-[0_0_30px_rgba(47,123,255,0.1)] transition-all duration-1000 animate-pulse"
-                                style={{
-                                    top: `${15 + (i % 3) * 25}%`,
-                                    left: `${10 + i * 12}%`,
-                                    animationDelay: `${i * 300}ms`,
-                                    animationDuration: "4s",
-                                    borderColor: `rgba(47, 123, 255, ${0.15 + (i % 3) * 0.1})`,
-                                    backgroundColor: `rgba(47, 123, 255, ${0.02 + (i % 3) * 0.02})`,
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
 
-                <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center px-6">
-                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-[#2F7BFF]">
-                        <span className="h-2 w-2 rounded-full bg-[#2F7BFF] animate-pulse" />
-                        The MindSpace Career Track
-                    </div>
-                    <h1 className="font-display text-[clamp(3rem,8vw,6.5rem)] font-black uppercase leading-[1.05] tracking-[-0.03em] text-[#2F7BFF] drop-shadow-[0_0_20px_rgba(47,123,255,0.2)]">
-                        The Long View
-                    </h1>
+                    <div
+                        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(to right, #687080 1px, transparent 1px),
+                                linear-gradient(to bottom, #687080 1px, transparent 1px)
+                            `,
+                            backgroundSize: "76px 76px",
+                            maskImage:
+                                "linear-gradient(to bottom, black, transparent 85%)",
+                        }}
+                    />
 
-                    <p className="mx-auto mt-8 max-w-2xl text-[16px] leading-[1.8] text-[#A0AEC0] sm:text-[18px]">
-                        Our partners are placing bets on what's next. Here's what
-                        they're seeing that others aren't, and why they think the
-                        next decade will look radically different from the last
-                        with AI.
-                    </p>
+                    <div className="relative z-10 mx-auto max-w-4xl">
+                        <div className="mb-7 inline-flex items-center gap-3 rounded-full border border-[var(--ms-border)] bg-[var(--ms-surface)] px-4 py-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--ms-accent)] shadow-[0_0_12px_#2F7BFF]" />
+                            <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ms-secondary)]">
+                                Careers & Placements
+                            </span>
+                        </div>
 
-                    <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+                        <h1 className="text-[clamp(2.5rem,7vw,5.6rem)] font-normal leading-[1.04] tracking-[-0.045em]">
+                            Build your career.
+                            <span className="mt-2 block text-[var(--ms-accent)]">
+                                Move with purpose.
+                            </span>
+                        </h1>
+
+                        <p className="mx-auto mt-7 max-w-2xl text-[15px] leading-7 text-[var(--ms-muted)] sm:text-base sm:leading-8">
+                            Every professional journey starts somewhere.
+                            Find the guidance, preparation and support that
+                            help you take your next step with clarity.
+                        </p>
+
                         <Link
-                            href="#process"
-                            className="inline-flex h-12 items-center justify-center rounded-full bg-[#2F7BFF] px-8 text-[13px] font-bold uppercase tracking-[0.1em] text-white transition-transform hover:scale-105 shadow-[0_0_20px_rgba(47,123,255,0.4)]"
+                            href="#career-services"
+                            className="mt-9 inline-flex items-center gap-3 rounded-full bg-[var(--ms-accent)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:-translate-y-1 hover:bg-blue-500"
                         >
-                            Explore Tracks
-                        </Link>
-                        <Link
-                            href="#metrics"
-                            className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-transparent px-8 text-[13px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-white/5"
-                        >
-                            View Results
+                            Explore career services
+                            <span aria-hidden="true">↘</span>
                         </Link>
                     </div>
-                </div>
-            </section>
 
-            {/* ================= METRICS ================= */}
-            <section id="metrics" className="relative z-20 border-y border-white/10 bg-[#0A0D14]">
-                <div className="mx-auto max-w-[1200px] px-6 py-12">
-                    <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-                        {METRICS.map((metric, i) => (
-                            <div key={i} className="flex flex-col items-center text-center">
-                                <p className="font-display text-4xl font-bold text-white sm:text-5xl">
-                                    {metric.value}
-                                </p>
-                                <p className="mt-2 text-[11px] font-bold uppercase tracking-widest text-[#8A96A8]">
-                                    {metric.label}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                    <div className="absolute bottom-0 left-1/2 h-px w-[min(88%,1000px)] -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--ms-border)] to-transparent" />
+                </section>
 
-            {/* ================= PLACEMENT EXPLANATION ================= */}
-            <section className="relative z-10 mx-auto w-full max-w-[1000px] px-6 py-20">
-                <div className="rounded-3xl border border-[#2F7BFF]/25 bg-[#0B0F17] p-8 sm:p-10">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#2F7BFF]">
-                        How placement works
-                    </p>
-                    <h2 className="mt-4 font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.15] tracking-[-0.03em] text-white">
-                        We prepare you and connect you. Employers make the hiring decision.
-                    </h2>
-                    <p className="mt-4 text-[15px] leading-[1.8] text-[#A9BCD9]">
-                        We help candidates prepare for and connect with relevant job
-                        opportunities. Hiring decisions are made by employers, and
-                        employment is not guaranteed.
-                    </p>
+                {/* CAREER SERVICES GRID */}
+                <section
+                    id="career-services"
+                    className="relative mx-auto max-w-[1240px] px-5 pb-20 pt-10 sm:px-7 sm:pb-24"
+                >
+                    <div className="mb-10 flex flex-col justify-between gap-5 sm:mb-12 sm:flex-row sm:items-end">
+                        <div>
+                            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--ms-accent)]">
+                                Find your next step
+                            </p>
 
-                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-[#050505] p-5">
-                            <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#7CC4FF]">
-                                What we do
-                            </h3>
-                            <ul className="mt-3 space-y-2 text-[13.5px] leading-snug text-[#D3D8E2]">
-                                <li>Prepare your resume, interview and search strategy</li>
-                                <li>Make warm introductions to hiring teams we work with</li>
-                                <li>Coach you through follow-ups and offer negotiation</li>
-                            </ul>
+                            <h2 className="mt-3 text-3xl font-normal tracking-tight sm:text-4xl">
+                                Career services
+                            </h2>
                         </div>
-                        <div className="rounded-2xl border border-white/10 bg-[#050505] p-5">
-                            <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#7CC4FF]">
-                                What we can&apos;t promise
-                            </h3>
-                            <ul className="mt-3 space-y-2 text-[13.5px] leading-snug text-[#D3D8E2]">
-                                <li>That an employer will make an offer</li>
-                                <li>That a role will be open when you apply</li>
-                                <li>That any specific outcome is guaranteed</li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <p className="mt-6 text-[12.5px] leading-relaxed text-[#8A96A8]">
-                        We do not charge a fee for employment. All hiring decisions,
-                        terms and conditions rest with the employer.
-                    </p>
-                </div>
-            </section>
-
-            {/* ================= FEATURE TILES ================= */}
-            <section className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pb-24">
-                <div className="mb-16 flex flex-col items-center text-center">
-                    <h2 className="font-display text-4xl font-medium">
-                        Visualizing the path
-                    </h2>
-                    <p className="mt-4 max-w-xl text-[#8A96A8]">
-                        A glimpse into the environments and situations we prepare
-                        you for.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {(Object.entries(VISUALS) as [string, CareerVisual][])
-                        .filter(([slug]) => slug !== "on-the-job-readiness")
-                        .slice(0, 3)
-                        .map(([slug, visual], i) => (
-                            <div
-                                key={slug}
-                                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#0B0F17] transition-all hover:border-[#2F7BFF]/50"
-                            >
-                                <div className="aspect-square w-full overflow-hidden">
-                                    {visual.hero?.src ? (
-                                        <img
-                                            src={visual.hero.src}
-                                            alt={visual.hero.alt || "Career visual"}
-                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
-                                    ) : (
-                                        <div className="flex h-full w-full items-center justify-center bg-[#1A1F2B] text-[#8A96A8]">
-                                            No image available
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent" />
-                                <div className="absolute bottom-0 left-0 p-8">
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#2F7BFF]">
-                                        0{i + 1} // {visual.eyebrow || "Work Readiness"}
-                                    </span>
-                                    <h3 className="mt-3 font-display text-2xl text-white">
-                                        {visual.headline?.join(" ") || "Career Track"}
-                                    </h3>
-                                    <p className="mt-3 text-sm leading-relaxed text-[#8A96A8] line-clamp-3">
-                                        {visual.sub}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                </div>
-            </section>
-
-            {/* ================= PROCESS LIST ================= */}
-            <section
-                id="process"
-                className="bg-[#0A0D14] py-24 border-t border-white/5 relative z-10"
-            >
-                <div className="mx-auto max-w-[1000px] px-6">
-                    <div className="mb-16 text-center">
-                        <h2 className="font-display text-4xl mb-4">The Process</h2>
-                        <p className="text-[#8A96A8]">
-                            Seven steps from confusion to placement.
+                        <p className="max-w-md text-sm leading-7 text-[var(--ms-muted)] sm:text-right">
+                            Explore focused support for every stage of your
+                            professional journey.
                         </p>
                     </div>
-                    <div className="flex flex-col">
-                        {SERVICES.map((svc, i) => (
+
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                        {CAREER_SERVICES.map((service) => (
                             <Link
-                                key={i}
-                                href={svc.href}
-                                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-white/10 py-10 transition-all hover:bg-white/[0.02] hover:px-6 rounded-xl"
+                                key={service.number}
+                                href={service.href}
+                                className="career-card group relative flex min-h-[245px] flex-col overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-6 sm:p-7"
                             >
-                                <div className="flex items-center gap-8">
-                                    <span className="font-mono text-2xl text-[#2F7BFF] opacity-50 group-hover:opacity-100 transition-opacity">
-                                        0{i + 1}
+                                <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--ms-accent)] opacity-0 blur-[75px] transition-opacity duration-500 group-hover:opacity-[0.16]" />
+
+                                <div className="relative flex items-center justify-between gap-3">
+                                    <span className="font-mono text-xs tracking-wider text-[var(--ms-accent)]">
+                                        / {service.number}
                                     </span>
-                                    <div>
-                                        <h3 className="font-display text-2xl text-white group-hover:text-[#2F7BFF] transition-colors">
-                                            {svc.title}
-                                        </h3>
-                                        <p className="text-[15px] text-[#8A96A8] mt-2">
-                                            {svc.desc}
-                                        </p>
-                                    </div>
+
+                                    <span className="rounded-full border border-[var(--ms-border)] px-3 py-1.5 text-[10px] tracking-wide text-[var(--ms-muted)]">
+                                        {service.category}
+                                    </span>
                                 </div>
-                                <span className="hidden sm:flex items-center gap-2 text-[#2F7BFF] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-2">
-                                    View details <span>→</span>
-                                </span>
+
+                                <div className="relative mt-8 flex-1">
+                                    <h3 className="text-[23px] font-normal leading-tight tracking-tight text-[var(--ms-text)] transition-colors duration-300 group-hover:text-[var(--ms-accent)] sm:text-[25px]">
+                                        {service.title}
+                                    </h3>
+
+                                    <p className="mt-3 max-w-[370px] text-[14px] leading-7 text-[var(--ms-muted)] sm:text-[15px]">
+                                        {service.description}
+                                    </p>
+                                </div>
+
+                                <div className="relative mt-7 flex items-center justify-between border-t border-[var(--ms-border)] pt-5">
+                                    <span className="text-xs tracking-wide text-[var(--ms-secondary)]">
+                                        {service.keyword}
+                                    </span>
+
+                                    <span className="career-arrow flex h-9 w-9 items-center justify-center rounded-full border border-[var(--ms-border)] text-[var(--ms-secondary)] group-hover:border-[var(--ms-accent)] group-hover:bg-[var(--ms-accent)] group-hover:text-white">
+                                        ↗
+                                    </span>
+                                </div>
                             </Link>
                         ))}
                     </div>
 
-                    <p className="mt-10 rounded-2xl border border-white/10 bg-[#050505] p-5 text-[12.5px] leading-relaxed text-[#8A96A8]">
-                        <strong className="text-[#7CC4FF]">Placement note:</strong>{" "}
-                        We help candidates prepare for and connect with relevant job
-                        opportunities. Hiring decisions are made by employers, and
-                        employment is not guaranteed. We do not charge candidates for
-                        employment.
-                    </p>
-                </div>
-            </section>
+                    {/* PLACEMENT TRANSPARENCY */}
+                    <div className="mt-8 flex flex-col gap-3 rounded-xl border border-[var(--ms-border)] bg-[var(--ms-background-alt)] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                        <div>
+                            <p className="text-[11px] font-bold uppercase tracking-[0.17em] text-[var(--ms-accent)]">
+                                A transparent approach
+                            </p>
+                            <p className="mt-2 text-sm leading-6 text-[var(--ms-muted)]">
+                                We support your preparation and connect you with
+                                relevant opportunities. Hiring decisions remain
+                                with employers; employment is not guaranteed.
+                            </p>
+                        </div>
 
-            {/* ================= TESTIMONIALS ================= */}
-            <section className="py-24 relative z-10">
-                <div className="mx-auto max-w-[1200px] px-6">
-                    <h2 className="font-display text-4xl mb-16 text-center">
-                        Success Stories
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {TESTIMONIALS.map((t, i) => (
-                            <div
-                                key={i}
-                                className="flex flex-col justify-between rounded-3xl border border-white/10 bg-[#0B0F17] p-8"
-                            >
-                                <p className="text-[15px] leading-relaxed text-[#A0AEC0] italic">
-                                    "{t.quote}"
-                                </p>
-                                <div className="mt-8 flex items-center gap-4">
-                                    <div className="h-10 w-10 rounded-full bg-[#2F7BFF]/20 flex items-center justify-center text-[#2F7BFF] font-bold">
-                                        {t.author.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-white">
-                                            {t.author}
-                                        </p>
-                                        <p className="text-xs text-[#8A96A8]">
-                                            {t.role}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        <Link
+                            href="/contact"
+                            className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[var(--ms-secondary)] transition-colors hover:text-[var(--ms-accent)]"
+                        >
+                            Talk to us <span>↗</span>
+                        </Link>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <Footer />
+                <Footer />
+            </div>
         </main>
     );
 }

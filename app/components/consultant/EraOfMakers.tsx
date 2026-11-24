@@ -12,7 +12,7 @@ export default function EraOfMakers() {
     return (
         <section
             id="era-of-makers"
-            className="relative isolate overflow-hidden bg-[#080B12] py-24 text-[#F5F7FB] sm:py-32 lg:py-36"
+            className="relative isolate overflow-hidden bg-[#080B12] py-24 text-[#F5F7FB] font-questrial sm:py-32 lg:py-36"
         >
             <div className="pointer-events-none absolute -left-48 top-20 h-[420px] w-[420px] rounded-full bg-[#2F7BFF]/[0.07] blur-[130px]" />
 
@@ -21,15 +21,15 @@ export default function EraOfMakers() {
                 {/* Section identity */}
                 <div className="mb-16 flex items-center gap-4">
 
-                    <div className="mx-autmb-10 mb-4  flex max-w-7xl items-center gap-3 px-6">
+                    <div className="mx-auto mb-4 flex max-w-7xl items-center gap-3 px-6">
                         <span className="h-px w-9 bg-[#2F7BFF]" />
-                        <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                        <span className="font-questrial text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A9C7FF]">
                             MindSpace / OurVisions
                         </span>
                         <span className="h-px max-w-24 flex-1 bg-white/10" />
                     </div>
                     <span className="h-px flex-1 bg-white/10" />
-                    <span className="hidden text-[9px] uppercase tracking-[0.2em] text-white/35 sm:block">
+                    <span className="hidden font-questrial text-[10px] uppercase tracking-[0.18em] text-white/35 sm:block">
                         One connected platform
                     </span>
                 </div>
@@ -38,11 +38,11 @@ export default function EraOfMakers() {
 
                     {/* Meaningful brand explanation */}
                     <div className="relative z-10 lg:col-span-5">
-                        <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">
+                        <p className="mb-6 font-questrial text-[11px] font-medium uppercase tracking-[0.22em] text-white/65">
                             An era of connected possibilities
                         </p>
 
-                        <h2 className="max-w-[680px] text-[clamp(38px,6.4vw,80px)] leading-[0.94] tracking-[-0.055em] font-[650] max-sm:text-[clamp(36px,11vw,58px)]">
+                        <h2 className="max-w-[680px] font-questrial text-[clamp(38px,6.4vw,72px)] leading-[0.94] tracking-[-0.055em] font-[600] max-sm:text-[clamp(36px,11vw,58px)]">
                             Different needs.
                             <br />
                             <span className="text-[#A9C7FF]">
@@ -50,14 +50,14 @@ export default function EraOfMakers() {
                             </span>
                         </h2>
 
-                        <p className="mt-8 max-w-[510px] text-[15px] leading-[1.95] text-[#A2AAB8] sm:text-base">
+                        <p className="mt-8 max-w-[510px] font-questrial text-[clamp(15px,1.15vw,17px)] leading-[1.9] text-white/80">
                             MindSpace brings technology solutions, professional training, and career support together in one place. We help businesses develop digital products and help individuals build skills, prepare for interviews, and connect with relevant job opportunities.
                         </p>
 
                         <div className="mt-9">
                             <Link
                                 href="#services"
-                                className="group inline-flex items-center gap-4 border-b border-[#2F7BFF]/60 pb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:text-[#A9C7FF]"
+                                className="group inline-flex items-center gap-4 border-b border-[#2F7BFF]/60 pb-3 font-questrial text-[12px] font-semibold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:text-[#A9C7FF]"
                             >
                                 Explore what we do
 
@@ -288,10 +288,10 @@ export default function EraOfMakers() {
                             <div className="relative -mt-2 grid grid-cols-2 gap-x-8 gap-y-4 border-t border-white/10 pt-6 sm:grid-cols-4">
                                 {capabilities.map((item, index) => (
                                     <div key={item} className="flex items-start gap-2">
-                                        <span className="mt-1 font-mono text-[9px] text-[#2F7BFF]">
+                                        <span className=" font-mono text-[13px] text-[#2F7BFF]">
                                             0{index + 1}
                                         </span>
-                                        <span className="text-[10px] leading-5 text-white/65">
+                                        <span className="font-questrial text-[14px] leading-5 text-white/65">
                                             {item}
                                         </span>
                                     </div>
@@ -303,10 +303,10 @@ export default function EraOfMakers() {
 
                 {/* Closing brand line */}
                 <div className="mt-20 flex flex-col justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    <p className="font-questrial text-[11px] uppercase tracking-[0.18em] text-white/60">
                         Technology. Learning. Global opportunities.
                     </p>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    <p className="font-questrial text-[11px] uppercase tracking-[0.18em] text-white/60">
                         The MindSpace vision
                     </p>
                 </div>
