@@ -1,4 +1,4 @@
-// app/components/consultant/services/ServiceImpactSection.tsx
+
 "use client";
 
 export type ServiceImpactItem = {
@@ -20,7 +20,8 @@ export default function ServiceImpactSection({
             className="relative overflow-hidden border-y py-14 text-[var(--ms-text)] sm:py-20 lg:py-24"
             style={{
                 background: "var(--ms-background)",
-                borderColor: "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                borderColor:
+                    "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
             }}
         >
             <div
@@ -38,9 +39,15 @@ export default function ServiceImpactSection({
                         className="mb-5 flex items-center justify-center gap-3 text-[12px] font-bold uppercase tracking-[.2em]"
                         style={{ color: "var(--ms-secondary)" }}
                     >
-                        <span className="h-px w-8" style={{ background: "var(--ms-accent)" }} />
+                        <span
+                            className="h-px w-8"
+                            style={{ background: "var(--ms-accent)" }}
+                        />
                         The impact of {title}
-                        <span className="h-px w-8" style={{ background: "var(--ms-accent)" }} />
+                        <span
+                            className="h-px w-8"
+                            style={{ background: "var(--ms-accent)" }}
+                        />
                     </div>
 
                     <h2 className="text-balance text-center text-4xl font-medium leading-[1.08] tracking-[-.055em] text-[var(--ms-text)] sm:text-5xl lg:text-5xl">
@@ -57,11 +64,11 @@ export default function ServiceImpactSection({
                     </p>
                 </header>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                     {items.slice(0, 6).map((item, index) => (
                         <article
                             key={`${item.label}-${index}`}
-                            className="impact-card group relative flex min-h-[320px] flex-col overflow-hidden border p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(0,0,0,.25)] sm:min-h-[340px]"
+                            className="impact-card group relative flex min-h-[340px] flex-col overflow-hidden border p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(0,0,0,.25)] sm:min-h-[360px]"
                             style={{
                                 background: "var(--ms-surface-alt)",
                                 borderColor:
@@ -77,14 +84,17 @@ export default function ServiceImpactSection({
                                 }}
                             />
 
-                            <div className="relative z-10 flex h-full flex-col">
-                                <div className="flex items-center justify-between">
+                            <div className="relative z-10 flex h-full flex-1 flex-col">
+                                {/* CARD TOP */}
+
+                                <div className="flex h-5 shrink-0 items-center justify-between">
                                     <span
                                         className="text-[12px] font-bold uppercase tracking-[.15em]"
                                         style={{ color: "var(--ms-secondary)" }}
                                     >
                                         IMPACT / {String(index + 1).padStart(2, "0")}
                                     </span>
+
                                     <span
                                         className="text-[11px]"
                                         style={{ color: "var(--ms-secondary)" }}
@@ -93,41 +103,61 @@ export default function ServiceImpactSection({
                                     </span>
                                 </div>
 
+                                {/* COMPLETE CONTENT */}
+
                                 <div className="mt-8">
-                                    <h3 className="break-words text-[27px] font-medium leading-[1.04] tracking-[-.055em] text-[var(--ms-text)] sm:text-[27px]">
-                                        {item.headline}
-                                    </h3>
+                                    <div className="min-h-[72px]">
+                                        <h3 className="break-words text-[27px] font-medium leading-[1.04] tracking-[-.055em] text-[var(--ms-text)]">
+                                            {item.headline}
+                                        </h3>
+                                    </div>
 
-                                    <p
-                                        className="mt-4 text-[11px] font-bold uppercase leading-[1.5] tracking-[.1em]"
-                                        style={{ color: "var(--ms-secondary)" }}
-                                    >
-                                        {item.label}
-                                    </p>
+                                    <div className="mt-4 min-h-[34px]">
+                                        <p
+                                            className="break-words text-[11px] font-bold uppercase leading-[1.5] tracking-[.1em]"
+                                            style={{
+                                                color: "var(--ms-secondary)",
+                                            }}
+                                        >
+                                            {item.label}
+                                        </p>
+                                    </div>
 
-                                    <p className="mt-3 text-[13px] leading-[1.8] text-[var(--ms-muted)] transition-colors duration-500 group-hover:text-[var(--ms-text)]">
-                                        {item.description}
-                                    </p>
+                                    <div className="mt-3">
+                                        <p className="break-words text-[13px] leading-[1.8] text-[var(--ms-muted)] transition-colors duration-500 group-hover:text-[var(--ms-text)]">
+                                            {item.description}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className="mt-auto pt-7">
+                                {/* BOTTOM — ALIGNED */}
+
+                                <div className="mt-auto shrink-0 pt-7">
                                     <div
                                         className="grid w-fit grid-cols-6 gap-[4px]"
                                         aria-hidden="true"
                                     >
-                                        {Array.from({ length: 24 }).map((_, tileIndex) => (
-                                            <span
-                                                key={tileIndex}
-                                                className="h-[11px] w-[11px] transition-colors duration-500"
-                                                style={{
-                                                    background:
-                                                        tileIndex <
-                                                            Math.max(0, Math.min(24, item.tiles))
-                                                            ? "var(--ms-accent)"
-                                                            : "color-mix(in srgb, var(--ms-text) 10%, transparent)",
-                                                }}
-                                            />
-                                        ))}
+                                        {Array.from({ length: 24 }).map(
+                                            (_, tileIndex) => (
+                                                <span
+                                                    key={tileIndex}
+                                                    className="h-[11px] w-[11px] transition-colors duration-500"
+                                                    style={{
+                                                        background:
+                                                            tileIndex <
+                                                                Math.max(
+                                                                    0,
+                                                                    Math.min(
+                                                                        24,
+                                                                        item.tiles
+                                                                    )
+                                                                )
+                                                                ? "var(--ms-accent)"
+                                                                : "color-mix(in srgb, var(--ms-text) 10%, transparent)",
+                                                    }}
+                                                />
+                                            )
+                                        )}
                                     </div>
 
                                     <div
@@ -139,7 +169,9 @@ export default function ServiceImpactSection({
                                     >
                                         <div
                                             className="h-full w-0 transition-all duration-700 group-hover:w-full"
-                                            style={{ background: "var(--ms-accent)" }}
+                                            style={{
+                                                background: "var(--ms-accent)",
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -158,6 +190,7 @@ export default function ServiceImpactSection({
                     <span className="text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--ms-muted)]">
                         MindSpace / Service impact
                     </span>
+
                     <span className="text-[9px] uppercase tracking-[.14em] text-[var(--ms-muted)]">
                         Practical value · Connected outcomes
                     </span>

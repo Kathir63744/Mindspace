@@ -483,7 +483,7 @@ export default function ServiceSignalAnimation({
                         borderColor:
                             "color-mix(in srgb, var(--ms-accent) 60%, transparent)",
                         background: "var(--ms-accent)",
-                        color: "var(--ms-background)",
+                        color: "white",
                         boxShadow:
                             "0 0 38px color-mix(in srgb, var(--ms-accent) 28%, transparent)",
                     }}

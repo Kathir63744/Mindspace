@@ -1,5 +1,8 @@
 
+// app/careers/page.tsx
+
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { Questrial } from "next/font/google";
 
@@ -17,6 +20,10 @@ const questrial = Questrial({
     subsets: ["latin"],
     display: "swap",
 });
+
+/* =========================================================
+   CAREERS & PLACEMENTS SERVICES
+========================================================= */
 
 const CAREER_SERVICES = [
     {
@@ -84,34 +91,68 @@ const CAREER_SERVICES = [
     },
 ];
 
-import type { CSSProperties } from "react";
+/* =========================================================
+   CAREERS THEME — PURPLE
+========================================================= */
 
 const themeVars = {
-    "--ms-background": "#130B09",
-    "--ms-background-alt": "#1B100C",
-    "--ms-surface": "#1B100C",
-    "--ms-surface-alt": "#281710",
-    "--ms-border": "rgba(255, 135, 88, 0.16)",
-    "--ms-text": "#FFF6F1",
-    "--ms-secondary": "#EBD9D0",
-    "--ms-muted": "#DCC9BF",
-    "--ms-accent": "#FF8758",
-    "--ms-accent-soft": "rgba(255, 135, 88, 0.12)",
-    "--ms-glow": "rgba(255, 135, 88, 0.16)",
+    "--ms-background": "#261549",
+    "--ms-background-alt": "#1C1036",
+    "--ms-surface": "#2F1B5C",
+    "--ms-surface-alt": "#3A226B",
+    "--ms-border": "rgba(157, 102, 255, 0.20)",
+    "--ms-text": "#F5F0FF",
+    "--ms-secondary": "#E4D7FA",
+    "--ms-muted": "#C9B9E5",
+    "--ms-accent": "#9D66FF",
+    "--ms-accent-soft": "rgba(157, 102, 255, 0.12)",
+    "--ms-glow": "rgba(157, 102, 255, 0.17)",
 } as CSSProperties;
+
+/* =========================================================
+   PAGE
+========================================================= */
 
 export default function CareersPage() {
     return (
         <main
-            className={`${questrial.className} relative min-h-screen overflow-hidden bg-[var(--ms-background)] text-[var(--ms-text)]`}
+            className={`${questrial.className} careers-page relative min-h-screen overflow-hidden bg-[var(--ms-background)] text-[var(--ms-text)]`}
             style={themeVars}
         >
-            <Navbar />
-
             <style>{`
                 .careers-page,
                 .careers-page * {
                     font-family: ${questrial.style.fontFamily}, sans-serif;
+                }
+
+                /* =================================================
+                   SHARED NAVBAR-ALIGNED PAGE SPACING
+                ================================================= */
+
+                .careers-page .careers-hero {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+
+                .careers-page .careers-content {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+
+                @media (min-width: 640px) {
+                    .careers-page .careers-hero,
+                    .careers-page .careers-content {
+                        padding-left: 32px;
+                        padding-right: 32px;
+                    }
+                }
+
+                @media (min-width: 1024px) {
+                    .careers-page .careers-hero,
+                    .careers-page .careers-content {
+                        padding-left: 56px;
+                        padding-right: 56px;
+                    }
                 }
 
                 .career-card {
@@ -137,14 +178,19 @@ export default function CareersPage() {
                 }
             `}</style>
 
+            <Navbar />
+
+            {/* =====================================================
+                HERO
+            ===================================================== */}
+
             <div className="careers-page">
-                {/* HERO */}
-                <section className="relative flex min-h-[440px] items-center justify-center overflow-hidden px-5 pb-20 pt-36 text-center sm:min-h-[490px] sm:pt-40">
+                <section className="careers-hero relative flex min-h-[420px] items-center justify-center overflow-hidden pb-16 pt-32 text-center sm:min-h-[470px] sm:pb-20 sm:pt-36">
                     <div
                         className="pointer-events-none absolute inset-0"
                         style={{
                             background:
-                                "radial-gradient(ellipse at 50% 0%, rgba(47,123,255,0.15), transparent 62%)",
+                                "radial-gradient(ellipse at 50% 0%, var(--ms-glow), transparent 65%)",
                         }}
                     />
 
@@ -152,8 +198,8 @@ export default function CareersPage() {
                         className="pointer-events-none absolute inset-0 opacity-[0.12]"
                         style={{
                             backgroundImage: `
-                                linear-gradient(to right, #687080 1px, transparent 1px),
-                                linear-gradient(to bottom, #687080 1px, transparent 1px)
+                                linear-gradient(to right, #A99AC5 1px, transparent 1px),
+                                linear-gradient(to bottom, #A99AC5 1px, transparent 1px)
                             `,
                             backgroundSize: "76px 76px",
                             maskImage:
@@ -161,22 +207,23 @@ export default function CareersPage() {
                         }}
                     />
 
-                    <div className="relative z-10 mx-auto max-w-4xl">
+                    <div className="relative z-10 mx-auto w-full max-w-4xl">
                         <div className="mb-7 inline-flex items-center gap-3 rounded-full border border-[var(--ms-border)] bg-[var(--ms-surface)] px-4 py-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--ms-accent)] shadow-[0_0_12px_#2F7BFF]" />
-                            <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ms-secondary)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--ms-accent)] shadow-[0_0_12px_var(--ms-accent)]" />
+
+                            <span className="text-[11px] uppercase tracking-[0.22em] text-[var(--ms-secondary)]">
                                 Careers & Placements
                             </span>
                         </div>
 
-                        <h1 className="text-[clamp(2.5rem,7vw,5.6rem)] font-normal leading-[1.04] tracking-[-0.045em]">
+                        <h1 className="text-[clamp(2.5rem,6.5vw,5rem)] font-normal leading-[1.04] tracking-[-0.045em]">
                             Build your career.
                             <span className="mt-2 block text-[var(--ms-accent)]">
                                 Move with purpose.
                             </span>
                         </h1>
 
-                        <p className="mx-auto mt-7 max-w-2xl text-[15px] leading-7 text-[var(--ms-muted)] sm:text-base sm:leading-8">
+                        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-[var(--ms-muted)] sm:text-base sm:leading-8">
                             Every professional journey starts somewhere.
                             Find the guidance, preparation and support that
                             help you take your next step with clarity.
@@ -184,7 +231,7 @@ export default function CareersPage() {
 
                         <Link
                             href="#career-services"
-                            className="mt-9 inline-flex items-center gap-3 rounded-full bg-[var(--ms-accent)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:-translate-y-1 hover:bg-blue-500"
+                            className="mt-8 inline-flex items-center gap-3 rounded-full bg-[var(--ms-accent)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:-translate-y-1 hover:opacity-90"
                         >
                             Explore career services
                             <span aria-hidden="true">↘</span>
@@ -194,14 +241,17 @@ export default function CareersPage() {
                     <div className="absolute bottom-0 left-1/2 h-px w-[min(88%,1000px)] -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--ms-border)] to-transparent" />
                 </section>
 
-                {/* CAREER SERVICES GRID */}
+                {/* =================================================
+                    CAREER SERVICES GRID
+                ================================================= */}
+
                 <section
                     id="career-services"
-                    className="relative mx-auto max-w-[1240px] px-5 pb-20 pt-10 sm:px-7 sm:pb-24"
+                    className="careers-content relative mx-auto max-w-[1240px] pb-20 pt-10 sm:pb-24"
                 >
-                    <div className="mb-10 flex flex-col justify-between gap-5 sm:mb-12 sm:flex-row sm:items-end">
+                    <div className="mb-9 flex flex-col justify-between gap-5 sm:mb-11 sm:flex-row sm:items-end">
                         <div>
-                            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--ms-accent)]">
+                            <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--ms-accent)]">
                                 Find your next step
                             </p>
 
@@ -221,7 +271,7 @@ export default function CareersPage() {
                             <Link
                                 key={service.number}
                                 href={service.href}
-                                className="career-card group relative flex min-h-[245px] flex-col overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-6 sm:p-7"
+                                className="career-card group relative flex min-h-[235px] flex-col overflow-hidden rounded-2xl border border-[var(--ms-border)] bg-[var(--ms-surface)] p-6 sm:p-7"
                             >
                                 <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--ms-accent)] opacity-0 blur-[75px] transition-opacity duration-500 group-hover:opacity-[0.16]" />
 
@@ -235,17 +285,17 @@ export default function CareersPage() {
                                     </span>
                                 </div>
 
-                                <div className="relative mt-8 flex-1">
-                                    <h3 className="text-[23px] font-normal leading-tight tracking-tight text-[var(--ms-text)] transition-colors duration-300 group-hover:text-[var(--ms-accent)] sm:text-[25px]">
+                                <div className="relative mt-7 flex-1">
+                                    <h3 className="text-[21px] font-normal leading-tight tracking-tight text-[var(--ms-text)] transition-colors duration-300 group-hover:text-[var(--ms-accent)] sm:text-[23px]">
                                         {service.title}
                                     </h3>
 
-                                    <p className="mt-3 max-w-[370px] text-[14px] leading-7 text-[var(--ms-muted)] sm:text-[15px]">
+                                    <p className="mt-3 max-w-[370px] text-[14px] leading-7 text-[var(--ms-muted)]">
                                         {service.description}
                                     </p>
                                 </div>
 
-                                <div className="relative mt-7 flex items-center justify-between border-t border-[var(--ms-border)] pt-5">
+                                <div className="relative mt-6 flex items-center justify-between border-t border-[var(--ms-border)] pt-4">
                                     <span className="text-xs tracking-wide text-[var(--ms-secondary)]">
                                         {service.keyword}
                                     </span>
@@ -258,12 +308,16 @@ export default function CareersPage() {
                         ))}
                     </div>
 
-                    {/* PLACEMENT TRANSPARENCY */}
+                    {/* =================================================
+                        PLACEMENT TRANSPARENCY
+                    ================================================= */}
+
                     <div className="mt-8 flex flex-col gap-3 rounded-xl border border-[var(--ms-border)] bg-[var(--ms-background-alt)] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
                         <div>
-                            <p className="text-[11px] font-bold uppercase tracking-[0.17em] text-[var(--ms-accent)]">
+                            <p className="text-[11px] uppercase tracking-[0.17em] text-[var(--ms-accent)]">
                                 A transparent approach
                             </p>
+
                             <p className="mt-2 text-sm leading-6 text-[var(--ms-muted)]">
                                 We support your preparation and connect you with
                                 relevant opportunities. Hiring decisions remain

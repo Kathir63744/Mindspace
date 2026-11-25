@@ -1,4 +1,4 @@
-//consultant/app/training/page.tsx
+
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
@@ -70,7 +70,7 @@ function TrainingCard({
 }) {
     return (
         <motion.article
-            className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#0B0F17] to-[#050505] p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-[#2F7BFF]/70 hover:shadow-[0_30px_70px_-24px_rgba(47,123,255,0.55)] sm:p-7"
+            className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#0B1711] to-[#050A07] p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-[#32C878]/70 hover:shadow-[0_30px_70px_-24px_rgba(50,200,120,0.35)] sm:p-7"
             initial={reducedMotion ? false : { opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -78,21 +78,21 @@ function TrainingCard({
         >
             {/* Header: number + tag */}
             <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] tracking-[0.18em] text-[#2F7BFF]">
+                <span className="font-mono text-[11px] tracking-[0.18em] text-[#32C878]">
                     {String(index + 1).padStart(2, "0")} / 04
                 </span>
-                <span className="rounded-full border border-white/15 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[#9CCBFF]">
+                <span className="rounded-full border border-white/15 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[#A5E8C2]">
                     {category.tag}
                 </span>
             </div>
 
             {/* Title */}
-            <h3 className="mt-6 text-[clamp(1.25rem,2vw,1.5rem)] font-[550] leading-[1.15] tracking-[-0.035em] text-[#F3F5FA] transition-colors group-hover:text-[#7CC4FF]">
+            <h3 className="mt-6 text-[clamp(1.25rem,2vw,1.5rem)] font-[550] leading-[1.15] tracking-[-0.035em] text-[#F3F8F4] transition-colors group-hover:text-[#79E3A7]">
                 {category.title}
             </h3>
 
             {/* Explanation */}
-            <p className="mt-3 text-[13.5px] leading-[1.75] text-[#A0A9BA]">
+            <p className="mt-3 text-[13.5px] leading-[1.75] text-[#A4B5A9]">
                 {category.summary}
             </p>
 
@@ -101,9 +101,12 @@ function TrainingCard({
                 {category.features.map((f) => (
                     <li
                         key={f}
-                        className="flex items-start gap-2.5 text-[13px] leading-snug text-[#D3D8E2]"
+                        className="flex items-start gap-2.5 text-[13px] leading-snug text-[#D3DED6]"
                     >
-                        <span className="mt-[2px] text-[11px] text-[#2F7BFF]" aria-hidden="true">
+                        <span
+                            className="mt-[2px] text-[11px] text-[#32C878]"
+                            aria-hidden="true"
+                        >
                             ↗
                         </span>
                         {f}
@@ -114,7 +117,7 @@ function TrainingCard({
             {/* Footer link */}
             <Link
                 href={category.href}
-                className="group/link mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4 text-[12px] font-[650] uppercase tracking-[0.14em] text-[#A9C7FF] transition-colors hover:text-white"
+                className="group/link mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4 text-[12px] font-[650] uppercase tracking-[0.14em] text-[#A5E8C2] transition-colors hover:text-white"
             >
                 View details
                 <span
@@ -153,16 +156,17 @@ export default function TrainingShowcase({
 
     return (
         <section
-            className="relative isolate w-full overflow-hidden bg-[#07090F] px-[clamp(20px,6vw,92px)] pt-[clamp(76px,9vw,128px)] pb-12 text-[#F3F5FA] before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(ellipse_at_82%_8%,rgba(47,123,255,0.12),transparent_34%)] max-sm:px-[18px] max-sm:pt-[66px] max-sm:pb-[34px]"
+            className="relative isolate w-full overflow-hidden bg-[#070D09] px-[clamp(20px,6vw,92px)] pt-[clamp(76px,9vw,128px)] pb-12 text-[#F3F8F4] before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(ellipse_at_82%_8%,rgba(50,200,120,0.12),transparent_34%)] max-sm:px-[18px] max-sm:pt-[66px] max-sm:pb-[34px]"
             id={id}
             aria-labelledby={`${id}-heading`}
         >
-            <Navbar/>
+            <Navbar />
+
             <div className="relative z-10 mx-auto max-w-[1440px]">
                 {/* Eyebrow */}
                 <div className="mx-auto mb-4 flex max-w-7xl items-center gap-3 px-6">
-                    <span className="h-px w-9 bg-[#2F7BFF]" />
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A9C7FF]">
+                    <span className="h-px w-9 bg-[#32C878]" />
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#A5E8C2]">
                         {eyebrow}
                     </span>
                     <span className="h-px max-w-24 flex-1 bg-white/10" />
@@ -178,10 +182,12 @@ export default function TrainingShowcase({
                     >
                         <h2
                             id={`${id}-heading`}
-                            className="m-0 max-w-[900px] text-[clamp(48px,7.4vw,98px)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F5FA] max-sm:text-[clamp(43px,12vw,66px)]"
+                            className="m-0 max-w-[900px] text-[clamp(48px,7.4vw,98px)] font-medium leading-[0.98] tracking-[-0.075em] text-[#F3F8F4] max-sm:text-[clamp(43px,12vw,66px)]"
                         >
                             {titleLine1}
-                            <span className="text-[#A9C7FF]">{titleAccent}</span>
+                            <span className="text-[#A5E8C2]">
+                                {titleAccent}
+                            </span>
                         </h2>
                     </motion.div>
 
@@ -192,19 +198,19 @@ export default function TrainingShowcase({
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.12, ease: EASE }}
                     >
-                        <span className="text-[9px] font-[650] uppercase tracking-[0.16em] text-[#A9C7FF]">
+                        <span className="text-[9px] font-[650] uppercase tracking-[0.16em] text-[#A5E8C2]">
                             PRACTICAL PROGRAMMES
                         </span>
-                        <p className="mt-[17px] text-[15px] leading-[1.85] text-[#A0A9BA] max-sm:text-sm">
+                        <p className="mt-[17px] text-[15px] leading-[1.85] text-[#A4B5A9] max-sm:text-sm">
                             {description}
                         </p>
                         <a
-                            className="group mt-6 inline-flex items-center gap-5 border-b border-[#2F7BFF] pb-[9px] text-xs font-semibold text-[#F3F5FA] no-underline transition-all duration-250 hover:gap-[27px] hover:text-[#A9C7FF]"
+                            className="group mt-6 inline-flex items-center gap-5 border-b border-[#32C878] pb-[9px] text-xs font-semibold text-[#F3F8F4] no-underline transition-all duration-250 hover:gap-[27px] hover:text-[#A5E8C2]"
                             href={contactHref}
                         >
                             Talk to our team
                             <span
-                                className="text-[17px] text-[#A9C7FF]"
+                                className="text-[17px] text-[#A5E8C2]"
                                 aria-hidden="true"
                             >
                                 ↗
@@ -214,8 +220,10 @@ export default function TrainingShowcase({
                 </div>
 
                 {/* Divider header */}
-                <div className="flex justify-between gap-[18px] border-t border-white/[0.13] py-[17px] text-[9px] font-[650] uppercase tracking-[0.16em] text-[#8993A6] max-sm:text-[8px] max-sm:tracking-[0.1em]">
-                    <span className="text-[#A9C7FF]">TRAINING TRACKS</span>
+                <div className="flex justify-between gap-[18px] border-t border-white/[0.13] py-[17px] text-[9px] font-[650] uppercase tracking-[0.16em] text-[#899B8E] max-sm:text-[8px] max-sm:tracking-[0.1em]">
+                    <span className="text-[#A5E8C2]">
+                        TRAINING TRACKS
+                    </span>
                     <span>Four tracks. One platform.</span>
                 </div>
 
@@ -233,20 +241,23 @@ export default function TrainingShowcase({
 
                 {/* Footer strip */}
                 <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/[0.13] pt-6 sm:flex-row sm:items-center">
-                    <p className="text-[11px] text-[#8993A6]">
+                    <p className="text-[11px] text-[#899B8E]">
                         Not sure which track fits? Talk to us and we'll point you
                         to the right starting point.
                     </p>
                     <Link
                         href="/contact"
-                        className="group inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-[#A9C7FF]"
+                        className="group inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-[#A5E8C2]"
                     >
                         Talk to an expert
-                        <span className="transition-transform group-hover:translate-x-1">↗</span>
+                        <span className="transition-transform group-hover:translate-x-1">
+                            ↗
+                        </span>
                     </Link>
                 </div>
             </div>
-            <Footer/>
+
+            <Footer />
         </section>
     );
 }

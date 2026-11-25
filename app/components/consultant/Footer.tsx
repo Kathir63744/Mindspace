@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "./data";
 import { getPageAccentTheme } from "./PageAccent";
@@ -112,10 +114,24 @@ const LEGAL_LINKS = [
     },
 ];
 
- export default function Footer() {
-    const pathname = require("next/navigation").usePathname() as string;
+export default function Footer() {
+    const pathname = usePathname();
 
-    const { accent, accentRgb } = getPageAccentTheme(pathname);
+    // PAGE THEME
+    const pageTheme = getPageAccentTheme(pathname);
+
+    // CAREERS THEME OVERRIDE
+    const isCareers =
+        pathname === "/careers" ||
+        pathname.startsWith("/careers/");
+
+    const accent = isCareers
+        ? "#9D66FF"
+        : pageTheme.accent;
+
+    const accentRgb = isCareers
+        ? "157, 102, 255"
+        : pageTheme.accentRgb;
 
     const accentStyle = {
         "--page-accent": accent,
@@ -154,9 +170,8 @@ const LEGAL_LINKS = [
             />
 
             <div className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-14">
-                {/* =================================================
-                    MAIN CLOSING STATEMENT
-                ================================================= */}
+
+                {/* MAIN CLOSING STATEMENT */}
 
                 <div className="grid gap-10 border-b border-white/15 py-16 sm:py-20 lg:grid-cols-12 lg:items-end lg:gap-12 lg:py-24">
                     <div className="lg:col-span-7">
@@ -221,11 +236,10 @@ const LEGAL_LINKS = [
                     </div>
                 </div>
 
-                {/* =================================================
-                    NAVIGATION DIRECTORY
-                ================================================= */}
+                {/* NAVIGATION DIRECTORY */}
 
                 <div className="grid gap-12 border-b border-white/15 py-14 lg:grid-cols-12 lg:gap-12 lg:py-16">
+
                     {/* BRAND COLUMN */}
 
                     <div className="lg:col-span-3">
@@ -294,15 +308,7 @@ const LEGAL_LINKS = [
                                         <li key={link.href}>
                                             <Link
                                                 href={link.href}
-                                                className="group inline-flex items-center gap-2 text-[14px] font-medium leading-7 text-[#D0D9E7] transition-colors duration-300"
-                                                onMouseEnter={(event) => {
-                                                    event.currentTarget.style.color =
-                                                        accent;
-                                                }}
-                                                onMouseLeave={(event) => {
-                                                    event.currentTarget.style.color =
-                                                        "";
-                                                }}
+                                                className="group inline-flex items-center gap-2 text-[14px] font-medium leading-7 text-[#D0D9E7] transition-colors duration-300 hover:text-[var(--page-accent)]"
                                             >
                                                 <span>{link.label}</span>
 
@@ -323,9 +329,7 @@ const LEGAL_LINKS = [
                     </nav>
                 </div>
 
-                {/* =================================================
-                    CONTACT INFORMATION
-                ================================================= */}
+                {/* CONTACT INFORMATION */}
 
                 <div className="grid gap-8 border-b border-white/15 py-12 sm:grid-cols-2 lg:grid-cols-12 lg:items-center lg:gap-10">
                     <div className="lg:col-span-3">
@@ -344,25 +348,19 @@ const LEGAL_LINKS = [
                     </div>
 
                     <div className="grid gap-7 sm:col-span-1 sm:grid-cols-2 lg:col-span-9 lg:grid-cols-3">
+
                         {/* PHONE */}
 
                         <a
                             href={phoneHref}
-                            className="group border-t border-white/20 pt-5 transition-colors"
-                            onMouseEnter={(event) => {
-                                event.currentTarget.style.borderColor =
-                                    accent;
-                            }}
-                            onMouseLeave={(event) => {
-                                event.currentTarget.style.borderColor = "";
-                            }}
+                            className="group border-t border-white/20 pt-5 transition-colors hover:border-[var(--page-accent)]"
                         >
                             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B7C5D8]">
                                 Call MindSpace
                             </span>
 
                             <div className="mt-3 flex items-center justify-between gap-3">
-                                <span className="break-words text-[15px] font-semibold text-[#E2EAF5] transition-colors">
+                                <span className="break-words text-[15px] font-semibold text-[#E2EAF5]">
                                     {siteConfig.phone}
                                 </span>
 
@@ -379,14 +377,7 @@ const LEGAL_LINKS = [
 
                         <a
                             href={`mailto:${siteConfig.email}`}
-                            className="group border-t border-white/20 pt-5 transition-colors"
-                            onMouseEnter={(event) => {
-                                event.currentTarget.style.borderColor =
-                                    accent;
-                            }}
-                            onMouseLeave={(event) => {
-                                event.currentTarget.style.borderColor = "";
-                            }}
+                            className="group border-t border-white/20 pt-5 transition-colors hover:border-[var(--page-accent)]"
                         >
                             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B7C5D8]">
                                 Write to us
@@ -420,9 +411,7 @@ const LEGAL_LINKS = [
                     </div>
                 </div>
 
-                {/* =================================================
-                    BOTTOM SIGNATURE
-                ================================================= */}
+                {/* BOTTOM SIGNATURE */}
 
                 <div className="flex flex-col gap-6 py-8 md:flex-row md:items-center md:justify-between">
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -448,15 +437,7 @@ const LEGAL_LINKS = [
                                     <li key={link.href}>
                                         <Link
                                             href={link.href}
-                                            className="text-[12px] font-medium text-[#C2CDDC] transition-colors"
-                                            onMouseEnter={(event) => {
-                                                event.currentTarget.style.color =
-                                                    accent;
-                                            }}
-                                            onMouseLeave={(event) => {
-                                                event.currentTarget.style.color =
-                                                    "";
-                                            }}
+                                            className="text-[12px] font-medium text-[#C2CDDC] transition-colors duration-300 hover:text-[var(--page-accent)]"
                                         >
                                             {link.label}
                                         </Link>

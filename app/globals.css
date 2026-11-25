@@ -172,3 +172,32 @@
     opacity: 0;
   }
 }
+
+
+/* =========================================================
+   SERVICES PAGE — FORCE QUESTRIAL
+   Overrides Anton / font-display inside Services only
+========================================================= */
+
+#mindspace-services-page,
+#mindspace-services-page *,
+#mindspace-services-page *::before,
+#mindspace-services-page *::after {
+  font-family: var(--font-questrial), sans-serif !important;
+}
+
+/* All heading elements */
+#mindspace-services-page h1,
+#mindspace-services-page h2,
+#mindspace-services-page h3,
+#mindspace-services-page h4,
+#mindspace-services-page h5,
+#mindspace-services-page h6 {
+  font-family: var(--font-questrial), sans-serif !important;
+  font-weight: 400 !important;
+}
+
+/* Override Anton's font-display utility */
+#mindspace-services-page .font-display {
+  font-family: var(--font-questrial), sans-serif !important;
+}

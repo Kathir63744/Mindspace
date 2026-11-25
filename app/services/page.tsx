@@ -1,12 +1,23 @@
-// app/services/page.tsx
+
 import type { Metadata } from "next";
+import { Questrial } from "next/font/google";
+
 import Footer from "@/app/components/consultant/Footer";
 import Navbar from "@/app/components/consultant/Navbar";
 import ServicesHero from "@/app/components/consultant/services/ServicesHero";
 
-
 import { Catalogue } from "../components/consultant/services/ServicesSections";
-import { MAIN_THEMES, getThemeVariables } from "../components/consultant/themes/MindSpaceTheme";
+import {
+    MAIN_THEMES,
+    getThemeVariables,
+} from "../components/consultant/themes/MindSpaceTheme";
+
+const questrial = Questrial({
+    subsets: ["latin"],
+    weight: "400",
+    display: "swap",
+    variable: "--font-questrial",
+});
 
 export const metadata: Metadata = {
     title: "Services | MindSpace",
@@ -17,22 +28,39 @@ export const metadata: Metadata = {
 const theme = MAIN_THEMES.technology;
 
 const TECH_STEPS = [
-    { title: "Discuss Your Requirements", body: "Tell us about your business, users and project goals." },
-    { title: "Define the Scope", body: "We agree on features, deliverables, pricing and timelines." },
-    { title: "Design & Develop", body: "We create the solution and share progress for review." },
-    { title: "Test & Launch", body: "We test the agreed functionality and prepare the solution for launch." },
-    { title: "Support & Maintain", body: "We provide support and maintenance according to the agreed arrangement." },
+    {
+        title: "Discuss Your Requirements",
+        body: "Tell us about your business, users and project goals.",
+    },
+    {
+        title: "Define the Scope",
+        body: "We agree on features, deliverables, pricing and timelines.",
+    },
+    {
+        title: "Design & Develop",
+        body: "We create the solution and share progress for review.",
+    },
+    {
+        title: "Test & Launch",
+        body: "We test the agreed functionality and prepare the solution for launch.",
+    },
+    {
+        title: "Support & Maintain",
+        body: "We provide support and maintenance according to the agreed arrangement.",
+    },
 ];
 
 export default function ServicesPage() {
     return (
         <div
-            className="min-h-screen bg-[var(--ms-background)] text-[var(--ms-text)]"
+            id="mindspace-services-page"
+            className={`${questrial.className} ${questrial.variable} min-h-screen bg-[var(--ms-background)] text-[var(--ms-text)]`}
             style={getThemeVariables(theme)}
         >
-
             <Navbar />
+
             <ServicesHero />
+
             <Catalogue />
 
             <section
@@ -47,9 +75,11 @@ export default function ServicesPage() {
                         >
                             How we work
                         </p>
-                        <h2 className="mt-5 font-display text-[clamp(2rem,4.6vw,3.8rem)] leading-[1.05] tracking-[-0.05em] text-[var(--ms-text)]">
+
+                        <h2 className="mt-5 text-[clamp(2rem,4.6vw,3.8rem)] leading-[1.05] tracking-[-0.05em] text-[var(--ms-text)]">
                             How We Work
                         </h2>
+
                         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-[1.8] text-[var(--ms-muted)]">
                             Select a service to see the steps involved.
                         </p>
@@ -71,9 +101,11 @@ export default function ServicesPage() {
                                 >
                                     {String(i + 1).padStart(2, "0")}
                                 </span>
-                                <h3 className="mt-3 font-display text-[1.05rem] leading-snug text-[var(--ms-text)]">
+
+                                <h3 className="mt-3 text-[1.05rem] leading-snug text-[var(--ms-text)]">
                                     {step.title}
                                 </h3>
+
                                 <p className="mt-2 text-[13px] leading-relaxed text-[var(--ms-muted)]">
                                     {step.body}
                                 </p>
@@ -88,15 +120,16 @@ export default function ServicesPage() {
                                 "color-mix(in srgb, var(--ms-background) 92%, var(--ms-accent) 4%)",
                         }}
                     >
-                        <strong style={{ color: "var(--ms-accent)" }}>Note:</strong>{" "}
-                        Scope, pricing and timelines are agreed before work begins.
-                        Changes to agreed scope are handled in writing.
+                        <strong style={{ color: "var(--ms-accent)" }}>
+                            Note:
+                        </strong>{" "}
+                        Scope, pricing and timelines are agreed before work
+                        begins. Changes to agreed scope are handled in writing.
                     </p>
                 </div>
             </section>
 
             <Footer />
-
         </div>
     );
 }

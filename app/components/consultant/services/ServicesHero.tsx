@@ -6,13 +6,6 @@ import { useEffect, useState } from "react";
 
 import { Eyebrow, GradientText, Icon } from "./ServicesUi";
 import ServiceBackgrounVideo from "./ServiceBackgrounVideo";
-import { Questrial } from "next/font/google";
-
-const questrial = Questrial({
-    weight: "400",
-    subsets: ["latin"],
-    display: "swap",
-});
 
 const TECH_TILES = [
     {
@@ -84,7 +77,7 @@ export default function ServicesHero() {
     return (
         <section
             aria-label="MindSpace technology services"
-            className={`${questrial.className} relative w-full overflow-hidden bg-[var(--ms-background)] text-[var(--ms-text)]`}
+            className="relative w-full overflow-hidden bg-[var(--ms-background)] text-[var(--ms-text)]"
         >
             {/* Video background */}
             <ServiceBackgrounVideo src="/service-bg.mp4" rate={0.85} />

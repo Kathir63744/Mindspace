@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -203,12 +204,33 @@ function ArrowUpRight({ className = "" }: { className?: string }) {
 export default function Navbar() {
     const pathname = usePathname();
 
-    const { accent, accentRgb } = getPageAccentTheme(pathname);
+    /* ============================================================
+       PAGE THEME
+    ============================================================ */
+
+    const {
+        accent: pageAccent,
+        accentRgb: pageAccentRgb,
+    } = getPageAccentTheme(pathname);
+
+    const isCareers =
+        pathname === "/careers" ||
+        pathname.startsWith("/careers/");
+
+    const accent = isCareers ? "#9D66FF" : pageAccent;
+
+    const accentRgb = isCareers
+        ? "157, 102, 255"
+        : pageAccentRgb;
 
     const accentStyle = {
         "--page-accent": accent,
         "--page-accent-rgb": accentRgb,
     } as CSSProperties;
+
+    /* ============================================================
+       STATE
+    ============================================================ */
 
     const [scrolled, setScrolled] = useState(false);
     const [hideTopBar, setHideTopBar] = useState(false);
@@ -480,10 +502,21 @@ export default function Navbar() {
             ===================================================== */}
 
             <div
-                className={`w-full border-b transition-colors duration-300 ${solid
-                    ? "border-white/10 bg-[#07090F]/85 backdrop-blur-xl"
-                    : "border-transparent bg-transparent"
+                className={`w-full border-b transition-colors duration-300 ${isCareers
+                    ? "border-white/10 backdrop-blur-xl"
+                    : solid
+                        ? "border-white/10 bg-[#07090F]/85 backdrop-blur-xl"
+                        : "border-transparent bg-transparent"
                     }`}
+                style={
+                    isCareers
+                        ? {
+                            backgroundColor: solid
+                                ? "#1C1036"
+                                : "#261549",
+                        }
+                        : undefined
+                }
             >
                 <nav className="mx-auto grid h-[72px] max-w-[90rem] grid-cols-[auto_1fr] items-center px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-12">
                     {/* BRAND */}
@@ -836,10 +869,19 @@ export default function Navbar() {
             ===================================================== */}
 
             <div
-                className={`grid transition-[grid-template-rows] duration-300 lg:hidden ${mobileOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                className={`grid transition-[grid-template-rows] duration-300 lg:hidden ${mobileOpen
+                    ? "grid-rows-[1fr]"
+                    : "grid-rows-[0fr]"
                     }`}
             >
-                <div className="overflow-hidden bg-[#07090F]">
+                <div
+                    className="overflow-hidden"
+                    style={{
+                        backgroundColor: isCareers
+                            ? "#261549"
+                            : "#07090F",
+                    }}
+                >
                     <div className="max-h-[calc(100svh-72px)] overflow-y-auto px-6 pb-6 pt-2">
                         <ul className="flex flex-col">
                             {MENUS.map((menu) => {

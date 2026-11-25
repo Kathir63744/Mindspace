@@ -1,26 +1,16 @@
-
 import type { CSSProperties } from "react";
-
-/* =============================================================
-   THEME TYPES
-============================================================= */
 
 export type MindSpaceTheme = {
     name: string;
-
     background: string;
     backgroundAlt: string;
-
     surface: string;
     surfaceAlt: string;
-
     text: string;
     muted: string;
-
     accent: string;
     secondary: string;
     secondaryDeep: string;
-
     accentSoft: string;
     border: string;
     glow: string;
@@ -37,13 +27,7 @@ type ThemeFamily = Pick<
     | "accent"
 >;
 
-/* =============================================================
-   MAIN THEME FAMILIES
-============================================================= */
-
 const FAMILY_THEMES: Record<string, ThemeFamily> = {
-    /* TECHNOLOGY — BLUE */
-
     technology: {
         background: "#081735",
         backgroundAlt: "#081735",
@@ -53,9 +37,6 @@ const FAMILY_THEMES: Record<string, ThemeFamily> = {
         muted: "#C5D5F5",
         accent: "#2F7BFF",
     },
-
-    /* TRAINING — GREEN */
-
     training: {
         background: "#07110D",
         backgroundAlt: "#0A1911",
@@ -65,21 +46,16 @@ const FAMILY_THEMES: Record<string, ThemeFamily> = {
         muted: "#C2D7CA",
         accent: "#35D07F",
     },
-
-    /* CAREERS — ORANGE */
-
+    // UPDATED CAREERS THEME (#261549)
     careers: {
-        background: "#130B09",
-        backgroundAlt: "#1B100C",
-        surface: "#1B100C",
-        surfaceAlt: "#281710",
-        text: "#FFF6F1",
-        muted: "#DCC9BF",
-        accent: "#FF8758",
+        background: "#261549",
+        backgroundAlt: "#1C1036",
+        surface: "#2F1B5C",
+        surfaceAlt: "#3A226B",
+        text: "#F5F0FF",
+        muted: "#f8f5feff",
+        accent: "#9D66FF",
     },
-
-    /* STUDY ABROAD — GREEN */
-
     studyAbroad: {
         background: "#07110D",
         backgroundAlt: "#0A1911",
@@ -91,20 +67,11 @@ const FAMILY_THEMES: Record<string, ThemeFamily> = {
     },
 };
 
-/* =============================================================
-   SLUG SECONDARY COLOR PAIRINGS
-============================================================= */
-
 const SLUG_SECONDARIES: Record<string, string> = {
-    /* Technology / Blue */
-
     "website-development": "#123A9B",
     "app-development": "#244ED6",
     "web-application": "#0D2868",
     "software-development": "#194ABF",
-
-    /* Training / Green */
-
     "programming-foundations": "#087A48",
     "training-web-development": "#145C35",
     "web-development": "#145C35",
@@ -112,54 +79,33 @@ const SLUG_SECONDARIES: Record<string, string> = {
     "training-portfolio": "#0C8C55",
     "communication": "#17663B",
     "training-communication": "#17663B",
-
-    /* Careers / Orange */
-
-    "career-direction": "#B94B19",
-    "resume-linkedin": "#943C32",
-    "interview-coaching": "#C45B24",
-    "placement-support": "#923510",
-    "internships": "#A85B12",
-    "on-the-job-readiness": "#7F3024",
-    "job-search-support": "#923510"
+    // Careers secondary variations based on violet
+    "career-direction": "#7A44D1",
+    "resume-linkedin": "#6030B3",
+    "interview-coaching": "#8B5CF6",
+    "placement-support": "#552699",
+    "internships": "#6C35C2",
+    "on-the-job-readiness": "#4A1F8C",
+    "job-search-support": "#552699",
 };
-
-/* =============================================================
-   DEFAULT FAMILY SECONDARY COLORS
-============================================================= */
 
 const FAMILY_SECONDARIES: Record<string, string> = {
     technology: "#123A9B",
     training: "#087A48",
-    careers: "#B94B19",
+    careers: "#7A44D1",
     studyAbroad: "#087A48",
 };
-
-/* =============================================================
-   FAMILY DETECTION
-============================================================= */
 
 function getFamilyFromSlug(
     pillar: string,
     slug: string,
 ): keyof typeof FAMILY_THEMES {
-    const normalizedPillar = pillar
-        .toLowerCase()
-        .replace(/[\s\-_]/g, "");
-
+    const normalizedPillar = pillar.toLowerCase().replace(/[\s\-_]/g, "");
     const normalizedSlug = slug.toLowerCase().trim();
 
-    /* STUDY ABROAD */
-
-    if (
-        normalizedPillar.includes("studyabroad") ||
-        normalizedSlug.includes("study-abroad")
-    ) {
+    if (normalizedPillar.includes("studyabroad") || normalizedSlug.includes("study-abroad")) {
         return "studyAbroad";
     }
-
-    /* TRAINING */
-
     if (
         normalizedPillar.includes("training") ||
         normalizedSlug.startsWith("training-") ||
@@ -170,9 +116,6 @@ function getFamilyFromSlug(
     ) {
         return "training";
     }
-
-    /* CAREERS */
-
     if (
         normalizedPillar.includes("career") ||
         normalizedSlug.startsWith("career-") ||
@@ -186,19 +129,11 @@ function getFamilyFromSlug(
     ) {
         return "careers";
     }
-
-    /* TECHNOLOGY — DEFAULT */
-
     return "technology";
 }
 
-/* =============================================================
-   COLOR UTILITIES
-============================================================= */
-
 function hexToRgb(hex: string) {
     const clean = hex.replace("#", "");
-
     return {
         r: parseInt(clean.slice(0, 2), 16),
         g: parseInt(clean.slice(2, 4), 16),
@@ -208,49 +143,29 @@ function hexToRgb(hex: string) {
 
 function rgba(hex: string, alpha: number): string {
     const { r, g, b } = hexToRgb(hex);
-
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
-
-/* =============================================================
-   RESOLVE THEME
-============================================================= */
 
 export function resolveTheme(
     pillar: string,
     slug: string = "",
 ): MindSpaceTheme {
     const normalizedSlug = slug.toLowerCase().trim();
-
-    const familyName = getFamilyFromSlug(
-        pillar,
-        normalizedSlug,
-    );
-
+    const familyName = getFamilyFromSlug(pillar, normalizedSlug);
     const family = FAMILY_THEMES[familyName];
 
-    const secondary =
-        SLUG_SECONDARIES[normalizedSlug] ??
-        FAMILY_SECONDARIES[familyName];
+    const secondary = SLUG_SECONDARIES[normalizedSlug] ?? FAMILY_SECONDARIES[familyName];
 
     return {
         name: normalizedSlug || familyName,
-
         ...family,
-
         secondary,
         secondaryDeep: secondary,
-
         accentSoft: rgba(family.accent, 0.13),
         border: rgba(family.accent, 0.22),
         glow: rgba(family.accent, 0.30),
     };
 }
-
-/* =============================================================
-   MAIN THEMES
-   Used by app/services/page.tsx
-============================================================= */
 
 export const MAIN_THEMES = {
     technology: resolveTheme("technology"),
@@ -259,38 +174,22 @@ export const MAIN_THEMES = {
     studyAbroad: resolveTheme("study-abroad"),
 } as const;
 
-/* =============================================================
-   CSS VARIABLES
-============================================================= */
-
-export function getThemeVariables(
-    theme: MindSpaceTheme,
-): CSSProperties {
+export function getThemeVariables(theme: MindSpaceTheme): CSSProperties {
     return {
         "--ms-background": theme.background,
         "--ms-background-alt": theme.backgroundAlt,
-
         "--ms-surface": theme.surface,
         "--ms-surface-alt": theme.surfaceAlt,
-
         "--ms-text": theme.text,
         "--ms-muted": theme.muted,
-
         "--ms-accent": theme.accent,
         "--ms-secondary": theme.secondary,
         "--ms-secondary-deep": theme.secondaryDeep,
-
         "--ms-accent-soft": theme.accentSoft,
         "--ms-border": theme.border,
         "--ms-glow": theme.glow,
-
         "--ms-gradient": `linear-gradient(135deg, ${theme.accent}, ${theme.secondaryDeep})`,
-
-        "--ms-gradient-soft": `linear-gradient(135deg, ${rgba(
-            theme.accent,
-            0.16,
-        )}, ${rgba(theme.secondaryDeep, 0.22)})`,
-
+        "--ms-gradient-soft": `linear-gradient(135deg, ${rgba(theme.accent, 0.16)}, ${rgba(theme.secondaryDeep, 0.22)})`,
         "--ms-gradient-strong": `linear-gradient(135deg, ${theme.accent}, ${theme.secondaryDeep})`,
     } as CSSProperties;
 }
