@@ -666,153 +666,262 @@ export default function ServiceReportExperience({
             data-service-report
             className={`${questrial.className} min-h-screen text-[var(--ms-text)] selection:bg-[var(--ms-accent)] selection:text-white`}
         >
+
             <style jsx global>{`
-                [data-service-report],
-                [data-service-report] * {
-                    font-family: ${questrial.style.fontFamily}, sans-serif !important;
-                }
+    /* =========================================
+       GLOBAL FONT & BASE SETTINGS
+    ========================================= */
 
-                html {
-                    scroll-behavior: smooth;
-                }
+    [data-service-report],
+    [data-service-report] * {
+        font-family: ${questrial.style.fontFamily}, sans-serif !important;
+        box-sizing: border-box;
+    }
 
-                [data-service-report] {
-                    --ms-accent: #2F7BFF;
-                    --ms-secondary: #69A6FF;
-                    --ms-muted: #B5CFFF;
-                }
+    html {
+        scroll-behavior: smooth;
+    }
 
-                .report-shell {
-                    width: min(1240px, calc(100% - 48px));
-                    margin-inline: auto;
-                }
+    [data-service-report] {
+        --ms-accent: #2F7BFF;
+        --ms-secondary: #69A6FF;
+        --ms-muted: #B5CFFF;
 
-                .report-section {
-                    scroll-margin-top: 74px;
-                }
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+    }
 
-                .report-grid {
-                    background-image:
-                        linear-gradient(
-                            to right,
-                            rgba(47,123,255,0.10) 1px,
-                            transparent 1px
-                        ),
-                        linear-gradient(
-                            to bottom,
-                            rgba(47,123,255,0.10) 1px,
-                            transparent 1px
-                        );
-                    background-size: 28px 28px;
-                }
+    /* =========================================
+       LAYOUT
+    ========================================= */
 
-                .report-card {
-                    border: 1px solid rgba(47,123,255,0.24);
-                    background: #0B1D40;
-                }
+    .report-shell {
+        width: min(1240px, calc(100% - 64px));
+        margin-inline: auto;
+    }
 
-                .report-number {
-                    font-variant-numeric: tabular-nums;
-                    letter-spacing: -0.07em;
-                }
+    .report-section {
+        min-width: 0;
+        scroll-margin-top: 90px;
+    }
 
-                .audience-rail {
-                    scrollbar-width: none;
-                    -ms-overflow-style: none;
-                    touch-action: pan-y;
-                }
+    .report-grid,
+    .report-card {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
 
-                .audience-rail::-webkit-scrollbar {
-                    display: none;
-                }
+    .report-card {
+        border: 1px solid rgba(47, 123, 255, 0.24);
+        background: #0B1D40;
+    }
 
-                .person-drift {
-                    animation: person-drift 5s ease-in-out infinite;
-                }
+    .report-number {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.07em;
+    }
 
-                @keyframes person-drift {
-                    0%,
-                    100% {
-                        transform: translateY(0);
-                    }
+    [data-service-report] img,
+    [data-service-report] video {
+        max-width: 100%;
+    }
 
-                    50% {
-                        transform: translateY(-5px);
-                    }
-                }
+    /* =========================================
+       HORIZONTAL NAVIGATION
+    ========================================= */
 
-                /*
-                 * Larger typography for small text.
-                 * Scoped to this service report only.
-                 */
-                [data-service-report] [class~="text-[12px]"] {
-                    font-size: 15px !important;
-                    line-height: 1.55;
-                }
+    .report-navigation {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        align-items: center;
 
-                [data-service-report] [class~="text-[13px]"] {
-                    font-size: 16px !important;
-                    line-height: 1.55;
-                }
+        overflow-x: auto;
+        overflow-y: hidden;
 
-                [data-service-report] [class~="text-[14px]"] {
-                    font-size: 17px !important;
-                    line-height: 1.55;
-                }
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
 
-                [data-service-report] [class~="text-[15px]"] {
-                    font-size: 18px !important;
-                    line-height: 1.5;
-                }
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        touch-action: pan-x;
+    }
 
-                [data-service-report] [class~="text-[16px]"] {
-                    font-size: 19px !important;
-                    line-height: 1.55;
-                }
+    .report-navigation::-webkit-scrollbar,
+    .report-navigation::-webkit-scrollbar-track,
+    .report-navigation::-webkit-scrollbar-thumb {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+    }
 
-                [data-service-report] [class~="text-[17px]"] {
-                    font-size: 20px !important;
-                    line-height: 1.6;
-                }
+    .report-navigation button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
 
-                [data-service-report] [class~="text-[18px]"] {
-                    font-size: 21px !important;
-                    line-height: 1.6;
-                }
+    /* =========================================
+       HIDE ALL REPORT SCROLLBARS
+       Scrolling remains functional
+    ========================================= */
 
-                @media (max-width: 640px) {
-                    .report-shell {
-                        width: min(100% - 32px, 1240px);
-                    }
+    [data-service-report] * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
 
-                    [data-service-report] [class~="text-[18px]"] {
-                        font-size: 19px !important;
-                    }
+    [data-service-report] *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+    }
 
-                    [data-service-report] [class~="text-[17px]"] {
-                        font-size: 18px !important;
-                    }
-                }
+    .scrollbar-hide {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
 
-                @media (prefers-reduced-motion: reduce) {
-                    .person-drift {
-                        animation: none;
-                    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
 
-                    html {
-                        scroll-behavior: auto;
-                    }
-                }
+    /* =========================================
+       AUDIENCE RAIL
+    ========================================= */
 
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
+    .audience-rail {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
 
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
+    .audience-rail::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    .person-drift {
+        animation: person-drift 5s ease-in-out infinite;
+    }
+
+    @keyframes person-drift {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* =========================================
+       TABLET RESPONSIVENESS
+    ========================================= */
+
+    @media (max-width: 1024px) {
+        .report-shell {
+            width: calc(100% - 48px);
+        }
+
+        .report-section {
+            scroll-margin-top: 76px;
+        }
+    }
+
+    /* =========================================
+       MOBILE RESPONSIVENESS
+    ========================================= */
+
+    @media (max-width: 768px) {
+        .report-shell {
+            width: calc(100% - 36px);
+        }
+
+        .report-section {
+            scroll-margin-top: 68px;
+        }
+
+        .report-navigation button {
+            padding: 14px 13px;
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+    }
+
+    /* =========================================
+       SMALL MOBILE
+    ========================================= */
+
+    @media (max-width: 640px) {
+        .report-shell {
+            width: calc(100% - 32px);
+        }
+
+        .report-section {
+            scroll-margin-top: 64px;
+        }
+
+        .report-shell h2 {
+            font-size: clamp(30px, 8vw, 42px);
+            line-height: 1.06;
+        }
+
+        .report-shell h3,
+        .report-shell p {
+            overflow-wrap: anywhere;
+        }
+
+        .report-navigation button {
+            padding: 13px 11px;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+        }
+
+        .person-drift {
+            animation: none;
+        }
+    }
+
+    /* =========================================
+       EXTRA SMALL DEVICES
+    ========================================= */
+
+    @media (max-width: 380px) {
+        .report-shell {
+            width: calc(100% - 26px);
+        }
+
+        .report-navigation button {
+            padding-inline: 9px;
+            font-size: 11px;
+        }
+    }
+
+    /* =========================================
+       REDUCED MOTION ACCESSIBILITY
+    ========================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+        .person-drift {
+            animation: none;
+        }
+
+        html {
+            scroll-behavior: auto;
+        }
+    }
+`}</style>
+
 
             {/* Hero Header */}
             <header
@@ -854,58 +963,68 @@ export default function ServiceReportExperience({
                 </div>
             </header>
 
-            {/* Report navigation */}
+
+            {/* Responsive report navigation */}
             <div
-                className="sticky top-0 z-40 border-b text-[var(--ms-text)] shadow-[0_4px_20px_rgba(0,0,0,.2)] backdrop-blur-xl"
+                className="report-nav sticky top-0 z-50 w-full border-b backdrop-blur-xl"
                 style={{
                     background:
-                        "color-mix(in srgb, var(--ms-background) 85%, transparent)",
+                        "color-mix(in srgb, var(--ms-background) 94%, transparent)",
                     borderColor:
-                        "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
+                        "color-mix(in srgb, var(--ms-accent) 24%, transparent)",
                 }}
             >
-                <div className="report-shell flex min-h-[48px] items-center justify-between gap-4">
+                <div className="report-shell flex min-h-[58px] items-center gap-3 sm:gap-6">
+                    {/* Fixed brand */}
                     <Link
                         href="/services"
-                        className="shrink-0 text-[16px] font-bold uppercase tracking-[.16em] text-[var(--ms-text)]"
+                        className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] font-bold uppercase tracking-[.12em] text-[var(--ms-text)] sm:text-[15px] sm:tracking-[.15em]"
                     >
-                        MINDSPACE{" "}
-                        <span style={{ color: "var(--ms-accent)" }}>/</span>{" "}
-                        REPORT
+                        MINDSPACE
+                        <span style={{ color: "var(--ms-accent)" }}>/</span>
+                        <span className="text-[#8BC1FF]">REPORT</span>
                     </Link>
 
+                    {/* Swipeable section navigation */}
                     <nav
-                        className="flex min-w-0 items-center overflow-x-auto scrollbar-hide"
+                        className="report-nav-scroll flex min-w-0 flex-1 items-center overflow-x-auto overflow-y-hidden"
                         aria-label="Report sections"
                     >
-                        {NAV.map((item) => (
-                            <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => goTo(item.id)}
-                                className="whitespace-nowrap border-l py-[17px] text-[16px] font-medium uppercase tracking-[.13em] transition-colors sm:px-5"
-                                style={
-                                    activeNav === item.id
-                                        ? {
-                                            borderColor:
-                                                "color-mix(in srgb, var(--ms-accent) 20%, transparent)",
-                                            background:
-                                                "color-mix(in srgb, var(--ms-accent) 15%, transparent)",
-                                            color: "#8BC1FF",
-                                        }
-                                        : {
-                                            borderColor:
-                                                "color-mix(in srgb, var(--ms-text) 10%, transparent)",
-                                            color: "#B5CFFF",
-                                        }
-                                }
-                            >
-                                {item.label}
-                            </button>
-                        ))}
+                        {NAV.map((item) => {
+                            const isActive = activeNav === item.id;
+
+                            return (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => goTo(item.id)}
+                                    aria-current={isActive ? "location" : undefined}
+                                    className="relative flex h-[58px] shrink-0 items-center whitespace-nowrap px-3 text-[12px] font-medium uppercase tracking-[.07em] transition-colors duration-200 sm:px-5 sm:text-[13px] sm:tracking-[.1em] lg:text-[14px]"
+                                    style={{
+                                        color: isActive ? "#8BC1FF" : "#B5CFFF",
+                                    }}
+                                >
+                                    {item.label}
+
+                                    {/* Active indicator */}
+                                    <span
+                                        className="absolute inset-x-3 bottom-0 h-[2px] transition-all duration-300 sm:inset-x-5"
+                                        style={{
+                                            background: isActive
+                                                ? "var(--ms-accent)"
+                                                : "transparent",
+                                            boxShadow: isActive
+                                                ? "0 0 12px rgba(47,123,255,.55)"
+                                                : "none",
+                                        }}
+                                    />
+                                </button>
+                            );
+                        })}
                     </nav>
                 </div>
             </div>
+
 
             {/* Usage Highlights */}
             <ServiceUsageHighlights

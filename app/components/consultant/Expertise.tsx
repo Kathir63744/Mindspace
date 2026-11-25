@@ -143,7 +143,8 @@ export default function Expertise() {
                 </div>
 
                 {/* Category navigation */}
-                <div className="mb-9 flex gap-2 overflow-x-auto pb-2">
+                {/* Category navigation — scrollable without visible scrollbar */}
+                <div className="scrollbar-hide mb-9 flex gap-2 overflow-x-auto overscroll-x-contain pb-2">
                     {categories.map((category) => {
                         const active = selected === category;
 
