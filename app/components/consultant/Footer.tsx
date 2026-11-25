@@ -112,7 +112,7 @@ const LEGAL_LINKS = [
     },
 ];
 
-export default function Footer() {
+ export default function Footer() {
     const pathname = require("next/navigation").usePathname() as string;
 
     const { accent, accentRgb } = getPageAccentTheme(pathname);
